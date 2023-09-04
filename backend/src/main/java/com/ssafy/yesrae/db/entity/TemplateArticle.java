@@ -41,6 +41,10 @@ public class TemplateArticle extends BaseEntity{
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
+    // 기본 자료형 Wrapper 필수.
+    @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
+    private Integer viewCount;
+
     @Column // 기본값 null
     private LocalDateTime deletedAt;
 

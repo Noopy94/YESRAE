@@ -1,8 +1,11 @@
 package com.ssafy.yesrae.api.template.service;
 
 import com.ssafy.yesrae.api.template.request.TemplateRegistPostReq;
+import com.ssafy.yesrae.api.template.response.TemplateFindRes;
 import com.ssafy.yesrae.db.entity.TemplateArticle;
 import com.ssafy.yesrae.db.repository.TemplateArticleRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,5 +49,25 @@ public class TemplateServiceImpl implements TemplateService {
 
         log.info("TemplateService_registTemplate_end: success");
         return templateArticle;
+    }
+
+    /**
+     *  게시글 전체 조회 API에 대한 서비스
+     */
+    @Override
+    public List<TemplateFindRes> findAllTemplate() {
+
+        log.info("TemplateService_findAllTemplate_start: ");
+
+        List<TemplateFindRes> res = templateArticleRepository.findAll()
+                .stream().map(m -> TemplateFindRes.builder()
+                .title(m.getTitle())
+                .content(m.getContent())
+                .viewCount(m.getViewCount())
+                .build()
+            ).collect(Collectors.toList());
+
+        log.info("TemplateService_findAllTemplate_end: success");
+        return res;
     }
 }

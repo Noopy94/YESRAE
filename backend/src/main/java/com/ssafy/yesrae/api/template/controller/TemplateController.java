@@ -1,12 +1,15 @@
 package com.ssafy.yesrae.api.template.controller;
 
 import com.ssafy.yesrae.api.template.request.TemplateRegistPostReq;
+import com.ssafy.yesrae.api.template.response.TemplateFindRes;
 import com.ssafy.yesrae.api.template.service.TemplateService;
-import com.ssafy.yesrae.common.exception.Template.TemplateRegistFailException;
+import com.ssafy.yesrae.common.exception.Template.TemplateNoResultException;
 import com.ssafy.yesrae.common.model.CommonResponse;
-import com.ssafy.yesrae.db.entity.TemplateArticle;
+import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,12 +43,24 @@ public class TemplateController {
         
         log.info("TemplateController_regist_start: " + registInfo.toString());
 
-        TemplateArticle templateArticle = templateService.registTemplate(registInfo);
-        if (templateArticle != null) {  // regist 성공하면 success
-            log.info("TemplateController_regist_end: success");
-            return CommonResponse.success(SUCCESS);
-        } else {    // 실패하면 Exception
-            throw new TemplateRegistFailException();
-        }
+        templateService.registTemplate(registInfo);
+
+        log.info("TemplateController_regist_end: success");
+        return CommonResponse.success(SUCCESS);
+    }
+
+    /**
+     * 게시글 목록 조회 API
+     */
+    @GetMapping
+    public CommonResponse<?> findAll() {
+
+        log.info("TemplateController_findAll_start: ");
+
+        Optional<List<TemplateFindRes>> findRes = Optional.ofNullable(
+            templateService.findAllTemplate());
+
+        log.info("TemplateController_findAll_end: " + findRes);
+        return CommonResponse.success(findRes.orElseThrow(TemplateNoResultException::new));
     }
 }
