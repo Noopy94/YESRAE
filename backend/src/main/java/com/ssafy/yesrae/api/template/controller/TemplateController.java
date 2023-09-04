@@ -4,13 +4,16 @@ import com.ssafy.yesrae.api.template.request.TemplateRegistPostReq;
 import com.ssafy.yesrae.api.template.response.TemplateFindRes;
 import com.ssafy.yesrae.api.template.service.TemplateService;
 import com.ssafy.yesrae.common.exception.Template.TemplateNoResultException;
+import com.ssafy.yesrae.common.exception.Template.TemplatePossessionFailException;
 import com.ssafy.yesrae.common.model.CommonResponse;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -62,5 +65,23 @@ public class TemplateController {
 
         log.info("TemplateController_findAll_end: " + findRes);
         return CommonResponse.success(findRes.orElseThrow(TemplateNoResultException::new));
+    }
+
+    /**
+     * 게시글을 삭제하기 위한 API
+     */
+    @PutMapping("/delete/{articleId}")
+    public CommonResponse<?> delete(@PathVariable Long articleId) {
+
+        log.info("TemplateController_delete_start: " + articleId);
+
+        boolean isDeleted = templateService.deleteTemplate(articleId);
+
+        if (isDeleted) {    // 삭제 성공하면 success
+            log.info("TemplateController_delete_end: success");
+            return CommonResponse.success(SUCCESS);
+        } else {    // 삭제 실패하면 Exception
+            throw new TemplatePossessionFailException();
+        }
     }
 }

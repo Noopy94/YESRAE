@@ -10,4 +10,6 @@ public interface TemplateService {
     TemplateArticle registTemplate(TemplateRegistPostReq registInfo);
 
     List<TemplateFindRes> findAllTemplate();
+
+    Boolean deleteTemplate(Long articleId);
 }

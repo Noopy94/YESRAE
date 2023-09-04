@@ -50,4 +50,11 @@ public class TemplateArticle extends BaseEntity{
 
     @CreationTimestamp
     private LocalDateTime time;
+
+    /**
+     * 게시글 삭제 시 deletedAt을 현재 시간으로 설정하기 위한 method
+     */
+    public void deleteTemplate() {
+        this.deletedAt = LocalDateTime.now();
+    }
 }

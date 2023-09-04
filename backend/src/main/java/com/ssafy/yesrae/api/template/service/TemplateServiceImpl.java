@@ -2,6 +2,7 @@ package com.ssafy.yesrae.api.template.service;
 
 import com.ssafy.yesrae.api.template.request.TemplateRegistPostReq;
 import com.ssafy.yesrae.api.template.response.TemplateFindRes;
+import com.ssafy.yesrae.common.exception.NoDataException;
 import com.ssafy.yesrae.db.entity.TemplateArticle;
 import com.ssafy.yesrae.db.repository.TemplateArticleRepository;
 import java.util.List;
@@ -69,5 +70,23 @@ public class TemplateServiceImpl implements TemplateService {
 
         log.info("TemplateService_findAllTemplate_end: success");
         return res;
+    }
+
+    /**
+     * 게시글 삭제 (Soft Delete) API 에 대한 서비스
+     */
+    @Override
+    public Boolean deleteTemplate(Long articleId) {
+
+        log.info("TemplateService_deleteTemplate_start: ");
+
+        TemplateArticle templateArticle = templateArticleRepository.findById(articleId)
+            .orElseThrow(NoDataException::new);
+
+        // 실제 서비스에서는 article을 작성한 유저와 삭제 요청을 한 유저를 비교해서 둘이 같을 경우에만 삭제가 되도록.
+        // 둘을 비교해서 두 유저 정보가 다를 경우 false 를 리턴하면 됨
+        templateArticle.deleteTemplate();
+        log.info("TemplateService_deleteTemplate_end: true");
+        return true;
     }
 }
