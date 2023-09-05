@@ -1,4 +1,4 @@
-package com.ssafy.yesrae.db.entity;
+package com.ssafy.yesrae.common.model;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
