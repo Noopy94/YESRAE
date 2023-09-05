@@ -1,6 +1,6 @@
-package com.ssafy.yesrae.db.repository;
+package com.ssafy.yesrae.domain.template.repository;
 
-import com.ssafy.yesrae.db.entity.TemplateArticle;
+import com.ssafy.yesrae.domain.template.entity.TemplateArticle;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

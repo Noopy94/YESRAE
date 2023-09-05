@@ -1,8 +1,8 @@
-package com.ssafy.yesrae.api.template.controller;
+package com.ssafy.yesrae.domain.template.controller;
 
-import com.ssafy.yesrae.api.template.request.TemplateRegistPostReq;
-import com.ssafy.yesrae.api.template.response.TemplateFindRes;
-import com.ssafy.yesrae.api.template.service.TemplateService;
+import com.ssafy.yesrae.domain.template.dto.request.TemplateRegistPostReq;
+import com.ssafy.yesrae.domain.template.dto.response.TemplateFindRes;
+import com.ssafy.yesrae.domain.template.service.TemplateService;
 import com.ssafy.yesrae.common.exception.Template.TemplateNoResultException;
 import com.ssafy.yesrae.common.exception.Template.TemplatePossessionFailException;
 import com.ssafy.yesrae.common.model.CommonResponse;

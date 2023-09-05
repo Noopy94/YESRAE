@@ -1,5 +1,6 @@
-package com.ssafy.yesrae.db.entity;
+package com.ssafy.yesrae.domain.template.entity;
 
+import com.ssafy.yesrae.common.model.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import java.time.LocalDateTime;
@@ -25,7 +26,7 @@ import org.hibernate.annotations.Where;
 @DynamicInsert  // INSERT 구문에서 null이 아닌 컬럼들만 실제로 insert
 @Where(clause = "deleted_at is null")   // 일괄적으로 적용할 where 조건. 현재 clause는 soft delete를 위함
 @Entity
-public class TemplateArticle extends BaseEntity{
+public class TemplateArticle extends BaseEntity {
 
     /*
         Foreign Key 작성하는 방법
