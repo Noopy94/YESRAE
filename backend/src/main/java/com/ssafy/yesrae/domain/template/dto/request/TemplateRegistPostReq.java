@@ -1,4 +1,4 @@
-package com.ssafy.yesrae.api.template.request;
+package com.ssafy.yesrae.domain.template.dto.request;
 
 import lombok.Data;
 

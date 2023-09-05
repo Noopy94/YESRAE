@@ -1,10 +1,10 @@
-package com.ssafy.yesrae.api.template.service;
+package com.ssafy.yesrae.domain.template.service;
 
-import com.ssafy.yesrae.api.template.request.TemplateRegistPostReq;
-import com.ssafy.yesrae.api.template.response.TemplateFindRes;
+import com.ssafy.yesrae.domain.template.dto.request.TemplateRegistPostReq;
+import com.ssafy.yesrae.domain.template.dto.response.TemplateFindRes;
 import com.ssafy.yesrae.common.exception.NoDataException;
-import com.ssafy.yesrae.db.entity.TemplateArticle;
-import com.ssafy.yesrae.db.repository.TemplateArticleRepository;
+import com.ssafy.yesrae.domain.template.entity.TemplateArticle;
+import com.ssafy.yesrae.domain.template.repository.TemplateArticleRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
