@@ -13,16 +13,11 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class OAuthAttributes {
 
     private String nameAttributeKey; // OAuth2 로그인 진행 시 키가 되는 필드 값, PK와 같은 의미
     private OAuth2UserInfo oauth2UserInfo; // 소셜 타입별 로그인 유저 정보(닉네임, 이메일, 프로필 사진 등등)
-
-    @Builder
-    public OAuthAttributes(String nameAttributeKey, OAuth2UserInfo oauth2UserInfo) {
-        this.nameAttributeKey = nameAttributeKey;
-        this.oauth2UserInfo = oauth2UserInfo;
-    }
 
     /**
      * SocialType에 맞는 메소드 호출하여 OAuthAttributes 객체 반환 파라미터 : userNameAttributeName -> OAuth2 로그인 시
@@ -32,13 +27,11 @@ public class OAuthAttributes {
     public static OAuthAttributes of(SocialType socialType,
         String userNameAttributeName, Map<String, Object> attributes) {
 
-        if (socialType == SocialType.NAVER) {
-            return ofNaver(userNameAttributeName, attributes);
-        }
-        if (socialType == SocialType.KAKAO) {
-            return ofKakao(userNameAttributeName, attributes);
-        }
-        return ofGoogle(userNameAttributeName, attributes);
+        return switch (socialType) {
+            case NAVER -> ofNaver(userNameAttributeName, attributes);
+            case KAKAO -> ofKakao(userNameAttributeName, attributes);
+            case GOOGLE -> ofGoogle(userNameAttributeName, attributes);
+        };
     }
 
     private static OAuthAttributes ofKakao(String userNameAttributeName,
