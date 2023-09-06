@@ -37,6 +37,18 @@ public class SongServiceImpl implements SongService{
         LocalDate releaseDate = songInfo.getReleaseDate();
         Integer duration = songInfo.getDuration();
         Integer popularity = songInfo.getPopularity();
+        float acousticness = songInfo.getAcousticness();
+        float danceability = songInfo.getDanceability();
+        float energy = songInfo.getEnergy();
+        float instrumentalness = songInfo.getInstrumentalness();
+        Integer key = songInfo.getKey();
+        float liveness = songInfo.getLiveness();
+        float loudness = songInfo.getLoudness();
+        Integer mode = songInfo.getMode();
+        float speechiness = songInfo.getSpeechiness();
+        float tempo = songInfo.getTempo();
+        Integer timeSignature = songInfo.getTimeSignature();
+        float valence = songInfo.getValence();
 
         Song song = Song.builder()
             .id(id)
@@ -51,11 +63,23 @@ public class SongServiceImpl implements SongService{
             .releaseDate(releaseDate)
             .duration(duration)
             .popularity(popularity)
+            .acousticness(acousticness)
+            .danceability(danceability)
+            .energy(energy)
+            .instrumentalness(instrumentalness)
+            .key(key)
+            .liveness(liveness)
+            .loudness(loudness)
+            .mode(mode)
+            .speechiness(speechiness)
+            .tempo(tempo)
+            .timeSignature(timeSignature)
+            .valence(valence)
             .build();
 
         songRepository.save(song);
 
-        log.info("TemplateService_registTemplate_end: success");
+        log.info("SongService_registSong_end: success");
         return song;
     }
 }
