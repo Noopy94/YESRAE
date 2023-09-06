@@ -37,18 +37,18 @@ public class SongServiceImpl implements SongService{
         LocalDate releaseDate = songInfo.getReleaseDate();
         Integer duration = songInfo.getDuration();
         Integer popularity = songInfo.getPopularity();
-        float acousticness = songInfo.getAcousticness();
-        float danceability = songInfo.getDanceability();
-        float energy = songInfo.getEnergy();
-        float instrumentalness = songInfo.getInstrumentalness();
+        Float acousticness = songInfo.getAcousticness();
+        Float danceability = songInfo.getDanceability();
+        Float energy = songInfo.getEnergy();
+        Float instrumentalness = songInfo.getInstrumentalness();
         Integer key = songInfo.getKey();
-        float liveness = songInfo.getLiveness();
-        float loudness = songInfo.getLoudness();
+        Float liveness = songInfo.getLiveness();
+        Float loudness = songInfo.getLoudness();
         Integer mode = songInfo.getMode();
-        float speechiness = songInfo.getSpeechiness();
-        float tempo = songInfo.getTempo();
+        Float speechiness = songInfo.getSpeechiness();
+        Float tempo = songInfo.getTempo();
         Integer timeSignature = songInfo.getTimeSignature();
-        float valence = songInfo.getValence();
+        Float valence = songInfo.getValence();
 
         Song song = Song.builder()
             .id(id)
