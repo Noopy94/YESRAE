@@ -48,6 +48,9 @@ public class PlayList extends BaseEntity {
     @Column(nullable = false, columnDefinition = "VARCHAR(100)")
     private String description;
 
+    @Column(nullable = false, columnDefinition = "BOOLEAN")
+    private boolean isPublic;
+
     @CreationTimestamp
     private LocalDateTime createdData;
 
