@@ -1,10 +1,11 @@
-package com.ssafy.yesrae.api.template.service;
+package com.ssafy.yesrae.domain.template.service;
 
-import com.ssafy.yesrae.api.template.request.TemplateRegistPostReq;
-import com.ssafy.yesrae.api.template.response.TemplateFindRes;
+import com.ssafy.yesrae.domain.template.dto.request.TemplateFindByConditionGetReq;
+import com.ssafy.yesrae.domain.template.dto.request.TemplateRegistPostReq;
+import com.ssafy.yesrae.domain.template.dto.response.TemplateFindRes;
 import com.ssafy.yesrae.common.exception.NoDataException;
-import com.ssafy.yesrae.db.entity.TemplateArticle;
-import com.ssafy.yesrae.db.repository.TemplateArticleRepository;
+import com.ssafy.yesrae.domain.template.entity.TemplateArticle;
+import com.ssafy.yesrae.domain.template.repository.TemplateArticleRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -31,15 +32,15 @@ public class TemplateServiceImpl implements TemplateService {
     /**
      * 게시글 Regist API 에 대한 서비스
      *
-     * @param registInfo : 게시글 등록할 때 입력한 정보
+     * @param templateRegistPostReq : 게시글 등록할 때 입력한 정보
      */
     @Override
-    public TemplateArticle registTemplate(TemplateRegistPostReq registInfo) {
+    public TemplateArticle registTemplate(TemplateRegistPostReq templateRegistPostReq) {
 
-        log.info("TemplateService_registTemplate_start: " + registInfo.toString());
+        log.info("TemplateService_registTemplate_start: " + templateRegistPostReq.toString());
 
-        String title = registInfo.getTitle();
-        String content = registInfo.getContent();
+        String title = templateRegistPostReq.getTitle();
+        String content = templateRegistPostReq.getContent();
 
         TemplateArticle templateArticle = TemplateArticle.builder()
             .title(title)
@@ -69,6 +70,21 @@ public class TemplateServiceImpl implements TemplateService {
             ).collect(Collectors.toList());
 
         log.info("TemplateService_findAllTemplate_end: success");
+        return res;
+    }
+
+    /**
+     *  게시글 검색어로 검색하여 조회 API에 대한 서비스
+     */
+    @Override
+    public List<TemplateFindRes> findByConditionTemplate(
+        TemplateFindByConditionGetReq templateFindByConditionGetReq) {
+
+        log.info("TemplateService_findByConditionTemplate_start: " + templateFindByConditionGetReq.toString());
+
+        List<TemplateFindRes> res = templateArticleRepository.findByConditionTemplate(templateFindByConditionGetReq);
+
+        log.info("TemplateService_findByConditionTemplate_end: success");
         return res;
     }
 

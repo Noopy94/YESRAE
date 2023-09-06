@@ -1,8 +1,9 @@
-package com.ssafy.yesrae.api.template.controller;
+package com.ssafy.yesrae.domain.template.controller;
 
-import com.ssafy.yesrae.api.template.request.TemplateRegistPostReq;
-import com.ssafy.yesrae.api.template.response.TemplateFindRes;
-import com.ssafy.yesrae.api.template.service.TemplateService;
+import com.ssafy.yesrae.domain.template.dto.request.TemplateFindByConditionGetReq;
+import com.ssafy.yesrae.domain.template.dto.request.TemplateRegistPostReq;
+import com.ssafy.yesrae.domain.template.dto.response.TemplateFindRes;
+import com.ssafy.yesrae.domain.template.service.TemplateService;
 import com.ssafy.yesrae.common.exception.Template.TemplateNoResultException;
 import com.ssafy.yesrae.common.exception.Template.TemplatePossessionFailException;
 import com.ssafy.yesrae.common.model.CommonResponse;
@@ -39,14 +40,14 @@ public class TemplateController {
     /**
      * 게시글을 등록하기 위한 API
      *
-     * @param registInfo : 게시글 등록할 때 입력한 정보
+     * @param templateRegistPostReq : 게시글 등록할 때 입력한 정보
      */
     @PostMapping
-    public CommonResponse<?> regist(@RequestBody TemplateRegistPostReq registInfo) {
+    public CommonResponse<?> regist(@RequestBody TemplateRegistPostReq templateRegistPostReq) {
         
-        log.info("TemplateController_regist_start: " + registInfo.toString());
+        log.info("TemplateController_regist_start: " + templateRegistPostReq.toString());
 
-        templateService.registTemplate(registInfo);
+        templateService.registTemplate(templateRegistPostReq);
 
         log.info("TemplateController_regist_end: success");
         return CommonResponse.success(SUCCESS);
@@ -60,10 +61,28 @@ public class TemplateController {
 
         log.info("TemplateController_findAll_start: ");
 
+        // 검색 결과 없을 경우 어떻게 할지 보완 필요 (현재 null 이 아니라 빈 리스트라서 exception 발동 안 함)
         Optional<List<TemplateFindRes>> findRes = Optional.ofNullable(
             templateService.findAllTemplate());
 
         log.info("TemplateController_findAll_end: " + findRes);
+        return CommonResponse.success(findRes.orElseThrow(TemplateNoResultException::new));
+    }
+
+    /**
+     *  게시글 검색어로 검색하여 조회 API
+     */
+    @GetMapping("/search")
+    public CommonResponse<?> findByCondition(
+        TemplateFindByConditionGetReq templateFindByConditionGetReq) {
+
+        log.info("TemplateController_findByCondition_start: " + templateFindByConditionGetReq.toString());
+
+        // 검색 결과 없을 경우 어떻게 할지 보완 필요 (현재 null 이 아니라 빈 리스트라서 exception 발동 안 함)ㄴ
+        Optional<List<TemplateFindRes>> findRes = Optional.ofNullable(
+            templateService.findByConditionTemplate(templateFindByConditionGetReq));
+
+        log.info("TemplateController_findByCondition_end: " + findRes);
         return CommonResponse.success(findRes.orElseThrow(TemplateNoResultException::new));
     }
 
