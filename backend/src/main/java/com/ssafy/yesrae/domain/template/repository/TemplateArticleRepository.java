@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
     TemplateArticle Entity를 위한 Spring Data JPA Repository
  */
 @Repository
-public interface TemplateArticleRepository extends JpaRepository<TemplateArticle, Long> {
+public interface TemplateArticleRepository extends JpaRepository<TemplateArticle, Long>, QTemplateArticleRepository {
 
 }
