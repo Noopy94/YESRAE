@@ -37,6 +37,7 @@ public class PlayList extends BaseEntity {
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "user_id")   // DB table에 적용될 FK column 이름
      */
+
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "id")
 //    private User user;
