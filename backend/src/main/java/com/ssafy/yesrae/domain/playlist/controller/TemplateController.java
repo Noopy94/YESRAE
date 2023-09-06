@@ -5,7 +5,6 @@ import com.ssafy.yesrae.common.exception.Template.TemplatePossessionFailExceptio
 import com.ssafy.yesrae.common.model.CommonResponse;
 import com.ssafy.yesrae.domain.playlist.dto.request.TemplateRegistPostReq;
 import com.ssafy.yesrae.domain.playlist.dto.response.TemplateFindRes;
-import com.ssafy.yesrae.domain.playlist.service.TemplateService;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;

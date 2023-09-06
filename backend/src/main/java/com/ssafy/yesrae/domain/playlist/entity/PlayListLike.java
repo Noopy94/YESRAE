@@ -1,10 +1,8 @@
 package com.ssafy.yesrae.domain.playlist.entity;
 
-import com.ssafy.yesrae.common.model.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
@@ -14,7 +12,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.Where;
 
@@ -30,7 +27,7 @@ import org.hibernate.annotations.Where;
 @DynamicInsert  // INSERT 구문에서 null이 아닌 컬럼들만 실제로 insert
 @Where(clause = "deleted_at is null")   // 일괄적으로 적용할 where 조건. 현재 clause는 soft delete를 위함
 @Entity
-public class PlayList extends BaseEntity {
+public class PlayListLike {
 
     /*
         Foreign Key 작성하는 방법
@@ -42,14 +39,9 @@ public class PlayList extends BaseEntity {
 //    @JoinColumn(name = "user_id")
 //    private User user;
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(40)")
-    private String title;
-
-    @Column(nullable = false, columnDefinition = "VARCHAR(100)")
-    private String description;
-
-    @CreationTimestamp
-    private LocalDateTime createdData;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "playlist_id")
+    private PlayList playlist;
 
     @Column // 기본값 null
     private LocalDateTime deletedAt;
