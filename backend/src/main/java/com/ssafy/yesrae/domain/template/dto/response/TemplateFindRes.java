@@ -15,4 +15,15 @@ public class TemplateFindRes {
     String content;
 
     Integer viewCount;
+
+    //Querydsl 을 위한 생성자
+
+    public TemplateFindRes() {
+    }
+
+    public TemplateFindRes(String title, String content, Integer viewCount) {
+        this.title = title;
+        this.content = content;
+        this.viewCount = viewCount;
+    }
 }
