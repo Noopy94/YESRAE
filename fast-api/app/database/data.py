@@ -1,10 +1,9 @@
 # 노맨틀 계획
-
 """
-1. spotify 30 초 미리 듣기를 다운 받는다 
-2. ( 해당 데이터를 wav로 바꾸고 음원 분석 수행 후 지운다 ) (V)
-3. 음원 분석 기준 (멜로디와 박자가 유의미할 것 같음) (템포, mel_freq 구하기)
-4. 음원 분석 데이터 저장 -> 유사도를 구하기 위한 데이터  (템포 컬럼, mel_freqs 컬럼 저장)
+1. spotify 30 초 미리 듣기를 다운 받는다 (구현 O, 사용 X -> Spotify 에서 30초 미리 듣기 제공하지 않는 경우 존재) 
+2. 해당 데이터를 wav로 바꾸고 음원 분석 수행 후 지운다 (구현 O, 사용 X)
+3. 음원 분석 기준 (멜로디와 박자가 유의미할 것 같음) (템포, mel_freq 구하기) (구현 O, 사용 X)
+4. 음원 분석 데이터 저장 -> 유사도를 구하기 위한 데이터  (템포 컬럼, mel_freqs 컬럼 저장) (템포 정보는 Spotify API 사용)
 5. 매일 일정한 시간이 되면 정답 곡 한개 선택 (인기도 고려)
 6. 정답곡을 기준으로 해당 곡과의 전체 곡의 유사도를 계산
 7. DB 에 매일 정답곡 기준으로 유사도 갱신
@@ -28,6 +27,14 @@ print("Melody Frequencies (Hz):", mel_freqs)
 tempo : BPM (분당 박자), beat_frames : 각 박자의 프레임 위치
 melody_freqs :  각 시간 스텝에 해당하는 주파수,  각 시간 스텝에서 가장 높은 확률로 감지된 주파수
 """
+
+
+"""
+변경 사항
+
+DB 에 템포 정보 넣을 필요 없다, Spotify 에서 제공하는 박자 정보 사용
+"""
+
 
 
 from scipy.spatial import distance
@@ -92,68 +99,11 @@ def deleteFile(filename):
         os.remove(filename)
 
 
-"""
-TODO : DB 에서 추후에 url 정보 하나씩 가져오기
-TODO : 입력 받은 노래의 박자 정보, 멜로디 저장 (DB 에 저장 예정)
-
-url 에 해당하는 음원 정보 분석해서 DB 에 오디오 시계열 데이터, 샘플링 주파수 저장
-:url : 30초 음원 url
-"""
-def storeMusicInfo(url):
-    
-    # 음원 파일 가져오기
-    mp3_name = getMusic(url)
-    mp3_file = root_path + mp3_name
-    # url 로 가져온 음원 오디오 시계열 데이터, 샘플링 주파수 추출
-    y, sr = loadmusic(mp3_file)
-
-    # TODO : tempo 추후에 DB 저장
-    tempo = getTempo(y, sr)
-    
-    
-    # TODO : mel_freqs 추후에 문자열로 변환해서 DB 에 저장
-    mel_freqs = getMelody(y, sr)
-
-    print(f"mel_freqs {mel_freqs}")
-    
-    deleteFile(mp3_file)
 
 """
 TODO : 노맨틀 정답곡 선정 어떻게 할지 고민해보기 (인기도 순위 고려)
 CRON 사용 해서 자정에 선정 -> 인기도 상위 50 에서 랜덤하게 추출해서 DB 에 저장
 """
-
-
-
-"""
-유사도 데이터 계산 후 DB 에 저장
-(아직 DB 에 박자, 멜로디 저장 X)
-
-"""
-def getSimilarity():
-
-    """
-    TODO : DB 에서 템포, mel_freqs 가져오기
-
-    today_tempo = 0
-    DB 에 mel_freq 데이터를 문자열로 저장되어 있어서 배열로 변환
-    today_mel_freq = np.array(eval(mel_freq))
-
-    나머지 곡들 DB 에서 템포, mel_freqs 가져오기
-    music_tempo = 0
-    DB 에 mel_freq 데이터를 문자열로 저장되어 있어서 배열로 변환
-    music_mel_freq = np.array(eval(mel_freq))
-
-    """
-    
-    """
-    TODO : 유사도 결과 DB 에 저장
-    similarity_result = calSimilarity(today_tempo, music_tempo, today_mel_freq, music_mel_freq)
-    """
-
-
-    pass
-
 
 
 
@@ -192,6 +142,47 @@ def calSimilarity(tempo1, tempo2, mel_freq1, mel_freq2):
     similarity_score = (20 * cosine_sim + (1 / (1 + tempo_difference))) / 21
 
     return similarity_score
+
+
+"""
+TODO : DB 에서 acousticness, danceability, instrumentalness, tempo, time_signature, mode(음계) 
+가져와서 곡의 특징 계산해서 저장
+"""
+
+"""
+acousticness, danceability, instrumentalness, tempo, time_signature, mode(음계) 정보를 바탕으로
+곡의 특징 수치화
+"""
+def calculate(acousticness, danceability, instrumentalness, tempo, time_signature, mode):
+
+    rate = [0.05, 0.05, 0.2, 0.4, 0.1, 0.2]
+    type = [ acousticness,  danceability, instrumentalness,  tempo, time_signature, mode]
+
+    result = sum(x * y for x, y in zip(rate, type))
+
+
+    return result
+
+
+"""
+TODO
+DB 에 두 곡간 유사도 정보 계산 후  저장
+"""
+
+"""
+TODO 
+곡간의 수치화 정보 비교
+"""
+def calculate_percentage(character1, character2):
+
+    max_diff = 1.0
+
+    diff = abs(character1 - character2)
+
+    similarity = (max_diff - diff) / max_diff
+
+    return similarity
+
 
 
 
@@ -246,4 +237,23 @@ for input_url in url:
     print(f"Overall Similarity Score: {similarity_score}")
 
     deleteFile(mp3_name)
-    
+
+
+# 멜로디 정보 없을 때 
+song_1 = [ 0.172,  0.608, 0,  109.977, 4, 1]
+song_2 = [ 0.18,   0.776, 0.0000344,  149.921, 4, 0]
+
+def test_without_melody(): 
+    song_1_character= calculate(song_1[0], song_1[1], song_1[2], song_1[3], song_1[4], song_1[5])
+
+    song_2_character= calculate(song_2[0], song_2[1], song_2[2], song_2[3], song_2[4], song_2[5])
+
+    print(f"song_1_character {song_1_character}")
+
+    print(f"song_2_character {song_2_character}")
+
+    similarity = calculate_percentage(song_1_character, song_2_character)
+
+    print(f"similarity {similarity}")
+
+test_without_melody()
