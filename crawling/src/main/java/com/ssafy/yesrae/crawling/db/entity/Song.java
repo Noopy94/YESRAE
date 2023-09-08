@@ -51,9 +51,6 @@ public class Song {
     @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate releaseDate;
 
-    @Column(nullable = false, columnDefinition = "FLOAT DEFAULT 0")
-    private Float similarity;
-
     @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
     private Integer duration;
 
@@ -108,6 +105,8 @@ public class Song {
     @Column(nullable = false, columnDefinition = "FLOAT DEFAULT 0")
     private Float valence;
 
-
+    // 노래 꼬맨틀 참여 여부
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT 0")
+    private Boolean todaySong;
 
 }

@@ -16,7 +16,6 @@ public class SongRegistPostReq {
     private String imgUrl;
     private String previewUrl;
     private LocalDate releaseDate;
-    private float similarity;
     private Integer duration;
     private Integer popularity;
     private float acousticness;
@@ -31,5 +30,6 @@ public class SongRegistPostReq {
     private float tempo;
     private Integer timeSignature;
     private float valence;
+    private Boolean todaySong;
 
 }

@@ -49,6 +49,7 @@ public class SongServiceImpl implements SongService{
         Float tempo = songInfo.getTempo();
         Integer timeSignature = songInfo.getTimeSignature();
         Float valence = songInfo.getValence();
+        Boolean todaySong = songInfo.getTodaySong();
 
         Song song = Song.builder()
             .id(id)
