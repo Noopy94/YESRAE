@@ -1,4 +1,4 @@
-package com.ssafy.yesrae.domain.cup.entity;
+package com.ssafy.yesrae.domain.tournament.entity;
 
 import com.ssafy.yesrae.common.model.BaseEntity;
 import jakarta.persistence.Column;
@@ -23,7 +23,7 @@ import org.hibernate.annotations.Where;
 @DynamicInsert
 @Where(clause = "deleted_at is null")
 @Entity
-public class CupSong extends BaseEntity {
+public class TournamentSong extends BaseEntity {
 
     @Column(nullable = false, length = 100)
     private String title;

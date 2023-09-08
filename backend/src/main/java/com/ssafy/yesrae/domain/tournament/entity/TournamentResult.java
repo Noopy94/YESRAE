@@ -1,4 +1,4 @@
-package com.ssafy.yesrae.domain.cup.entity;
+package com.ssafy.yesrae.domain.tournament.entity;
 
 import com.ssafy.yesrae.common.model.BaseEntity;
 import com.ssafy.yesrae.domain.user.entity.User;
@@ -29,7 +29,7 @@ import org.hibernate.annotations.Where;
 @DynamicInsert
 @Where(clause = "deleted_at is null")
 @Entity
-public class CupResult extends BaseEntity {
+public class TournamentResult extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -37,11 +37,11 @@ public class CupResult extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "song_id")
-    private CupSong cupSong;
+    private TournamentSong tournamentSong;
 
     @CreationTimestamp
-    private LocalDateTime deletedAt;
+    private LocalDateTime date;
 
-    @Column(nullable = false, columnDefinition = "BOOLEAN")
+    @Column(nullable = false, columnDefinition = "TINYINT default 0")
     private Boolean isWinner;
 }

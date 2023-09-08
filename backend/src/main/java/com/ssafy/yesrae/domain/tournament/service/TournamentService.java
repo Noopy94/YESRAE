@@ -1,0 +1,10 @@
+package com.ssafy.yesrae.domain.tournament.service;
+
+import com.ssafy.yesrae.domain.tournament.dto.request.FindTournamentSongGetReq;
+import com.ssafy.yesrae.domain.tournament.dto.response.TournamentSongFindRes;
+import java.util.List;
+
+public interface TournamentService {
+
+    List<TournamentSongFindRes> findTournamentSong(FindTournamentSongGetReq findTournamentSongGetReq);
+}
