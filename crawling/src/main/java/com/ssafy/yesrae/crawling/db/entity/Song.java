@@ -20,7 +20,6 @@ import org.hibernate.annotations.DynamicInsert;
 @SuperBuilder
 @Entity
 public class Song {
-
     @Id
     private String id;
 

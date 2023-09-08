@@ -38,6 +38,7 @@ public class PlayListSong implements Serializable {
     @JoinColumn(name = "id")
     private PlayList playlist;
 
+    // @Id
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "song_id")
 //    private Song song;

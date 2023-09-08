@@ -6,7 +6,9 @@ import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
-public class PlayListRegistPostReq {
+public class PlayListModifyPutReq {
+
+    Long playListId;
     String title;
     String description;
     MultipartFile img;

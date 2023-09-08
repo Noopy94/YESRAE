@@ -1,5 +1,6 @@
 package com.ssafy.yesrae.domain.playlist.entity;
 
+import com.ssafy.yesrae.domain.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
