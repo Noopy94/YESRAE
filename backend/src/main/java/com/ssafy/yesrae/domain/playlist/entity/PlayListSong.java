@@ -4,8 +4,10 @@ import com.ssafy.yesrae.common.model.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -29,14 +31,9 @@ import org.hibernate.annotations.Where;
 @DynamicInsert  // INSERT 구문에서 null이 아닌 컬럼들만 실제로 insert
 @Where(clause = "deleted_at is null")   // 일괄적으로 적용할 where 조건. 현재 clause는 soft delete를 위함
 @Entity
-public class PlayListSong {
+public class PlayListSong implements Serializable {
 
-    /*
-        Foreign Key 작성하는 방법
-        @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "user_id")   // DB table에 적용될 FK column 이름
-     */
-
+    @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
     private PlayList playlist;

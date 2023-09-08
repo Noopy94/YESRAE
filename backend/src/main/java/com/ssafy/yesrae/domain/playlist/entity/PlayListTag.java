@@ -31,12 +31,6 @@ import org.hibernate.annotations.Where;
 @Entity
 public class PlayListTag extends BaseEntity {
 
-    /*
-        Foreign Key 작성하는 방법
-        @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "user_id")   // DB table에 적용될 FK column 이름
-     */
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "playlist_id")
     private PlayList playlist;
