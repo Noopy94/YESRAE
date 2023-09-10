@@ -182,4 +182,12 @@ secret/
 *.mp3
 *.wav
 
+# python virtual environment folder
+Include/
+Lib/
+Scripts/
+__pycache__/
+*.cfg
+
+
 # End of https://www.toptal.com/developers/gitignore/api/intellij,java,react,visualstudiocode

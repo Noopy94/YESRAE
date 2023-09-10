@@ -4,7 +4,7 @@
 2. 해당 데이터를 wav로 바꾸고 음원 분석 수행 후 지운다 (구현 O, 사용 X)
 3. 음원 분석 기준 (멜로디와 박자가 유의미할 것 같음) (템포, mel_freq 구하기) (구현 O, 사용 X)
 4. 음원 분석 데이터 저장 -> 유사도를 구하기 위한 데이터  (템포 컬럼, mel_freqs 컬럼 저장) (템포 정보는 Spotify API 사용)
-5. 매일 일정한 시간이 되면 정답 곡 한개 선택 (인기도 고려)
+5. 매일 일정한 시간이 되면 정답 곡 한개 선택 (인기도 고려) (1. cron 사용 2. 인기도 높은 곡에서 랜덤 선택 3. 인기 높은 곡과의 유사도 계산 후 저장 -> "노래ID" : 유사도 4.  순위 고래 )
 6. 정답곡을 기준으로 해당 곡과의 전체 곡의 유사도를 계산
 7. DB 에 매일 정답곡 기준으로 유사도 갱신
 """
@@ -32,11 +32,10 @@ melody_freqs :  각 시간 스텝에 해당하는 주파수,  각 시간 스텝�
 """
 변경 사항
 
-DB 에 템포 정보 넣을 필요 없다, Spotify 에서 제공하는 박자 정보 사용
+DB 에 템포 정보 넣을 필요 X, Spotify 에서 제공하는 박자 정보 사용
 """
 
-
-
+#from typing import Any
 from scipy.spatial import distance
 import librosa
 import numpy as np
@@ -145,26 +144,6 @@ def calSimilarity(tempo1, tempo2, mel_freq1, mel_freq2):
 
 
 """
-TODO : DB 에서 acousticness, danceability, instrumentalness, tempo, time_signature, mode(음계) 
-가져와서 곡의 특징 계산해서 저장
-"""
-
-"""
-acousticness, danceability, instrumentalness, tempo, time_signature, mode(음계) 정보를 바탕으로
-곡의 특징 수치화
-"""
-def calculate(acousticness, danceability, instrumentalness, tempo, time_signature, mode):
-
-    rate = [0.05, 0.05, 0.2, 0.4, 0.1, 0.2]
-    type = [ acousticness,  danceability, instrumentalness,  tempo, time_signature, mode]
-
-    result = sum(x * y for x, y in zip(rate, type))
-
-
-    return result
-
-
-"""
 TODO
 DB 에 두 곡간 유사도 정보 계산 후  저장
 """
@@ -239,21 +218,7 @@ for input_url in url:
     deleteFile(mp3_name)
 
 
-# 멜로디 정보 없을 때 
-song_1 = [ 0.172,  0.608, 0,  109.977, 4, 1]
-song_2 = [ 0.18,   0.776, 0.0000344,  149.921, 4, 0]
+"""
+-------------------------------------------------------------------------------------
+"""
 
-def test_without_melody(): 
-    song_1_character= calculate(song_1[0], song_1[1], song_1[2], song_1[3], song_1[4], song_1[5])
-
-    song_2_character= calculate(song_2[0], song_2[1], song_2[2], song_2[3], song_2[4], song_2[5])
-
-    print(f"song_1_character {song_1_character}")
-
-    print(f"song_2_character {song_2_character}")
-
-    similarity = calculate_percentage(song_1_character, song_2_character)
-
-    print(f"similarity {similarity}")
-
-test_without_melody()
