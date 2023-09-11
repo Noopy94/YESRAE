@@ -1,7 +1,18 @@
 import numpy as np
-# 그룹 1 - 발라드 ------------------
 
-## 1-1) 산들 (복면 가왕) - 응급실
+"""
+spotify API 에서 제공하는 음악에 대한 특징값 이용해서 가중치로 유사도 구하기 
+"""
+"""
+테스트 데이터
+그룹 1) 발라드
+그룹 2) 락
+그룹 3) 댄스 곡
+그룹 4) 힙합
+"""
+
+
+# 1-1) 산들 (복면 가왕) - 응급실
 test1_1 = {
     "danceability": 0.395,
     "energy": 0.348,
@@ -23,7 +34,7 @@ test1_1 = {
     "time_signature": 4
 }
 
-## 1-2) 이지 - 응급실
+# 1-2) 이지 - 응급실
 test1_2 = {
     "danceability": 0.579,
     "energy": 0.374,
@@ -46,7 +57,7 @@ test1_2 = {
 }
 
 
-## 1-3) 정승환 - 너였다면
+# 1-3) 정승환 - 너였다면
 test1_3 = {
     "danceability": 0.387,
     "energy": 0.515,
@@ -68,9 +79,9 @@ test1_3 = {
     "time_signature": 4
 }
 
-# 그룹 2 - 락 ------------------
 
-## 2-1) ellegarden - marryme
+
+# 2-1) ellegarden - marryme
 test2_1 = {
     "danceability": 0.298,
     "energy": 0.987,
@@ -92,7 +103,7 @@ test2_1 = {
     "time_signature": 4
 }
 
-## 2-2) ellegarden - supernova
+# 2-2) ellegarden - supernova
 test2_2 = {
     "danceability": 0.368,
     "energy": 0.977,
@@ -113,7 +124,7 @@ test2_2 = {
     "duration_ms": 225080,
     "time_signature": 4
 }
-## 2-3) green day - basket case
+# 2-3) green day - basket case
 test2_3 = {
     "danceability": 0.442,
     "energy": 0.943,
@@ -135,9 +146,8 @@ test2_3 = {
     "time_signature": 4
 }
 
-# 그룹 3 - 댄스 ------------------
 
-## 3-1) 르세라핌 - 안티프레자일
+# 3-1) 르세라핌 - 안티프레자일
 test3_1 = {
     "danceability": 0.879,
     "energy": 0.784,
@@ -158,7 +168,7 @@ test3_1 = {
     "duration_ms": 184444,
     "time_signature": 4
 }
-## 3-2) 르세라핌 - unforgiven
+# 3-2) 르세라핌 - unforgiven
 test3_2 = {
     "danceability": 0.795,
     "energy": 0.875,
@@ -180,7 +190,7 @@ test3_2 = {
     "time_signature": 4
 }
 
-## 3-3) 에스파 - blackmamba
+# 3-3) 에스파 - blackmamba
 test3_3 = {
     "danceability": 0.612,
     "energy": 0.912,
@@ -204,9 +214,7 @@ test3_3 = {
 
 
 
-# 그룹 4 - 힙합 ------------------
-
-## 4-1) grey - 하기나해
+# 4-1) grey - 하기나해
 test4_1 ={
     "danceability": 0.794,
     "energy": 0.62,
@@ -227,7 +235,7 @@ test4_1 ={
     "duration_ms": 228098,
     "time_signature": 4
 }
-## 4-2) 로꼬 - 감아
+# 4-2) 로꼬 - 감아
 test4_2 = {
     "danceability": 0.72,
     "energy": 0.846,
@@ -248,7 +256,7 @@ test4_2 = {
     "duration_ms": 230112,
     "time_signature": 4
 }
-## 4-3) 박재범 - all i wanna do
+# 4-3) 박재범 - all i wanna do
 test4_3 = {
     "danceability": 0.403,
     "energy": 0.724,
@@ -270,6 +278,10 @@ test4_3 = {
     "time_signature": 4
 }
 
+
+"""
+가중치 정보
+"""
 weight = {
     "acousticness"      : 0.1,
     "danceability"      : 0.1, 
@@ -285,10 +297,16 @@ weight = {
     "time_signature"    : 0.0
 }
 
+
+"""
+
+"""
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
 
-
+"""
+음악 
+"""
 class song:
     def __init__(self, acousticness = None, danceability= None, energy= None, instrumentalness= None, key= None, liveness= None
         , loudness = None, mode = None,  speechiness = None,   valence = None,  tempo = None, time_signature = None, **kwargs):
@@ -365,30 +383,30 @@ def calculate(target_song, const_song):
         else:
             difference = difference + weight[name] * abs((value -  const_song.get_value(name)))
         
-    return sigmoid( -1 * difference) * 100
+    return sigmoid( -1 * difference) * 100 * 1.577
 
 
 """
 TEST 용
 유사도 어떻게 나오는지 확인
 """
-for target_idx in range(1, 2):
+for target_idx in range(1, 5):
     for item in range(1, 4):
         target = "test" + str(target_idx) + "_" + str(item) 
 
         for const_idx in range(1, 4):
-            # 같은 군집일 때,
+            # 같은 군집일 때
             if const_idx == target_idx:
                 for const_item in range(1, 4):
                     const = "test" + str(const_idx) + "_" + str(const_item) 
-                    if target == const:
-                        pass
-                    else:
-                        target_song = song(**eval(target))
-                        const_song = song(**eval(const))
-                        
-                        similarity = calculate(target_song, const_song)
-                        print("similarity {} & {} = {:.2f}".format(target, const, similarity))
+                    # if target == const:
+                    #     pass
+                    # else:
+                    target_song = song(**eval(target))
+                    const_song = song(**eval(const))
+                    
+                    similarity = calculate(target_song, const_song)
+                    print("similarity {} & {} = {:.2f}".format(target, const, similarity))
             # 다른 군집일 때
             else:
                 for const_item in range(1, 4):
@@ -399,7 +417,7 @@ for target_idx in range(1, 2):
                         target_song = song(**eval(target))
                         const_song = song(**eval(const))
                         
-                        similarity = calculate(target_song, const_song)
+                        similarity = calculate(target_song, const_song) 
                         print("similarity {} & {} = {:.2f}".format(target, const, similarity))
 
 

@@ -1,13 +1,48 @@
 # 노맨틀 계획
+
 """
-1. spotify 30 초 미리 듣기를 다운 받는다 (구현 O, 사용 X -> Spotify 에서 30초 미리 듣기 제공하지 않는 경우 존재) 
-2. 해당 데이터를 wav로 바꾸고 음원 분석 수행 후 지운다 (구현 O, 사용 X)
-3. 음원 분석 기준 (멜로디와 박자가 유의미할 것 같음) (템포, mel_freq 구하기) (구현 O, 사용 X)
-4. 음원 분석 데이터 저장 -> 유사도를 구하기 위한 데이터  (템포 컬럼, mel_freqs 컬럼 저장) (템포 정보는 Spotify API 사용)
-5. 매일 일정한 시간이 되면 정답 곡 한개 선택 (인기도 고려) (1. cron 사용 2. 인기도 높은 곡에서 랜덤 선택 3. 인기 높은 곡과의 유사도 계산 후 저장 -> "노래ID" : 유사도 4.  순위 고래 )
-6. 정답곡을 기준으로 해당 곡과의 전체 곡의 유사도를 계산
-7. DB 에 매일 정답곡 기준으로 유사도 갱신
+==================초기 계획==================
+1. spotify 30 초 미리 듣기를 다운 받는다 (구현 O) 
+2. 해당 데이터를 wav로 바꾸고 음원 분석 수행 후 지운다 (구현 O)
+3. 음원 파일에서 음원 분석 기준(템포, mel_freq) 추출 (구현 O)
+4. 음원 분석 데이터 DB에 저장 -> 유사도를 구하기 위한 데이터  (템포 컬럼, mel_freqs 컬럼 저장) (FAST API 사용)
+5. 매일 일정한 시간이 되면 정답 곡 한개 선택 (인기도 고려) (1. cron 사용 2. 인기도 높은 곡에서 랜덤 선택 )
+6. 템포, mel_freq 기준으로 두 곡간 유사도 구하는 메소드 (구현 O)
+7. 정답곡을 기준으로 해당 곡과의 전체 곡의 유사도를 계산
+8. DB 에 매일 정답곡 기준으로 유사도 데이터 [노래 id : 유사도] 저장 (유사도 높은 순 정렬) (redis 사용)
 """
+
+
+"""
+==================변경 사항==================
+문제 : spotify 30초 미리 듣기 없는 경우가 존재 -> 음원 파일에서 템포, 멜로디 (mel_freq) 추출 불가
+대안 : spotify API 에서 제공하는 음악에 대한 특징값 이용해서 가중치로 유사도 구하기 
+        acousticness : 0 ~ 1 
+        danceability : 0 ~ 1 
+        energy : 0 ~ 1 
+        instrumentalness :  0 ~ 1 
+        key: -1 ~ 11
+        liveness ~= 0 ~ 1 
+        loudness = -60 ~ 0
+        mode : 0 ~ 1
+        speechiness : 0 ~ 1
+        tempo : not defined
+        time_signature : 3 ~ 7
+        valence : 0 ~ 1
+
+"""
+
+
+"""
+음원 박자, 멜로디 정보 분석 후 유사도 계산
+"""
+
+from scipy.spatial import distance
+import librosa
+import numpy as np
+import wget
+import os
+
 
 """
 # 박자 정보 추출
@@ -28,19 +63,6 @@ tempo : BPM (분당 박자), beat_frames : 각 박자의 프레임 위치
 melody_freqs :  각 시간 스텝에 해당하는 주파수,  각 시간 스텝에서 가장 높은 확률로 감지된 주파수
 """
 
-
-"""
-변경 사항
-
-DB 에 템포 정보 넣을 필요 X, Spotify 에서 제공하는 박자 정보 사용
-"""
-
-#from typing import Any
-from scipy.spatial import distance
-import librosa
-import numpy as np
-import wget
-import os
 
 
 """
@@ -100,13 +122,6 @@ def deleteFile(filename):
 
 
 """
-TODO : 노맨틀 정답곡 선정 어떻게 할지 고민해보기 (인기도 순위 고려)
-CRON 사용 해서 자정에 선정 -> 인기도 상위 50 에서 랜덤하게 추출해서 DB 에 저장
-"""
-
-
-
-"""
 두 곡 유사도 계산 후 반환
 템포 차이 계산, 두 곡간의 mel_freqs 간의 코사인 유사성 계산 후 템포와 mel_freq 유사성 결합해 유사도 계산
 
@@ -121,9 +136,7 @@ def calSimilarity(tempo1, tempo2, mel_freq1, mel_freq2):
     # 두 곡간의 템포 차이 계산
     tempo_difference = abs(tempo1 - tempo2)
 
-    """
-    TODO :  DB 에 mel_freq 데이터를 문자열로 저장되어 있어서 배열로 변환
-    """
+
     # mel_freq1 = np.array(eval(mel_freq1))
     # mel_freq2 = np.array(eval(mel_freq2))
 
@@ -144,29 +157,8 @@ def calSimilarity(tempo1, tempo2, mel_freq1, mel_freq2):
 
 
 """
-TODO
-DB 에 두 곡간 유사도 정보 계산 후  저장
-"""
-
-"""
-TODO 
-곡간의 수치화 정보 비교
-"""
-def calculate_percentage(character1, character2):
-
-    max_diff = 1.0
-
-    diff = abs(character1 - character2)
-
-    similarity = (max_diff - diff) / max_diff
-
-    return similarity
-
-
-
-
-"""
-TEST 용
+초기 계획 TEST 용
+url 에서 음원 파일 가져와서 박자, 멜로디 정보 추출후 유사도 계산
 """
 
 # 30초 미리 듣기 API 저장
@@ -184,7 +176,7 @@ today_song_file = root_path + today_song_name
 
 
 """
-유사도 TEST 용
+==================유사도 TEST 용==================
 """
 # for input_url in range(1):
 for input_url in url:
@@ -217,8 +209,4 @@ for input_url in url:
 
     deleteFile(mp3_name)
 
-
-"""
--------------------------------------------------------------------------------------
-"""
 
