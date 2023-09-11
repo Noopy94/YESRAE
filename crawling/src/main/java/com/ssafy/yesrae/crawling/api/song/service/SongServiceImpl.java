@@ -41,7 +41,7 @@ public class SongServiceImpl implements SongService{
         Float danceability = songInfo.getDanceability();
         Float energy = songInfo.getEnergy();
         Float instrumentalness = songInfo.getInstrumentalness();
-        Integer key = songInfo.getKey();
+        Integer tune = songInfo.getTune();
         Float liveness = songInfo.getLiveness();
         Float loudness = songInfo.getLoudness();
         Integer mode = songInfo.getMode();
@@ -68,7 +68,7 @@ public class SongServiceImpl implements SongService{
             .danceability(danceability)
             .energy(energy)
             .instrumentalness(instrumentalness)
-            .key(key)
+            .tune(tune)
             .liveness(liveness)
             .loudness(loudness)
             .mode(mode)
@@ -76,6 +76,7 @@ public class SongServiceImpl implements SongService{
             .tempo(tempo)
             .timeSignature(timeSignature)
             .valence(valence)
+            .todaySong(todaySong)
             .build();
 
         songRepository.save(song);

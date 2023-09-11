@@ -22,7 +22,7 @@ public class SongRegistPostReq {
     private float danceability;
     private float energy;
     private float instrumentalness;
-    private Integer key;
+    private Integer tune;
     private float liveness;
     private float loudness;
     private Integer mode;
