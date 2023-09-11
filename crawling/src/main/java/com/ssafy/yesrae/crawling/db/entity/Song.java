@@ -24,19 +24,19 @@ public class Song {
     @Id
     private String id;
 
-    @Column(nullable = false, length = 40)
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) CHARACTER SET UTF8")
     private String name;
 
     @Column(nullable = false, length = 40)
     private String albumId;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) CHARACTER SET UTF8")
     private String albumName;
 
     @Column(nullable = false, length = 40)
     private String artistId;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) CHARACTER SET UTF8")
     private String artistName;
 
     @Column(length = 40)
