@@ -1,7 +1,6 @@
 package com.ssafy.yesrae.domain.playlist.repository;
 
 import com.ssafy.yesrae.domain.playlist.entity.PlayList;
-import com.ssafy.yesrae.domain.playlist.entity.PlayListLike;
 import com.ssafy.yesrae.domain.playlist.entity.PlayListSong;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -6,6 +6,8 @@ import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
-public class PlayListTitleModifyPutReq {
-    String title;
+public class PlayListImgModifyPutReq {
+
+   MultipartFile img;
+
 }

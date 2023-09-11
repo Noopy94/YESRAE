@@ -55,7 +55,13 @@ public enum ErrorCode {
      */
     COMMON_SYSTEM_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "시스템 오류입니다. 잠시 후 다시 이용해주세요."),
 
-    FILE_IO_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "파일 입출력 오류입니다.");
+    FILE_IO_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "파일 입출력 오류입니다."),
+
+    PlayList_NOT_FOUND(HttpStatus.NOT_FOUND, "플레이 리스트를 찾을 수 없습니다."),
+
+    PlayListTag_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 태그를 찾을 수 없습니다.");
+
+
 
     private final HttpStatus httpStatus;
     private final String message;

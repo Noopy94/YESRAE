@@ -1,6 +1,8 @@
 package com.ssafy.yesrae.domain.playlist.entity;
 
 import com.ssafy.yesrae.common.model.BaseEntity;
+import com.ssafy.yesrae.domain.playlist.dto.request.PlayListImgModifyPutReq;
+import com.ssafy.yesrae.domain.playlist.dto.request.PlayListModifyPutReq;
 import com.ssafy.yesrae.domain.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,10 +42,10 @@ public class PlayList extends BaseEntity {
     private String description;
 
     @Column(nullable = false, columnDefinition = "BOOLEAN")
-    private boolean isPublic;
+    private Boolean isPublic;
 
     @Column(columnDefinition = "VARCHAR(255)")
-    private String img; //img url
+    private String imgUrl; //img url
 
     @CreationTimestamp
     private LocalDateTime createdData;
@@ -51,11 +53,17 @@ public class PlayList extends BaseEntity {
     @Column // 기본값 null
     private LocalDateTime deletedAt;
 
-    public void modifyPlayList(Boolean isPublic,String title, String description, String img){
-        this.isPublic = isPublic;
-        this.title = title;
-        this.description = description;
-        this.img = img;
+
+    public  void modifyPlayListImg(String imgUrl){
+
+        this.imgUrl = imgUrl;
+
+    }
+
+    public void modifyPlayList(PlayListModifyPutReq modifyInfo){
+        this.isPublic = modifyInfo.getIsPublic();
+        this.title = modifyInfo.getTitle();
+        this.description = modifyInfo.getDescription();
         this.createdData =LocalDateTime.now();
     }
 

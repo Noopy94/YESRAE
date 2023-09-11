@@ -7,9 +7,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class PlayListRegistPostReq {
+
+    Long userId;
+    Boolean isPublic;
     String title;
     String description;
-    MultipartFile img;
     List<PlayListSong> musicList;
-
 }

@@ -32,16 +32,16 @@ import org.hibernate.annotations.Where;
 public class PlayListTag extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "playlist_id")
-    private PlayList playlist;
+    @JoinColumn(name = "playList_id")
+    private PlayList playList;
 
     @Column(nullable = false, columnDefinition = "VARCHAR(40)")
-    private String tagname;
+    private String tagName;
 
     @Column // 기본값 null
     private LocalDateTime deletedAt;
 
-    public void deletePlayList() {
+    public void deletePlayListTag() {
         this.deletedAt = LocalDateTime.now();
     }
 }

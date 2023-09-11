@@ -7,11 +7,12 @@ import lombok.Data;
 @Builder
 public class PlayListGetResponse {
 
-    Long id;
-    Long user_id;
-    String title;
-    String description;
-    boolean isPublic;
-    String img; // S3에 저장된 이미지 url
+    // 아직 안쓸거임 예시코드
+//    Long id;
+//    Long user_id;
+//    String title;
+//    String description;
+//    boolean isPublic;
+//    String img; // S3에 저장된 이미지 url
 
 }

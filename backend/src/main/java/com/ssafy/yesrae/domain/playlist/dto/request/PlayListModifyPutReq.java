@@ -9,9 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class PlayListModifyPutReq {
 
     Long playListId;
+    Boolean isPublic;
     String title;
     String description;
-    MultipartFile img;
-    List<PlayListSong> musicList;
 
 }
