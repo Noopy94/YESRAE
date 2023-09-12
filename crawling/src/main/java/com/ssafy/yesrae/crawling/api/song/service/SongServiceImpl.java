@@ -3,7 +3,6 @@ package com.ssafy.yesrae.crawling.api.song.service;
 import com.ssafy.yesrae.crawling.api.song.request.SongRegistPostReq;
 import com.ssafy.yesrae.crawling.db.entity.Song;
 import com.ssafy.yesrae.crawling.db.repository.SongRepository;
-import java.time.LocalDate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +33,7 @@ public class SongServiceImpl implements SongService{
         String genre = songInfo.getGenre();
         String imgUrl = songInfo.getImgUrl();
         String previewUrl = songInfo.getPreviewUrl();
-        LocalDate releaseDate = songInfo.getReleaseDate();
+        Integer releaseYear = songInfo.getReleaseYear();
         Integer duration = songInfo.getDuration();
         Integer popularity = songInfo.getPopularity();
         Float acousticness = songInfo.getAcousticness();
@@ -61,7 +60,7 @@ public class SongServiceImpl implements SongService{
             .genre(genre)
             .imgUrl(imgUrl)
             .previewUrl(previewUrl)
-            .releaseDate(releaseDate)
+            .releaseYear(releaseYear)
             .duration(duration)
             .popularity(popularity)
             .acousticness(acousticness)

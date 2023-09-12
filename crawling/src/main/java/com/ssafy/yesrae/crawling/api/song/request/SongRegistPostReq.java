@@ -1,6 +1,5 @@
 package com.ssafy.yesrae.crawling.api.song.request;
 
-import java.time.LocalDate;
 import lombok.Data;
 
 @Data
@@ -15,7 +14,7 @@ public class SongRegistPostReq {
     private String genre;
     private String imgUrl;
     private String previewUrl;
-    private LocalDate releaseDate;
+    private Integer releaseYear;
     private Integer duration;
     private Integer popularity;
     private float acousticness;

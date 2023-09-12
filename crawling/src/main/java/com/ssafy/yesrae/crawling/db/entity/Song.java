@@ -3,7 +3,6 @@ package com.ssafy.yesrae.crawling.db.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -48,8 +47,8 @@ public class Song {
     @Column
     private String previewUrl;
 
-    @Column(nullable = false, columnDefinition = "DATE")
-    private LocalDate releaseDate;
+    @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
+    private Integer releaseYear;
 
     @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
     private Integer duration;
