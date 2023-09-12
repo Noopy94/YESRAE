@@ -59,7 +59,11 @@ public enum ErrorCode {
 
     PlayList_NOT_FOUND(HttpStatus.NOT_FOUND, "플레이 리스트를 찾을 수 없습니다."),
 
-    PlayListTag_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 태그를 찾을 수 없습니다.");
+    PlayListTag_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 태그를 찾을 수 없습니다."),
+
+    PlayListSong_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 플레이 리스트에서 해당 노래를 찾을 수 없습니다."),
+
+    PlayListLike_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 플레이 리스트 좋아요 이력을 찾을 수 없습니다.");
 
 
 

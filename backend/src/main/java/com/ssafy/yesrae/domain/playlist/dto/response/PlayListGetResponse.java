@@ -1,5 +1,6 @@
 package com.ssafy.yesrae.domain.playlist.dto.response;
 
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Data;
 
@@ -7,12 +8,13 @@ import lombok.Data;
 @Builder
 public class PlayListGetResponse {
 
-    // 아직 안쓸거임 예시코드
-//    Long id;
-//    Long user_id;
-//    String title;
-//    String description;
-//    boolean isPublic;
-//    String img; // S3에 저장된 이미지 url
+    private Long id;
+    private Long user_id;
+    private String title;
+    private String description;
+    private Long viewCount;
+    private Long likeCount;
+    private String imgUrl; // S3에 저장된 이미지 url
+    private LocalDateTime created_data;
 
 }

@@ -28,7 +28,6 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor // 모든 변수를 파라미터로 받는 생성자
 @SuperBuilder   // Builder를 보완한 Annotation. 상속 받은 필드도 build 해줌, but experimental
 @DynamicInsert  // INSERT 구문에서 null이 아닌 컬럼들만 실제로 insert
-@Where(clause = "deleted_at is null")   // 일괄적으로 적용할 where 조건. 현재 clause는 soft delete를 위함
 @Entity
 public class PlayListLike implements Serializable {
 
@@ -40,12 +39,14 @@ public class PlayListLike implements Serializable {
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "playlist_id")
-    private PlayList playlist;
+    private PlayList playList;
 
     @Column // 기본값 null
     private LocalDateTime deletedAt;
 
-    public void deletePlayList() {
+    public void setDeletedAt(){this.deletedAt = null;}
+    public void deletePlayListLike() {
         this.deletedAt = LocalDateTime.now();
     }
+
 }

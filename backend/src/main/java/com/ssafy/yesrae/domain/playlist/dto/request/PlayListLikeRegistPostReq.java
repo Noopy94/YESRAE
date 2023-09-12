@@ -6,6 +6,6 @@ import lombok.Data;
 public class PlayListLikeRegistPostReq {
 
     Long userId;
-    String tagName;
+    Long playListId;
 
 }

@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class PlayListModifyPutReq {
 
     Long playListId;
-    Boolean isPublic;
+    Integer isPublic;
     String title;
     String description;
 

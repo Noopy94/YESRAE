@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class PlayListRegistPostReq {
 
     Long userId;
-    Boolean isPublic;
+    Integer isPublic;
     String title;
     String description;
     List<PlayListSong> musicList;

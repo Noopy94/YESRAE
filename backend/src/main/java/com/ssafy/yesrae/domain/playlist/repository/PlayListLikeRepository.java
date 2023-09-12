@@ -2,6 +2,8 @@ package com.ssafy.yesrae.domain.playlist.repository;
 
 import com.ssafy.yesrae.domain.playlist.entity.PlayList;
 import com.ssafy.yesrae.domain.playlist.entity.PlayListLike;
+import com.ssafy.yesrae.domain.user.entity.User;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,5 +15,7 @@ public interface PlayListLikeRepository extends JpaRepository<PlayListLike, Long
 
     // PlayList에 있는 PlayListLike 숫자세기
     Long countByPlayList(PlayList playList);
+
+    PlayListLike findByUserAndPlayList(User user, PlayList playList);
 
 }

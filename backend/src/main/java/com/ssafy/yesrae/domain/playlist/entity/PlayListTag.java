@@ -35,7 +35,7 @@ public class PlayListTag extends BaseEntity {
     @JoinColumn(name = "playList_id")
     private PlayList playList;
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(40)")
+    @Column(nullable = false, length = 40)
     private String tagName;
 
     @Column // 기본값 null

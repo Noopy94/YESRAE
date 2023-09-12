@@ -6,6 +6,6 @@ import lombok.Data;
 public class PlayListLikeDeletePutReq {
 
     Long userId;
-    String tagName;
+    Long playListId;
 
 }

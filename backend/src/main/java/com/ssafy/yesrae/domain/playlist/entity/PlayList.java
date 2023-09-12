@@ -35,16 +35,16 @@ public class PlayList extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(40)")
+    @Column(nullable = false, length = 40)
     private String title;
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(100)")
+    @Column(nullable = false, length = 100)
     private String description;
 
-    @Column(nullable = false, columnDefinition = "BOOLEAN")
-    private Boolean isPublic;
+    @Column(nullable = false, columnDefinition = "TINYINT")
+    private Integer isPublic; // 0 flase  1 true
 
-    @Column(columnDefinition = "VARCHAR(255)")
+    @Column   // 255가 기본이라서
     private String imgUrl; //img url
 
     @CreationTimestamp
@@ -53,11 +53,15 @@ public class PlayList extends BaseEntity {
     @Column // 기본값 null
     private LocalDateTime deletedAt;
 
+    @Column(nullable = false, columnDefinition = "BIGINT DEFAULT 0")
+    private Long viewCount;
+
+    @Column(nullable = false, columnDefinition = "BIGINT DEFAULT 0")
+    private Long likeCount;
+
 
     public  void modifyPlayListImg(String imgUrl){
-
         this.imgUrl = imgUrl;
-
     }
 
     public void modifyPlayList(PlayListModifyPutReq modifyInfo){
@@ -70,4 +74,15 @@ public class PlayList extends BaseEntity {
     public void deletePlayList() {
         this.deletedAt = LocalDateTime.now();
     }
+
+    public void incrementLikeCount() {
+        this.likeCount++;
+    }
+
+    public void decrementLikeCount() {this.likeCount--;}
+
+    public void incrementViewCount() {
+        this.viewCount++;
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.ssafy.yesrae.domain.playlist.entity;
 
 import com.ssafy.yesrae.common.model.BaseEntity;
+import com.ssafy.yesrae.domain.song.entity.Song;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -29,24 +30,26 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor // 모든 변수를 파라미터로 받는 생성자
 @SuperBuilder   // Builder를 보완한 Annotation. 상속 받은 필드도 build 해줌, but experimental
 @DynamicInsert  // INSERT 구문에서 null이 아닌 컬럼들만 실제로 insert
-@Where(clause = "deleted_at is null")   // 일괄적으로 적용할 where 조건. 현재 clause는 soft delete를 위함
 @Entity
 public class PlayListSong implements Serializable {
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
-    private PlayList playlist;
+    private PlayList playList;
 
-    // @Id
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "song_id")
-//    private Song song;
+    @Id
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "song_id")
+    private Song song;
 
     @Column // 기본값 null
     private LocalDateTime deletedAt;
 
-    public void deletePlayList() {
+    public void setDeletedAt() {this.deletedAt = null;}
+
+    public void deletePlayListSong() {
         this.deletedAt = LocalDateTime.now();
     }
+
 }
