@@ -1,6 +1,7 @@
-from sqlalchemy import Boolean, Column, Integer, String, DateTime, Float
+from sqlalchemy import Boolean, Column, Integer, String, DateTime, Float, Double, ForeignKey
 
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import declarative_base, relationship
+
 
 Base = declarative_base()
 
@@ -33,10 +34,42 @@ class Song(Base):
     time_signature = Column(Integer, nullable=False, default=0)
     valence = Column(Float, nullable=False, default=0)
     today_song = Column(bool, nullable=False , default=False)
+
+
+    quiz = relationship('SongQuiz', back_populates= "song")
+    rank = relationship('SongQuizRank', back_populates="song")
+
     
     def __repr__(self):
         return f"Song(id={self.id}, name ={self.name}, album={self.album}, album_name={self.album_name}, artist = {self.artist}, artist_name ={self.artist_name} "
 
 
 
+class SongQuiz(Base):
 
+    __tablename__ = "song_quiz"
+
+    id = Column(String, primary_key= True, nullable=False)
+    similarity = Column(Double, nullable=False , default=0)
+
+    song_id = Column(String, ForeignKey('song.id'), nullable=False) 
+
+    song = relationship('Song', back_populates='quiz')
+
+    def __repr__(self):
+        return f"SongQuiz(id={self.id}, similarity ={self.similarity}"
+
+
+class SongQuizRank(Base):
+
+    __tablename__ = "song_quiz_rank"
+
+    id = Column(String, primary_key= True, nullable=False)
+    rank = Column(Double, nullable=False , default=0)
+
+    song_id = Column(String, ForeignKey('song.id'), nullable=False) 
+    song = relationship('Song', back_populates= 'rank')
+
+
+    def __repr__(self):
+        return f"SongQuizRank(id={self.id}, rank ={self.rank}"

@@ -307,7 +307,7 @@ def sigmoid(x):
 """
 음악 
 """
-class song:
+class Song:
     def __init__(self, acousticness = None, danceability= None, energy= None, instrumentalness= None, key= None, liveness= None
         , loudness = None, mode = None,  speechiness = None,   valence = None,  tempo = None, time_signature = None, **kwargs):
         """
@@ -402,8 +402,8 @@ for target_idx in range(1, 5):
                     # if target == const:
                     #     pass
                     # else:
-                    target_song = song(**eval(target))
-                    const_song = song(**eval(const))
+                    target_song = Song(**eval(target))
+                    const_song = Song(**eval(const))
                     
                     similarity = calculate(target_song, const_song)
                     print("similarity {} & {} = {:.2f}".format(target, const, similarity))
@@ -414,8 +414,8 @@ for target_idx in range(1, 5):
                     if target == const:
                         raise RuntimeError("Different cluster should not be same")
                     else:
-                        target_song = song(**eval(target))
-                        const_song = song(**eval(const))
+                        target_song = Song(**eval(target))
+                        const_song = Song(**eval(const))
                         
                         similarity = calculate(target_song, const_song) 
                         print("similarity {} & {} = {:.2f}".format(target, const, similarity))

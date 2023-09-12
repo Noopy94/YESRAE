@@ -1,12 +1,16 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+import aioredis
 
 
-DATABASE_URL = "mysql+pymysql://root:ssafy@localhost:3306/yesrae?charset=utf8mb4"
+DATABASE_URL = "mysql+pymysql://ssafy:ssafy@localhost:3306/yesrae"
 
-engine = create_engine(DATABASE_URL, echo = True, encoding = 'utf-8')
+engine = create_engine(DATABASE_URL, echo = True)
 
 SessionFactory = sessionmaker(autocommit = False, autoflush=False, bind=engine)
+
+REDIS_URL = "redis://localhost"
+redis = aioredis.from_url(REDIS_URL)
 
 def get_db():
 
@@ -16,3 +20,4 @@ def get_db():
         yield session
     finally:
         session.close()
+
