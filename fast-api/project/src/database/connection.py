@@ -1,16 +1,24 @@
+import os
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-import aioredis
+from dotenv import load_dotenv
 
 
-DATABASE_URL = "mysql+pymysql://ssafy:ssafy@localhost:3306/yesrae"
+load_dotenv()
+
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_HOST = os.getenv("DB_HOST")
+DB_PORT = os.getenv("DB_PORT")
+
+
+DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/yesrae"
 
 engine = create_engine(DATABASE_URL, echo = True)
 
 SessionFactory = sessionmaker(autocommit = False, autoflush=False, bind=engine)
 
-REDIS_URL = "redis://localhost"
-redis = aioredis.from_url(REDIS_URL)
 
 def get_db():
 

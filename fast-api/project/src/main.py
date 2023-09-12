@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Depends
-from requests import Session
+
 
 from database.connection import get_db
 

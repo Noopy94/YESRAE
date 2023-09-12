@@ -11,7 +11,6 @@ spotify API 에서 제공하는 음악에 대한 특징값 이용해서 가중�
 그룹 4) 힙합
 """
 
-
 # 1-1) 산들 (복면 가왕) - 응급실
 test1_1 = {
     "danceability": 0.395,
@@ -53,9 +52,8 @@ test1_2 = {
     "track_href": "https://api.spotify.com/v1/tracks/5XVEx1pTUR4T7ABtXoGGxx",
     "analysis_url": "https://api.spotify.com/v1/audio-analysis/5XVEx1pTUR4T7ABtXoGGxx",
     "duration_ms": 226548,
-    "time_signature": 4 
+    "time_signature": 4
 }
-
 
 # 1-3) 정승환 - 너였다면
 test1_3 = {
@@ -78,8 +76,6 @@ test1_3 = {
     "duration_ms": 272847,
     "time_signature": 4
 }
-
-
 
 # 2-1) ellegarden - marryme
 test2_1 = {
@@ -146,7 +142,6 @@ test2_3 = {
     "time_signature": 4
 }
 
-
 # 3-1) 르세라핌 - 안티프레자일
 test3_1 = {
     "danceability": 0.879,
@@ -212,10 +207,8 @@ test3_3 = {
     "time_signature": 4
 }
 
-
-
 # 4-1) grey - 하기나해
-test4_1 ={
+test4_1 = {
     "danceability": 0.794,
     "energy": 0.62,
     "key": 0,
@@ -278,38 +271,41 @@ test4_3 = {
     "time_signature": 4
 }
 
-
 """
 가중치 정보
 """
 weight = {
-    "acousticness"      : 0.1,
-    "danceability"      : 0.1, 
-    "energy"            : 0.3, 
-    "instrumentalness"  : 0.02, 
-    "key"               : 0.05,
-    "liveness"          : 0.05,
-    "loudness"          : 0.05,
-    "mode"              : 0.0,
-    "speechiness"       : 0.1,
-    "valence"           : 0.3,
-    "tempo"             : 0.5,
-    "time_signature"    : 0.0
+    "acousticness": 0.1,
+    "danceability": 0.1,
+    "energy": 0.3,
+    "instrumentalness": 0.02,
+    "key": 0.05,
+    "liveness": 0.05,
+    "loudness": 0.05,
+    "mode": 0.0,
+    "speechiness": 0.1,
+    "valence": 0.3,
+    "tempo": 0.5,
+    "time_signature": 0.0
 }
 
-
 """
 
 """
+
+
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
+
 
 """
 음악 
 """
-class Song:
-    def __init__(self, acousticness = None, danceability= None, energy= None, instrumentalness= None, key= None, liveness= None
-        , loudness = None, mode = None,  speechiness = None,   valence = None,  tempo = None, time_signature = None, **kwargs):
+
+
+class SongInfo:
+    def __init__(self, acousticness=None, danceability=None, energy=None, instrumentalness=None, key=None, liveness=None
+                 , loudness=None, mode=None, speechiness=None, valence=None, tempo=None, time_signature=None, **kwargs):
         """
         acousticness : 0 ~ 1 
         danceability : 0 ~ 1 
@@ -338,14 +334,13 @@ class Song:
         self.time_signature = time_signature
 
         self.feature_list = list(self.__dict__.keys())
-        self._index = 0 
-        
+        self._index = 0
 
     def __iter__(self):
-        return self 
-    
+        return self
+
     def __next__(self):
-        if self._index < len(self.feature_list): 
+        if self._index < len(self.feature_list):
             attr_name = self.feature_list[self._index]
             # feature 변수 에 해당하는 값
             attr_value = getattr(self, attr_name)
@@ -353,37 +348,39 @@ class Song:
             return attr_name, attr_value
         else:
             raise StopIteration
-        
+
     def len_feature(self):
         return len(self.feature_list)
-    
+
     def get_value(self, vals):
         return self.__dict__[vals]
-    
+
 
 """
 TODO : DB 에서 acousticness, danceability, energy, instrumentalness, key, liveness, loudness, mode, speechiness, tempo, time_signature, valence
 가져와서 곡의 특징 계산해서 저장
 """
 
-    
 """
 기준 곡과 다른 곡의 유사도 측정
 
 """
-def calculate(target_song, const_song):
 
-    difference = 0
-    # find the rate weights
-    for idx, (name, value) in enumerate(target_song):
-        if name == "tempo" or name == "key" or name == "time_signature":
-            # difference 가 커지면, 2 곡간의 차이는 크다
-            # tempo같은 경우는 같으면 differerence가 1, 다르면 0에 가깝게
-            difference = difference - weight[name] * 1 / (1 + abs((value -  const_song.get_value(name)))) 
-        else:
-            difference = difference + weight[name] * abs((value -  const_song.get_value(name)))
-        
-    return sigmoid( -1 * difference) * 100 * 1.577
+
+class CalculateUtil:
+
+    def calculate(self, target_song: SongInfo, const_song: SongInfo):
+        difference = 0
+        # find the rate weights
+        for idx, (name, value) in enumerate(target_song):
+            if name == "tempo" or name == "key" or name == "time_signature":
+                # difference 가 커지면, 2 곡간의 차이는 크다
+                # tempo같은 경우는 같으면 differerence가 1, 다르면 0에 가깝게
+                difference = difference - weight[name] * 1 / (1 + abs((value - const_song.get_value(name))))
+            else:
+                difference = difference + weight[name] * abs((value - const_song.get_value(name)))
+
+        return sigmoid(-1 * difference) * 100 * 1.577
 
 
 """
@@ -392,34 +389,30 @@ TEST 용
 """
 for target_idx in range(1, 5):
     for item in range(1, 4):
-        target = "test" + str(target_idx) + "_" + str(item) 
+        target = "test" + str(target_idx) + "_" + str(item)
 
         for const_idx in range(1, 4):
             # 같은 군집일 때
             if const_idx == target_idx:
                 for const_item in range(1, 4):
-                    const = "test" + str(const_idx) + "_" + str(const_item) 
+                    const = "test" + str(const_idx) + "_" + str(const_item)
                     # if target == const:
                     #     pass
                     # else:
-                    target_song = Song(**eval(target))
-                    const_song = Song(**eval(const))
-                    
-                    similarity = calculate(target_song, const_song)
+                    target_song = SongInfo(**eval(target))
+                    const_song = SongInfo(**eval(const))
+
+                    similarity = CalculateUtil.calculate(target_song, const_song)
                     print("similarity {} & {} = {:.2f}".format(target, const, similarity))
             # 다른 군집일 때
             else:
                 for const_item in range(1, 4):
-                    const = "test" + str(const_idx) + "_" + str(const_item) 
+                    const = "test" + str(const_idx) + "_" + str(const_item)
                     if target == const:
                         raise RuntimeError("Different cluster should not be same")
                     else:
-                        target_song = Song(**eval(target))
-                        const_song = Song(**eval(const))
-                        
-                        similarity = calculate(target_song, const_song) 
+                        target_song = SongInfo(**eval(target))
+                        const_song = SongInfo(**eval(const))
+
+                        similarity = CalculateUtil.calculate(target_song, const_song)
                         print("similarity {} & {} = {:.2f}".format(target, const, similarity))
-
-
-
-
