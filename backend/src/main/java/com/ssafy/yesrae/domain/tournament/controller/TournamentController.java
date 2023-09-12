@@ -47,20 +47,20 @@ public class TournamentController {
         return CommonResponse.success(findRes.orElseThrow(NoDataException::new));
     }
 
-    /**
-     *  이상형 월드컵 결과를 DB에 저장하는 API
-     */
-    @GetMapping
-    public CommonResponse<?> registTournamentResult(FindTournamentSongGetReq findTournamentSongGetReq) {
-
-        log.info("TournamentController_findTournamentSong_start: "
-            + findTournamentSongGetReq.toString());
-
-        Optional<List<TournamentSongFindRes>> findRes = Optional.ofNullable(
-            tournamentService.findTournamentSong(findTournamentSongGetReq));
-
-        log.info("TournamentController_findTournamentSong_end: "
-            + findRes.toString());
-        return CommonResponse.success(findRes.orElseThrow(NoDataException::new));
-    }
+//    /**
+//     *  이상형 월드컵 결과를 DB에 저장하는 API
+//     */
+//    @GetMapping
+//    public CommonResponse<?> registTournamentResult(FindTournamentSongGetReq findTournamentSongGetReq) {
+//
+//        log.info("TournamentController_findTournamentSong_start: "
+//            + findTournamentSongGetReq.toString());
+//
+//        Optional<List<TournamentSongFindRes>> findRes = Optional.ofNullable(
+//            tournamentService.findTournamentSong(findTournamentSongGetReq));
+//
+//        log.info("TournamentController_findTournamentSong_end: "
+//            + findRes.toString());
+//        return CommonResponse.success(findRes.orElseThrow(NoDataException::new));
+//    }
 }
