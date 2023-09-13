@@ -10,21 +10,21 @@ class Song(Base):
 
     id = Column(String, primary_key=True, nullable=False)
     name = Column(String, nullable=False)
-    album = Column(String, nullable=False)
+    album_id = Column(String, nullable=False)
     album_name = Column(String, nullable=False)
-    artist = Column(String, nullable=False)
+    artist_id = Column(String, nullable=False)
     artist_name = Column(String, nullable=False)
     genre = Column(String)
     img_url = Column(String, nullable=False)
     preview_url = Column(String, nullable=False)
-    release_date = Column(DateTime(), nullable=False)
+    release_year = Column(DateTime(), nullable=False)
     duration = Column(Integer, nullable=False, default=0)
     popularity = Column(Integer, nullable=False, default=0)
     acousticness = Column(Float, nullable=False, default=0)
     danceability = Column(Float, nullable=False, default=0)
     energy = Column(Float, nullable=False, default=0)
     instrumentalness = Column(Float, nullable=False, default=0)
-    key = Column(Integer, nullable=False, default=0)
+    tune = Column(Integer, nullable=False, default=0)
     liveness = Column(Float, nullable=False, default=0)
     loudness = Column(Float, nullable=False, default=0)
     mode = Column(Integer, nullable=False, default=0)
@@ -32,13 +32,23 @@ class Song(Base):
     tempo = Column(Float, nullable=False, default=0)
     time_signature = Column(Integer, nullable=False, default=0)
     valence = Column(Float, nullable=False, default=0)
-    today_song = Column(bool, nullable=False, default=False)
+    today_song = Column(Boolean, nullable=False, default=False)
+
+    
 
     quiz = relationship('SongQuiz', back_populates="song")
     rank = relationship('SongQuizRank', back_populates="song")
 
     def __repr__(self):
         return f"Song(id={self.id}, name ={self.name}, album={self.album}, album_name={self.album_name}, artist = {self.artist}, artist_name ={self.artist_name} "
+    
+    def set_today_song(self) -> "Song":
+        self.today_song = True
+        return self
+    
+    def unset_today_song(self) -> "Song":
+        self.today_song = False
+        return self
 
 
 class SongQuiz(Base):

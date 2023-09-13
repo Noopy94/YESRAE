@@ -387,9 +387,14 @@ class CalculateUtil:
 TEST 용
 유사도 어떻게 나오는지 확인
 """
+calculate_util = CalculateUtil()
+
+"""
 for target_idx in range(1, 5):
     for item in range(1, 4):
         target = "test" + str(target_idx) + "_" + str(item)
+
+
 
         for const_idx in range(1, 4):
             # 같은 군집일 때
@@ -402,7 +407,7 @@ for target_idx in range(1, 5):
                     target_song = SongInfo(**eval(target))
                     const_song = SongInfo(**eval(const))
 
-                    similarity = CalculateUtil.calculate(target_song, const_song)
+                    similarity = calculate_util.calculate(target_song, const_song)
                     print("similarity {} & {} = {:.2f}".format(target, const, similarity))
             # 다른 군집일 때
             else:
@@ -414,5 +419,6 @@ for target_idx in range(1, 5):
                         target_song = SongInfo(**eval(target))
                         const_song = SongInfo(**eval(const))
 
-                        similarity = CalculateUtil.calculate(target_song, const_song)
+                        similarity = calculate_util.calculate(target_song, const_song)
                         print("similarity {} & {} = {:.2f}".format(target, const, similarity))
+"""

@@ -1,17 +1,18 @@
-from fastapi import Depends
+
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from database.orm import Song
-from database.connection import get_db
+from database.connection import SessionFactory
 from database.orm import SongQuiz, SongQuizRank
 import redis
 
 
 class SongRepository:
 
-    def __init__(self, session: Session = Depends(get_db)):
-        self.session = session
+
+    # def __init__(self):
+    #     self.session = get_db()
 
     """
     노래 ID 에 해당하는 곡 정보 조회
@@ -25,10 +26,11 @@ class SongRepository:
     """
     노래 제목에 해당하는 곡 정보 조회
     :song_name  : 음악 제목
+    이름 같은 곡 존재 가능
     """
 
-    def get_song_by_name(self, song_name: str) -> Song | None:
-        return self.session.scalars(select(Song).where(Song.name == song_name))
+    def get_song_by_name(self, song_name: str) -> List[Song] | None:
+        return self.session.scalars(select(Song).where(Song.name == song_name)).all()
 
     """
     노래 30초 멜로디 정보 저장
@@ -46,7 +48,11 @@ class SongRepository:
     """
 
     def get_popular_song(self) -> List[Song] | None:
-        return self.session.scalars(select(Song).order_by(Song.popularity.desc()).limit(100)).all()
+        try : 
+            session = SessionFactory()
+            return session.query(Song).order_by(Song.popularity.desc()).limit(100).all()
+        finally:
+            session.close()
 
     """
     유사도 계산을 위해 정답곡을 제외한 전체곡 조회
@@ -54,6 +60,41 @@ class SongRepository:
 
     def get_songs_except_today_song(self, id: str) -> List[Song]:
         return self.session.scalars(select(Song).filter(Song.id != id)).all()
+
+
+    """
+    정답곡으로 설정되어 있는 곡 조회
+    """
+    def get_today_song(self) -> Song:
+        try : 
+            session = SessionFactory()
+            return session.query(Song).where(Song.today_song == True)
+            # return self.session.scalar(select(Song).where(Song.today_song == True))
+        finally:
+            session.close()
+
+    """
+    정답곡으로 설정
+    """
+    def update_today_song(self, song: Song) -> Song:
+        song.set_today_song()
+        self.session.add(instance=song)
+        self.session.commit()
+        self.session.refresh(instance=song)
+        return song
+    
+    """
+    정답곡 설정 해제 -> 이전 곡이 되어서
+    """
+    def update_prior_song(self, song : Song) -> Song:
+        song.unset_today_song()
+        self.session.add(instance=song)
+        self.session.commit()
+        self.session.refresh(instance=song)
+        return song
+
+    
+
 
 
 class SongQuizRepository:
@@ -68,18 +109,28 @@ class SongQuizRepository:
         key = song_quiz.id
         self.rd.set(key, song_quiz.similarity)
         return song_quiz
+    
+    """
+    노래 ID 에 해당하는 유사도 조회
+    """
+    def get_song_similarity(self, song_id) -> Song | None:
+        return self.rd.get(song_id)
 
 
 class SongQuizRankRepository:
-    def __init__(self, session: Session = Depends(get_db)):
-        self.session = session
+    def __init__(self, rd: redis.Redis):
+        self.rd = rd
 
     """
     노래 ID, 순위 저장
     """
 
     def save_song_quiz_rank(self, song_quiz_rank: SongQuizRank) -> SongQuizRank:
-        self.session.add(instance=song_quiz_rank)
-        self.session.commit()
-        self.session.refresh(instance=song_quiz_rank)
+        key = song_quiz_rank.id
+        self.rd.set(key, song_quiz_rank.rank)
         return song_quiz_rank
+    """
+    노래 ID 에 해당하는 순위 조회
+    """
+    def get_song_rank(self, song_id) -> Song | None:
+        return self.rd.get(song_id)
