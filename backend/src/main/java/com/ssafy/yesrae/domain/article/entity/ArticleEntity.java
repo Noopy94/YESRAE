@@ -7,12 +7,16 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.Where;
 
+import java.text.DateFormat;
+import java.time.LocalDateTime;
+
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @SuperBuilder
 @DynamicInsert
+@Table(name = "article")
 @Where(clause = "deleted_at is null")
 @Entity
 public class ArticleEntity extends BaseEntity {
@@ -34,5 +38,6 @@ public class ArticleEntity extends BaseEntity {
     @Column(nullable = false)
     private int category;
 
-
+    @Column(name = "created_date",nullable = false, columnDefinition = "TIMESTAMP")
+    private LocalDateTime createdDate;
 }
