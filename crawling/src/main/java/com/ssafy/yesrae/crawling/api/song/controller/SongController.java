@@ -13,7 +13,6 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -31,7 +30,7 @@ public class SongController {
 
     StringBuilder sb;
     BufferedReader br;
-    private static final String code = "AQDg-3RubDk2YgB0Ds1qwm1IpcP21PUThUSLglGA1GQIVGqzfCa6Q99-kcSXW77X41AXXCLZUNGiBwUDLs7Uvuras0wxSWYncUrlG7nUgE3pGSz7ch-iLey22wV-xKxSxZ0MYJNw0doJx7h2rWapvnYV1WaZyzLf5KAoLcSY";
+    private static final String code = "AQBwgneVqOxOgl2S5WK9OMAwc7i7DgDnvd7-doCrC52aRzyqpcBgY5T8o1SglDd4lWQUjDFnBQZIqjazsq825LnvhDhmBX-wGAOcQ2Zdkp0smbgpShHAt3GMt5jLPoXCay4Gs84pW6h-kwMwAYQL6u43cdKRgZCUsilaQZnU";
     private static String Atoken = "";
     private static String Rtoken = "";
     private static final String authorization = "Basic YzU1MWJmMjYyNDllNGFjZjllYWIxNzBhZWQ2MTRmYWI6MzIxZjMwZGIyYjI0NGMzZTk5MjRlZDc5Y2Q3Zjk5Mjk=";
@@ -39,7 +38,7 @@ public class SongController {
     XSSFWorkbook workbook;
 
     private static int sheetSize;
-    private static final int startIndex=29;
+    private static final int startIndex=0;
 
     JsonParser parser = new JsonParser();
 
@@ -122,7 +121,10 @@ public class SongController {
             String text = sb.toString();
             JsonObject object = JsonParser.parseString(text).getAsJsonObject();
             System.out.println(object.toString());
-            Atoken = object.get("access_token").toString();
+            Atoken = object.get("access_token").getAsString();
+            if(object.has("refresh_token")){
+                Rtoken = object.get("refresh_token").getAsString();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -242,9 +244,9 @@ public class SongController {
                         }
                     }
                     // 한글가능성
-                    String artistName = URLDecoder.decode(artist.get("name").getAsString(),StandardCharsets.UTF_8);
+                    String artistName = artist.get("name").getAsString();
                     // 한글가능성
-                    String albumName = URLDecoder.decode(ObjectAlbum.get("name").getAsString(),StandardCharsets.UTF_8);
+                    String albumName = ObjectAlbum.get("name").getAsString();
                     String albumId = ObjectAlbum.get("id").getAsString();
                     // 여기 단순히 date가 아니라 20616 같은 경우도 있음... -> string 4글자 잘라서 int로 넣자
                     Integer releaseYear = Integer.parseInt(ObjectAlbum.get("release_date").getAsString().substring(0,4));
@@ -293,15 +295,11 @@ public class SongController {
                         JsonObject ObjectTrack = tracks.get(trackIndex).getAsJsonObject();
                         String trackId = ObjectTrack.get("id").getAsString();
                         // 한글가능성
-                        String trackName = URLDecoder.decode(ObjectTrack.get("name").getAsString(),StandardCharsets.UTF_8);
+                        String trackName = ObjectTrack.get("name").getAsString();
                         Integer duration = ObjectTrack.get("duration_ms").getAsInt();
-                        String previewURL;
-                        Object preview = ObjectTrack.get("preview_url");
-                        if(preview == null){
-                            previewURL = null;
-                        }else{
-                            // 이유는 모르겠지만 ""가 붙는다.
-                            previewURL = preview.toString().replaceAll("\"","");
+                        String previewURL = null;
+                        if(!ObjectTrack.get("preview_url").isJsonNull()){
+                            previewURL = ObjectTrack.get("preview_url").getAsString();
                         }
                         /* 여기서부터는 인기도 받아오기위한 getTrack */
                         URL TrackURL = new URL("https://api.spotify.com/v1/tracks/"+trackId);
