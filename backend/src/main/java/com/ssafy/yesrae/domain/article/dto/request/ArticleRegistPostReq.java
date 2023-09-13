@@ -16,5 +16,5 @@ public class ArticleRegistPostReq {
     // 제목
     private String title;
     // 카테고리
-    private int category;
+    private Integer category;
 }
