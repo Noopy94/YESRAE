@@ -1,4 +1,5 @@
-package com.ssafy.yesrae.crawling.db.entity;
+package com.ssafy.yesrae.domain.song.entity;
+
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -77,7 +78,7 @@ public class Song {
 
     // 음정 정보입니다. 찾지 못한 경우 -1입니다.
     @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
-    private Integer key;
+    private Integer tune;
 
     // 0.8이상이면 라이브일 확률이 높습니다.
     @Column(nullable = false, columnDefinition = "FLOAT DEFAULT 0")
