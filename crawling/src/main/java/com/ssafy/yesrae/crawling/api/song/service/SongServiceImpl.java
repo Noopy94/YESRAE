@@ -3,7 +3,6 @@ package com.ssafy.yesrae.crawling.api.song.service;
 import com.ssafy.yesrae.crawling.api.song.request.SongRegistPostReq;
 import com.ssafy.yesrae.crawling.db.entity.Song;
 import com.ssafy.yesrae.crawling.db.repository.SongRepository;
-import java.time.LocalDate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,14 +33,14 @@ public class SongServiceImpl implements SongService{
         String genre = songInfo.getGenre();
         String imgUrl = songInfo.getImgUrl();
         String previewUrl = songInfo.getPreviewUrl();
-        LocalDate releaseDate = songInfo.getReleaseDate();
+        Integer releaseYear = songInfo.getReleaseYear();
         Integer duration = songInfo.getDuration();
         Integer popularity = songInfo.getPopularity();
         Float acousticness = songInfo.getAcousticness();
         Float danceability = songInfo.getDanceability();
         Float energy = songInfo.getEnergy();
         Float instrumentalness = songInfo.getInstrumentalness();
-        Integer key = songInfo.getKey();
+        Integer tune = songInfo.getTune();
         Float liveness = songInfo.getLiveness();
         Float loudness = songInfo.getLoudness();
         Integer mode = songInfo.getMode();
@@ -49,6 +48,7 @@ public class SongServiceImpl implements SongService{
         Float tempo = songInfo.getTempo();
         Integer timeSignature = songInfo.getTimeSignature();
         Float valence = songInfo.getValence();
+        Boolean todaySong = songInfo.getTodaySong();
 
         Song song = Song.builder()
             .id(id)
@@ -60,14 +60,14 @@ public class SongServiceImpl implements SongService{
             .genre(genre)
             .imgUrl(imgUrl)
             .previewUrl(previewUrl)
-            .releaseDate(releaseDate)
+            .releaseYear(releaseYear)
             .duration(duration)
             .popularity(popularity)
             .acousticness(acousticness)
             .danceability(danceability)
             .energy(energy)
             .instrumentalness(instrumentalness)
-            .key(key)
+            .tune(tune)
             .liveness(liveness)
             .loudness(loudness)
             .mode(mode)
@@ -75,6 +75,7 @@ public class SongServiceImpl implements SongService{
             .tempo(tempo)
             .timeSignature(timeSignature)
             .valence(valence)
+            .todaySong(todaySong)
             .build();
 
         songRepository.save(song);
