@@ -279,7 +279,7 @@ weight = {
     "danceability": 0.1,
     "energy": 0.3,
     "instrumentalness": 0.02,
-    "key": 0.05,
+    "tune": 0.05,
     "liveness": 0.05,
     "loudness": 0.05,
     "mode": 0.0,
@@ -304,7 +304,7 @@ def sigmoid(x):
 
 
 class SongInfo:
-    def __init__(self, acousticness=None, danceability=None, energy=None, instrumentalness=None, key=None, liveness=None
+    def __init__(self, acousticness=None, danceability=None, energy=None, instrumentalness=None, tune=None, liveness=None
                  , loudness=None, mode=None, speechiness=None, valence=None, tempo=None, time_signature=None, **kwargs):
         """
         acousticness : 0 ~ 1 
@@ -324,7 +324,7 @@ class SongInfo:
         self.danceability = danceability
         self.energy = energy
         self.instrumentalness = instrumentalness
-        self.key = key
+        self.tune = tune
         self.liveness = liveness
         self.loudness = loudness
         self.mode = mode
@@ -372,13 +372,17 @@ class CalculateUtil:
     def calculate(self, target_song: SongInfo, const_song: SongInfo):
         difference = 0
         # find the rate weights
-        for idx, (name, value) in enumerate(target_song):
-            if name == "tempo" or name == "key" or name == "time_signature":
+
+
+        for idx, (name, value) in enumerate(const_song):
+
+            if name == "tempo" or name == "tune" or name == "time_signature":
                 # difference 가 커지면, 2 곡간의 차이는 크다
                 # tempo같은 경우는 같으면 differerence가 1, 다르면 0에 가깝게
-                difference = difference - weight[name] * 1 / (1 + abs((value - const_song.get_value(name))))
+                difference = difference - weight[name] * 1 / (1 + abs((value - target_song.get_value(name))))
             else:
-                difference = difference + weight[name] * abs((value - const_song.get_value(name)))
+
+                difference = difference + weight[name] * abs((value - target_song.get_value(name)))
 
         return sigmoid(-1 * difference) * 100 * 1.577
 

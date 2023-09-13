@@ -76,7 +76,7 @@ class SongQuizRank(Base):
     __tablename__ = "song_quiz_rank"
 
     id = Column(String, primary_key=True, nullable=False)
-    rank = Column(Double, nullable=False, default=0)
+    rank = Column(Integer, nullable=False, default=0)
 
     song_id = Column(String, ForeignKey('song.id'), nullable=False)
     song = relationship('Song', back_populates='rank')

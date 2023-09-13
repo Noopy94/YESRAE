@@ -8,18 +8,15 @@ from database.orm import Song
 from database.connection import SessionFactory
 from database.orm import SongQuiz, SongQuizRank
 import redis
+import datetime
 
 
 class SongRepository:
 
-
-    # def __init__(self):
-    #     self.session = get_db()
-
     """
     노래 ID 에 해당하는 곡 정보 조회
     :song_id  : 음악 ID
-    return    음악 ID에 해당하는 음악 정보 조회 
+    :return    음악 ID에 해당하는 음악 정보 조회
     """
 
     def get_song_by_id(self, song_id: str) -> Song | None:
@@ -30,11 +27,10 @@ class SongRepository:
             session.close()
 
     """
-    노래 제목에 해당하는 곡 정보 조회
+    노래 name 에 해당하는 곡 정보 조회
     :song_name  : 음악 제목
-    이름 같은 곡 존재 가능
+    :return 이름 같은 곡 존재 가능
     """
-
     def get_song_by_name(self, song_name: str) -> List[Song] | None:
         try:
             session = SessionFactory()
@@ -61,7 +57,6 @@ class SongRepository:
     """
     인기도 높은 100 곡 DB 에서 조회
     """
-
     def get_popular_song(self) -> List[Song] | None:
         try : 
             session = SessionFactory()
@@ -91,7 +86,7 @@ class SongRepository:
         finally:
             session.close()
 
-    """
+    """ 
     정답곡으로 설정
     """
     def update_today_song(self, song: Song) -> Song:
@@ -124,40 +119,52 @@ class SongRepository:
 
 
 class SongQuizRepository:
-    """
-    def __init__(self, rd: redis.Redis):
-        self.rd = rd
-    """
 
     """
     노래 ID, 노래 유사도 저장
+    redis 에 key : [내일날짜_song_quiz], field : [노래 id] , value : [유사도] 저장
     """
 
     def save_song_quiz(self, song_quiz: SongQuiz) -> SongQuiz:
-        redis_config()
-        key = song_quiz.id
-        self.rd.set(key, song_quiz.similarity)
+        rd = redis_config()
+        # 내일
+        new_day = datetime.date.today() + datetime.timedelta(days=1)
+
+        key = str(new_day) + "_song_quiz"
+        field = song_quiz.id
+        value = song_quiz.similarity
+
+        rd.hset(key, field, value)
         return song_quiz
     
     """
     노래 ID 에 해당하는 유사도 조회
     """
     def get_song_similarity(self, song_id) -> Song | None:
-        return self.rd.get(song_id)
+        rd = redis_config()
+        return rd.get(song_id)
 
 
 class SongQuizRankRepository:
-    def __init__(self, rd: redis.Redis):
-        self.rd = rd
+
 
     """
     노래 ID, 순위 저장
     """
 
     def save_song_quiz_rank(self, song_quiz_rank: SongQuizRank) -> SongQuizRank:
-        key = song_quiz_rank.id
-        self.rd.set(key, song_quiz_rank.rank)
+        rd = redis_config()
+        # 내일
+        new_day = datetime.date.today() + datetime.timedelta(days=1)
+
+        key = str(new_day) + "_song_quiz_rank"
+        field = song_quiz_rank.id
+        value = song_quiz_rank.rank
+
+        rd.hset(key, field, value)
         return song_quiz_rank
+
+
     """
     노래 ID 에 해당하는 순위 조회
     """

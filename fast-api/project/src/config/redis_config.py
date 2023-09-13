@@ -12,5 +12,8 @@ def redis_config():
         REDIS_DATABASE = os.getenv("REDIS_DATABASE")
         rd = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DATABASE)
 
+        return rd
+
     except:
         print("redis 연결 실패")
+

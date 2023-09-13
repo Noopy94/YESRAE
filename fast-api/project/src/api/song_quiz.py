@@ -8,13 +8,11 @@ from service.song_quiz import SongQuizService
 router = APIRouter()
 
 """
-TODO
 오후 11시 30분이 되면 오늘의 예스래 노래 선택
-CRON 사용 해서 오후 11시 30분에 선정 -> 인기도 상위 100 에서 랜덤하게  선정
-선택한 곡 기준으로 유사도 계산 후 저장 (redis 사용) , 유사도 순위 저장
+CRON 사용 해서 오후 11시 30분에 선정 -> 인기도 상위 100 에서 랜덤하게 예스레 노래 선정
+선택한 곡 기준으로 유사도 계산해 redis 에 저장
+계산한 유사도를 바탕으로 순위 reids 에 저장
 """
-
-
 def get_song_quiz_service():
     return SongQuizService()
 
@@ -31,7 +29,8 @@ def song_quiz_update(
 scheduler = BackgroundScheduler()
 
 # 스케줄러 실행되는 것 확인 완료
-scheduler.add_job(song_quiz_update, "cron", hour=21, minute = 31)
+# 시간 설정
+scheduler.add_job(song_quiz_update, "cron", hour= 1, minute =30)
 
 scheduler.start()
 
