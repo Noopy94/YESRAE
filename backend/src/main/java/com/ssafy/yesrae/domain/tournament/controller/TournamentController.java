@@ -3,6 +3,7 @@ package com.ssafy.yesrae.domain.tournament.controller;
 import com.ssafy.yesrae.common.exception.NoDataException;
 import com.ssafy.yesrae.common.model.CommonResponse;
 import com.ssafy.yesrae.domain.tournament.dto.request.FindTournamentSongGetReq;
+import com.ssafy.yesrae.domain.tournament.dto.request.RegistTournamentResultPostReq;
 import com.ssafy.yesrae.domain.tournament.dto.response.TournamentSongFindRes;
 import com.ssafy.yesrae.domain.tournament.service.TournamentService;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -47,20 +49,19 @@ public class TournamentController {
         return CommonResponse.success(findRes.orElseThrow(NoDataException::new));
     }
 
-//    /**
-//     *  이상형 월드컵 결과를 DB에 저장하는 API
-//     */
-//    @GetMapping
-//    public CommonResponse<?> registTournamentResult(FindTournamentSongGetReq findTournamentSongGetReq) {
-//
-//        log.info("TournamentController_findTournamentSong_start: "
-//            + findTournamentSongGetReq.toString());
-//
-//        Optional<List<TournamentSongFindRes>> findRes = Optional.ofNullable(
-//            tournamentService.findTournamentSong(findTournamentSongGetReq));
-//
-//        log.info("TournamentController_findTournamentSong_end: "
-//            + findRes.toString());
-//        return CommonResponse.success(findRes.orElseThrow(NoDataException::new));
-//    }
+    /**
+     *  이상형 월드컵 결과를 DB에 저장하는 API
+     */
+    @PostMapping
+    public CommonResponse<?> registTournamentResult(
+        RegistTournamentResultPostReq registTournamentResultPostReq) {
+
+        log.info("TournamentController_registTournamentResult_start: "
+            + registTournamentResultPostReq.toString());
+
+
+
+        log.info("TournamentController_registTournamentResult_end: success");
+        return CommonResponse.success(SUCCESS);
+    }
 }
