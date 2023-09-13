@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 public class PlayListImgModifyPutReq {
 
+   Long playListId;
    MultipartFile img;
 
 }

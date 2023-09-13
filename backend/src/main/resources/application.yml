@@ -22,3 +22,4 @@ logging.level:
   org.hibernate.SQL: debug
 # org.hibernate.type: trace          #Spring boot 2.x, hibernate5
 # org.hibernate.orm.jdbc.bind: trace #Spring boot 3.x, hibernate6
+

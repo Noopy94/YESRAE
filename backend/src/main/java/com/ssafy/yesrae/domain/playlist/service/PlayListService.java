@@ -16,17 +16,19 @@ import com.ssafy.yesrae.domain.playlist.entity.PlayListLike;
 import com.ssafy.yesrae.domain.playlist.entity.PlayListSong;
 import com.ssafy.yesrae.domain.playlist.entity.PlayListTag;
 import com.ssafy.yesrae.domain.song.entity.Song;
+import java.io.IOException;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface PlayListService {
 
-    PlayList registPlayList(PlayListRegistPostReq registInfo);
+    PlayList registPlayList(PlayListRegistPostReq registInfo, MultipartFile img) throws IOException;
 
     void modifyPlayList(PlayListModifyPutReq modifyInfo);
 
-    void modifyPlayListImg(PlayListImgModifyPutReq modifyInfo);
+    void modifyPlayListImg(PlayListImgModifyPutReq modifyInfo) throws IOException;
 
     void deletePlayList(PlayListDeletePutReq deleteInfo);
 
@@ -65,5 +67,8 @@ public interface PlayListService {
 
     // 태그로 플레이 리스트 검색, 페이지네이션 필요
     Page<PlayListGetResponse> searchByTagPlayList(String keyword, Pageable pageable);
+
+    // 플레이 리스트 좋아요 수 세기
+    Long countPlayListLike(Long playListId);
 
 }

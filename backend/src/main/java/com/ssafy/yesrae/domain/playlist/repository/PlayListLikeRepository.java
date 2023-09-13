@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 public interface PlayListLikeRepository extends JpaRepository<PlayListLike, Long> {
 
     // PlayList에 있는 PlayListLike 숫자세기
-    Long countByPlayList(PlayList playList);
+    Long countByPlayListIdAndDeletedAtIsNull(Long playListId);
 
     PlayListLike findByUserAndPlayList(User user, PlayList playList);
 

@@ -85,4 +85,6 @@ public class PlayList extends BaseEntity {
         this.viewCount++;
     }
 
+    public void setImgUrl(String imgUrl){this.imgUrl = imgUrl;}
+
 }

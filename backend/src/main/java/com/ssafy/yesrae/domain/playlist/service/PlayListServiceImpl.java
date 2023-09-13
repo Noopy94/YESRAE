@@ -1,10 +1,12 @@
 package com.ssafy.yesrae.domain.playlist.service;
 
 
+import com.amazonaws.services.s3.transfer.Upload;
 import com.ssafy.yesrae.common.exception.playList.PlayListLikeNotFoundException;
 import com.ssafy.yesrae.common.exception.playList.PlayListNotFoundException;
 import com.ssafy.yesrae.common.exception.playList.PlayListTagNotFoundException;
 import com.ssafy.yesrae.common.exception.user.UserNotFoundException;
+import com.ssafy.yesrae.common.util.S3Uploader;
 import com.ssafy.yesrae.domain.playlist.dto.request.PlayListDeletePutReq;
 import com.ssafy.yesrae.domain.playlist.dto.request.PlayListImgModifyPutReq;
 import com.ssafy.yesrae.domain.playlist.dto.request.PlayListLikeDeletePutReq;
@@ -28,6 +30,7 @@ import com.ssafy.yesrae.domain.song.entity.Song;
 import com.ssafy.yesrae.domain.user.entity.User;
 import com.ssafy.yesrae.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -37,6 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Transactional
@@ -46,47 +50,50 @@ public class PlayListServiceImpl implements PlayListService{
     private final PlayListLikeRepository playListLikeRepository;
     private final PlayListRepository playListRepository;
     private final PlayListSongRepository playListSongRepository;
-
     private final PlayListTagRepository playListTagRepository;
-
     private final UserRepository userRepository;
+    private final S3Uploader s3Uploader;
 
     public PlayListServiceImpl(PlayListLikeRepository playListLikeRepository,
         PlayListRepository playListRepository, PlayListSongRepository playListSongRepository,
-        PlayListTagRepository playListTagRepository, UserRepository userRepository) {
+        PlayListTagRepository playListTagRepository, UserRepository userRepository,
+        S3Uploader s3Uploader) {
         this.playListLikeRepository = playListLikeRepository;
         this.playListRepository = playListRepository;
         this.playListSongRepository = playListSongRepository;
         this.playListTagRepository = playListTagRepository;
         this.userRepository = userRepository;
+        this.s3Uploader = s3Uploader;
     }
 
     // playList 등록
     @Override
-    public PlayList registPlayList(PlayListRegistPostReq registInfo) {
+    public PlayList registPlayList(PlayListRegistPostReq registInfo, MultipartFile img)
+        throws IOException {
 
         log.info("PlayListService_PlayListRegist_start : " + registInfo.toString());
 
         User user = userRepository.findById(registInfo.getUserId())
             .orElseThrow(UserNotFoundException::new);
+
         String title =registInfo.getTitle();
         String description =registInfo.getDescription();
         Integer isPublic = registInfo.getIsPublic();
-        // img url, 이미지 저장 로직은 아직 미완
-        String imgUrl = "";
 
         PlayList playList = PlayList.builder()
             .user(user)
             .isPublic(isPublic)
             .title(title)
             .description(description)
-            .imgUrl(imgUrl)
             .build();
 
+        if (img != null) {
+            String imgUrl = s3Uploader.upload(img, "playListId"+playList.getId());
+            playList.setImgUrl(imgUrl);
+        }
+
         playListRepository.save(playList);
-
         log.info("PlayListService_PlayListRegist_end : " + playList.toString());
-
         return playList;
 
     }
@@ -105,8 +112,20 @@ public class PlayListServiceImpl implements PlayListService{
     }
 
     @Override
-    public void modifyPlayListImg(PlayListImgModifyPutReq modifyInfo) {
+    public void modifyPlayListImg(PlayListImgModifyPutReq modifyInfo) throws IOException {
         //이미지 변경 로직, 이미지 저장 하면서, 새로운 url 제공
+
+        log.info("PlayListService_PlayListImgModify_start : " + modifyInfo.toString());
+
+        PlayList playList = playListRepository.findById(modifyInfo.getPlayListId())
+            .orElseThrow(PlayListNotFoundException::new);
+        MultipartFile img = modifyInfo.getImg();
+
+        if (img != null) {
+            String imgUrl = s3Uploader.upload(img, "playListId"+modifyInfo.getPlayListId());
+            playList.setImgUrl(imgUrl);
+        }
+        log.info("PlayListService_PlayListImgModify_end : " + playList.toString());
 
     }
 
@@ -368,6 +387,16 @@ public class PlayListServiceImpl implements PlayListService{
         return playListGetResponses;
     }
 
+    @Override
+    public Long countPlayListLike(Long playListId)  {
+
+        log.info("PlayListService_CountPlayListLike_start : " + playListId);
+
+        Long result = playListLikeRepository.countByPlayListIdAndDeletedAtIsNull(playListId);
+
+        log.info("PlayListService_CountPlayListLike_end : " + result);
+        return result;
+    }
 
 
 }
