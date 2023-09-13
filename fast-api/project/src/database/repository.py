@@ -2,6 +2,8 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from typing import List, Optional
+
+from config.redis_config import redis_config
 from database.orm import Song
 from database.connection import SessionFactory
 from database.orm import SongQuiz, SongQuizRank
@@ -21,7 +23,11 @@ class SongRepository:
     """
 
     def get_song_by_id(self, song_id: str) -> Song | None:
-        return self.session.scalars(select(Song).where(Song.id == song_id))
+        try:
+            session = SessionFactory()
+            return session.query(Song).filter(Song.id == song_id)
+        finally:
+            session.close()
 
     """
     노래 제목에 해당하는 곡 정보 조회
@@ -30,18 +36,27 @@ class SongRepository:
     """
 
     def get_song_by_name(self, song_name: str) -> List[Song] | None:
-        return self.session.scalars(select(Song).where(Song.name == song_name)).all()
+        try:
+            session = SessionFactory()
+            return session.query(Song).where(Song.name == song_name).all()
+        finally:
+            session.close()
 
     """
     노래 30초 멜로디 정보 저장
     :song   :음악 
     """
-
+    """
     def update_melody(self, song: Song) -> Song | None:
-        self.session.add(instance=song)
-        self.session.commit()
-        self.session.refresh(instance=song)
-        return song
+        try:
+            session = SessionFactory()
+            session.add(instance=song)
+            session.commit()
+            session.refresh(instance=song)
+            return song
+        finally:
+            session.close()
+    """
 
     """
     인기도 높은 100 곡 DB 에서 조회
@@ -59,17 +74,20 @@ class SongRepository:
     """
 
     def get_songs_except_today_song(self, id: str) -> List[Song]:
-        return self.session.scalars(select(Song).filter(Song.id != id)).all()
+        try:
+            session = SessionFactory()
+            return session.query(Song).filter(Song.id != id).all()
+        finally:
+            session.close()
 
 
     """
     정답곡으로 설정되어 있는 곡 조회
     """
-    def get_today_song(self) -> Song:
+    def get_today_song(self) -> Song | None:
         try : 
             session = SessionFactory()
-            return session.query(Song).where(Song.today_song == True)
-            # return self.session.scalar(select(Song).where(Song.today_song == True))
+            return session.query(Song).filter(Song.today_song == True).first()
         finally:
             session.close()
 
@@ -77,35 +95,46 @@ class SongRepository:
     정답곡으로 설정
     """
     def update_today_song(self, song: Song) -> Song:
-        song.set_today_song()
-        self.session.add(instance=song)
-        self.session.commit()
-        self.session.refresh(instance=song)
-        return song
+        try:
+            session = SessionFactory()
+            song.set_today_song()
+            session.add(instance=song)
+            session.commit()
+            session.refresh(instance=song)
+            return song
+        finally:
+            session.close()
     
     """
     정답곡 설정 해제 -> 이전 곡이 되어서
     """
     def update_prior_song(self, song : Song) -> Song:
-        song.unset_today_song()
-        self.session.add(instance=song)
-        self.session.commit()
-        self.session.refresh(instance=song)
-        return song
+        try:
+            session = SessionFactory()
+            song.unset_today_song()
+            session.add(instance=song)
+            session.commit()
+            session.refresh(instance=song)
+            return song
+        finally:
+            session.close()
 
     
 
 
 
 class SongQuizRepository:
+    """
     def __init__(self, rd: redis.Redis):
         self.rd = rd
+    """
 
     """
     노래 ID, 노래 유사도 저장
     """
 
     def save_song_quiz(self, song_quiz: SongQuiz) -> SongQuiz:
+        redis_config()
         key = song_quiz.id
         self.rd.set(key, song_quiz.similarity)
         return song_quiz

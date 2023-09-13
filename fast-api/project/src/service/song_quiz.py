@@ -10,7 +10,7 @@ from schema.response import SongQuizSchema
 from util.song_calculate import SongInfo, CalculateUtil
 import redis
 from database.connection import get_db
-
+from fastapi.encoders import jsonable_encoder
 
 
 
@@ -18,6 +18,8 @@ class SongQuizService:
     today_song: Song
 
     song_repository = SongRepository()
+    song_quiz_repository = SongQuizRepository()
+    calculate_util = CalculateUtil()
 
     def __init__(self) -> None:
         redis_config()
@@ -57,8 +59,15 @@ class SongQuizService:
         # DB 에서 이전날 prior_today_song -> today_song 을 false 로 변환
         # 조금전에 선정한 today_song -> true 로 변환
         prior_today_song : Song = self.song_repository.get_today_song()
-        prior_today_song = self.song_repository.update_prior_song(prior_today_song)
+
+        if prior_today_song is None:
+            print("이전의 오늘의 노래를 찾지 못했습니다.")
+        else:
+            print("prior_song_name", prior_today_song.name)
+            prior_today_song = self.song_repository.update_prior_song(prior_today_song)
+
         today_song = self.song_repository.update_today_song(today_song)
+        print("오늘의 노래", today_song.name)
 
         return today_song
 
@@ -68,25 +77,30 @@ class SongQuizService:
     """
     def save_similarity(
             self,
-            song_repository: SongRepository ,
-            song_quiz_repository : SongQuizRepository,
-            calculate_util: CalculateUtil
+            # song_repository: SongRepository ,
+            # song_quiz_repository : SongQuizRepository,
+            # calculate_util: CalculateUtil
     ):
         # 정답곡
         song_id: str = self.today_song.id
 
-        songs: List[Song] = song_repository.get_songs_except_today_song(song_id) 
+        songs: List[Song] = self.song_repository.get_songs_except_today_song(song_id)
 
-        today_song_info: SongInfo = SongInfo(**eval(self.today_song))
+        json_today_song = jsonable_encoder(self.today_song)
+
+        #today_song_info: SongInfo = SongInfo(**eval(json_today_song))
+        today_song_info: SongInfo = SongInfo(json_today_song)
 
         for song in songs:
-            compare_song_info = SongInfo(**eval(song))
+            json_compare_song = jsonable_encoder(song)
+            # compare_song_info = SongInfo(**eval(song))
+            compare_song_info = SongInfo(json_compare_song)
 
-            similarity: float = calculate_util.calculate(today_song_info, compare_song_info)
+            similarity: float = self.calculate_util.calculate(today_song_info, compare_song_info)
 
             song_quiz: SongQuiz = SongQuiz.create(id=song.id, similarity=similarity)
 
-            saved_song_quiz : SongQuiz = song_quiz_repository.save_song_quiz(song_quiz)
+            saved_song_quiz : SongQuiz = self.song_quiz_repository.save_song_quiz(song_quiz)
 
         
         # 이전 테이블에 있는 데이터들 지우기 DB 지우기
@@ -99,7 +113,7 @@ class SongQuizService:
     def save_song_rank(
             self, 
             rd : redis.Redis,
-            song_quiz_rank_repository : SongQuizRankRepository 
+            # song_quiz_rank_repository : SongQuizRankRepository
     ):
         # 다시 redis 에 저장된 모든 정보를 가져와서 순위를 정렬해서 저장해야 한다.
         count = 1000
@@ -112,7 +126,7 @@ class SongQuizService:
 
             song_quiz_rank : SongQuizRank = SongQuizRank.create(id=rank_data.keys, rank=rank_data.values)
 
-            saved_song_quiz_rank : SongQuizRank = song_quiz_rank_repository.save_song_quiz_rank(song_quiz_rank)
+            saved_song_quiz_rank : SongQuizRank = self.song_quiz_rank_repository.save_song_quiz_rank(song_quiz_rank)
 
         
     """
