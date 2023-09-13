@@ -1,5 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: Pretendard, Inter, system-ui, Avenir, Helvetica, Arial,
+      sans-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply text-sm text-white bg-gradient-to-r from-yesrae-0 to-yesrae-100 hover:bg-none hover:text-yesrae-100 focus:outline-none focus:ring-indigo-800 focus:ring-1;
+  }
+  .btn-secondary {
+    @apply text-sm text-white bg-gray-400;
+  }
+}
+
+@font-face {
+  font-family: Pretendard;
+  font-weight: 45 920;
+  font-style: normal;
+  font-display: swap;
+  src:
+    local('Pretendard Variable'),
+    url('assets/font/PretendardVariable.woff2') format('woff2-variations');
+}
+
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Pretendard, Inter, system-ui, Avenir, Helvetica, Arial,
+    sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
