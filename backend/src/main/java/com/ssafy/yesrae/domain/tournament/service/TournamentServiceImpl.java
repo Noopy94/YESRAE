@@ -1,6 +1,7 @@
 package com.ssafy.yesrae.domain.tournament.service;
 
 import com.ssafy.yesrae.domain.tournament.dto.request.FindTournamentSongGetReq;
+import com.ssafy.yesrae.domain.tournament.dto.request.RegistTournamentResultPostReq;
 import com.ssafy.yesrae.domain.tournament.dto.response.TournamentSongFindRes;
 import com.ssafy.yesrae.domain.tournament.repository.TournamentSongRepository;
 import java.util.List;
@@ -39,5 +40,15 @@ public class TournamentServiceImpl implements TournamentService{
 
         log.info("TemplateService_findAllTemplate_end: success");
         return findRes;
+    }
+
+    /**
+     * 이상형 월드컵 결과를 DB에 저장하는 API
+     * @param registTournamentResultPostReq : 이상형 월드컵 진행 결과 1등 ~ 4등
+     */
+    @Override
+    public void registTournamentResult(
+        RegistTournamentResultPostReq registTournamentResultPostReq) {
+        
     }
 }
