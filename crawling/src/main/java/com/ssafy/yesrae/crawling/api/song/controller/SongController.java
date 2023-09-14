@@ -27,27 +27,21 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 public class SongController {
+    private static final String code = "AQCCykvtI5ISC10En7db80mqMOvHd4QvTFftzgZJZHDwDqCi9U3Bw2EgJXHMNZDpdmUFpnesVj6JoaQe1YkJA5tnJwLVcAkmKV6mLNM4pXW3JTx_2CBruMJYrSPSFryJJ2YSdmL4dVhNQSlkZYDuiVo-PTunkUNO0LoAuJr3";
+    private static final String authorization = "Basic YzU1MWJmMjYyNDllNGFjZjllYWIxNzBhZWQ2MTRmYWI6MzIxZjMwZGIyYjI0NGMzZTk5MjRlZDc5Y2Q3Zjk5Mjk=";
+    private static final int startIndex=747;
 
     StringBuilder sb;
     BufferedReader br;
-    private static final String code = "AQBwgneVqOxOgl2S5WK9OMAwc7i7DgDnvd7-doCrC52aRzyqpcBgY5T8o1SglDd4lWQUjDFnBQZIqjazsq825LnvhDhmBX-wGAOcQ2Zdkp0smbgpShHAt3GMt5jLPoXCay4Gs84pW6h-kwMwAYQL6u43cdKRgZCUsilaQZnU";
     private static String Atoken = "";
     private static String Rtoken = "";
-    private static final String authorization = "Basic YzU1MWJmMjYyNDllNGFjZjllYWIxNzBhZWQ2MTRmYWI6MzIxZjMwZGIyYjI0NGMzZTk5MjRlZDc5Y2Q3Zjk5Mjk=";
-
     XSSFWorkbook workbook;
-
     private static int sheetSize;
-    private static final int startIndex=0;
-
     JsonParser parser = new JsonParser();
-
     private final SongService songService;
-
     public SongController(SongService songService) {
         this.songService = songService;
     }
-
     HashMap<String, Boolean> artistsMap = new HashMap<>();
     Deque<String> artistQueue = new ArrayDeque<>();
 
@@ -88,11 +82,6 @@ public class SongController {
     }
 
     public void changeToken(){
-        try (FileOutputStream out = new FileOutputStream(new File("C:\\dev\\A304\\crawling\\", "singer.xlsx"))) {
-            workbook.write(out);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         try {
             URL RefreshURL = new URL("https://accounts.spotify.com/api/token");
             String line;
@@ -139,14 +128,16 @@ public class SongController {
             workbook = new XSSFWorkbook(file);
             XSSFSheet sheet = workbook.getSheetAt(0);
             sheetSize = sheet.getLastRowNum()+1;
-            for (int sheetIndex = startIndex; sheetIndex<sheetSize;sheetIndex++) {
+            for (int sheetIndex = 0; sheetIndex<sheetSize;sheetIndex++) {
                 String artistId = sheet.getRow(sheetIndex).getCell(0).getStringCellValue();
                 artistsMap.put(artistId,true);
                 artistQueue.add(artistId);
-                System.out.println("엑셀 하나 읽었고 지금 가수 수는"+artistQueue.size());
             }
             file.close();
-
+            for(int i=0;i<startIndex;i++){
+                artistQueue.poll();
+            }
+            System.out.println("엑셀 읽었고 지금 가수 수는"+artistQueue.size());
             while(!artistQueue.isEmpty()){
                 String artistId = artistQueue.poll();
                 URL RelatedURL = new URL("https://api.spotify.com/v1/artists/"+artistId+"/related-artists");
@@ -155,18 +146,19 @@ public class SongController {
                 * 물론 set에 없을 경우에만. */
                 String RelatedLine;
                 sb = new StringBuilder();
-                HttpURLConnection Relatedconn = (HttpURLConnection) RelatedURL.openConnection();
-                Relatedconn.setRequestMethod("GET");
-                Relatedconn.setRequestProperty("Authorization", "Bearer "+Atoken);
-                if (Relatedconn.getResponseCode() >= 200 && Relatedconn.getResponseCode() <= 300) {
-                    br = new BufferedReader(new InputStreamReader(Relatedconn.getInputStream(),
+                HttpURLConnection relatedConn = (HttpURLConnection) RelatedURL.openConnection();
+                relatedConn.setRequestMethod("GET");
+                relatedConn.setRequestProperty("Authorization", "Bearer "+Atoken);
+                if (relatedConn.getResponseCode() >= 200 && relatedConn.getResponseCode() <= 300) {
+                    br = new BufferedReader(new InputStreamReader(relatedConn.getInputStream(),
                         StandardCharsets.UTF_8));
-                }else if (Relatedconn.getResponseCode() == 429){
+                }else if (relatedConn.getResponseCode() == 429){
+                    System.out.println("너무 자주했어요 잠깐쉽니다");
                     Thread.sleep(10000);
                     artistQueue.addFirst(artistId);
                     continue;
                     // 너무 자주 api 보냈을 때
-                }else if (Relatedconn.getResponseCode() == 401){
+                }else if (relatedConn.getResponseCode() == 401){
                     // 토큰 문제
                     System.out.println("한시간 됐네요 토큰 갱신합니다.");
                     changeToken();
@@ -174,14 +166,14 @@ public class SongController {
                     continue;
                 }
                 else {
-                    System.out.println("연관 아티스트 ID 오류남"+Relatedconn.getResponseCode());
-                    break;
+                    System.out.println("연관 아티스트 ID 오류남"+relatedConn.getResponseMessage());
+                    continue;
                 }
                 while ((RelatedLine = br.readLine()) != null) {
                     sb.append(RelatedLine);
                 }
                 br.close();
-                Relatedconn.disconnect();
+                relatedConn.disconnect();
                 String RelatedText = sb.toString();
                 JsonArray relatedArtists = parser.parse(RelatedText).getAsJsonObject().getAsJsonArray("artists");
                 for(int relatedIndex =0;relatedIndex<relatedArtists.size();relatedIndex++){
@@ -196,6 +188,11 @@ public class SongController {
                         System.out.println("artist 추가되었고 추가된 아티스트는 "+relatedArtist.get("name").getAsString()+"남은 인원은"+artistQueue.size());
                     }
                 }
+                try (FileOutputStream out = new FileOutputStream(new File("C:\\dev\\A304\\crawling\\", "singer.xlsx"))) {
+                    workbook.write(out);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 URL ArtistURL = new URL("https://api.spotify.com/v1/artists/"+artistId+"/albums?include_groups=single,album&market=KR&limit=50");
                 /* 가수 ID 검색으로 받아야 할 것
                  * : 가수 이름, 앨범 ID, 앨범 이름, 발매 시기
@@ -209,6 +206,7 @@ public class SongController {
                     br = new BufferedReader(new InputStreamReader(conn.getInputStream(),
                         StandardCharsets.UTF_8));
                 }else if (conn.getResponseCode() == 429){
+                    System.out.println("너무 자주했어요 잠깐쉽니다");
                     Thread.sleep(10000);
                     artistQueue.addFirst(artistId);
                     continue;
@@ -221,7 +219,7 @@ public class SongController {
                     continue;
                 }
                 else {
-                    System.out.println("아티스트 ID 오류남"+conn.getResponseCode());
+                    System.out.println("아티스트 ID 오류남"+conn.getResponseMessage());
                     break;
                 }
                 while ((line = br.readLine()) != null) {
@@ -262,6 +260,7 @@ public class SongController {
                         br = new BufferedReader(new InputStreamReader(conn.getInputStream(),
                             StandardCharsets.UTF_8));
                     }else if (conn.getResponseCode() == 429){
+                        System.out.println("너무 자주했어요 잠깐쉽니다");
                         Thread.sleep(10000);
                         albumIndex--;
                         continue;
@@ -274,7 +273,7 @@ public class SongController {
                         continue;
                     }
                     else {
-                        System.out.println("앨범 오류남"+conn.getResponseCode());
+                        System.out.println("앨범 오류남"+conn.getResponseMessage());
                         break;
                     }
                     while ((line = br.readLine()) != null) {
@@ -291,7 +290,6 @@ public class SongController {
                     }
                     JsonArray tracks = trackObject.get("tracks").getAsJsonObject().getAsJsonArray("items");
                     for(int trackIndex=0;trackIndex<tracks.size();trackIndex++){
-                        Thread.sleep(1000+((int)Math.random()*100+1));
                         JsonObject ObjectTrack = tracks.get(trackIndex).getAsJsonObject();
                         String trackId = ObjectTrack.get("id").getAsString();
                         // 한글가능성
@@ -311,6 +309,7 @@ public class SongController {
                             br = new BufferedReader(new InputStreamReader(conn.getInputStream(),
                                 StandardCharsets.UTF_8));
                         }else if (conn.getResponseCode() == 429){
+                            System.out.println("너무 자주했어요 잠깐쉽니다");
                             Thread.sleep(10000);
                             trackIndex--;
                             continue;
@@ -323,7 +322,7 @@ public class SongController {
                             continue;
                         }
                         else {
-                            System.out.println("인기도 오류남"+conn.getResponseCode());
+                            System.out.println("인기도 오류남"+conn.getResponseMessage());
                             break;
                         }
                         while ((line = br.readLine()) != null) {
@@ -347,7 +346,7 @@ public class SongController {
                             br = new BufferedReader(new InputStreamReader(conn.getInputStream(),
                                 StandardCharsets.UTF_8));
                         }else if (conn.getResponseCode() == 429){
-                            System.out.println("너무 api 자주 보냈어요");
+                            System.out.println("너무 자주했어요 잠깐쉽니다");
                             Thread.sleep(10000);
                             trackIndex--;
                             continue;
