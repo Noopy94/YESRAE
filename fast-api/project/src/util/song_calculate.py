@@ -289,19 +289,18 @@ weight = {
     "time_signature": 0.0
 }
 
-"""
 
 """
-
-
+시그모이드 함수
+:x
+"""
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
 
 
 """
-음악 
+음악 특성 관련된 클래스
 """
-
 
 class SongInfo:
     def __init__(self, acousticness=None, danceability=None, energy=None, instrumentalness=None, tune=None, liveness=None
@@ -311,7 +310,7 @@ class SongInfo:
         danceability : 0 ~ 1 
         energy : 0 ~ 1 
         instrumentalness :  0 ~ 1 
-        key: -1 ~ 11
+        tune: -1 ~ 11
         liveness ~= 0 ~ 1 
         loudness = -60 ~ 0
         mode : 0 ~ 1
@@ -356,17 +355,10 @@ class SongInfo:
         return self.__dict__[vals]
 
 
-"""
-TODO : DB 에서 acousticness, danceability, energy, instrumentalness, key, liveness, loudness, mode, speechiness, tempo, time_signature, valence
-가져와서 곡의 특징 계산해서 저장
-"""
 
 """
 기준 곡과 다른 곡의 유사도 측정
-
 """
-
-
 class CalculateUtil:
 
     def calculate(self, target_song: SongInfo, const_song: SongInfo):
@@ -378,7 +370,7 @@ class CalculateUtil:
 
             if name == "tempo" or name == "tune" or name == "time_signature":
                 # difference 가 커지면, 2 곡간의 차이는 크다
-                # tempo같은 경우는 같으면 differerence가 1, 다르면 0에 가깝게
+                # tempo같은 경우는 같으면 differerence가 1, 다르면 0에 가까워진다
                 difference = difference - weight[name] * 1 / (1 + abs((value - target_song.get_value(name))))
             else:
 

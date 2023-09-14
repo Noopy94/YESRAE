@@ -1,5 +1,5 @@
 
-from sqlalchemy import select
+from sqlalchemy import select, Integer, Float
 from sqlalchemy.orm import Session
 from typing import List, Optional
 
@@ -34,7 +34,7 @@ class SongRepository:
     def get_song_by_name(self, song_name: str) -> List[Song] | None:
         try:
             session = SessionFactory()
-            return session.query(Song).where(Song.name == song_name).all()
+            return session.query(Song).filter(Song.name.startswith(song_name)).all()
         finally:
             session.close()
 
@@ -72,6 +72,17 @@ class SongRepository:
         try:
             session = SessionFactory()
             return session.query(Song).filter(Song.id != id).all()
+        finally:
+            session.close()
+
+
+    """
+    전체곡 조회
+    """
+    def get_songs(self) -> List[Song]:
+        try:
+            session = SessionFactory()
+            return session.query(Song).all()
         finally:
             session.close()
 
@@ -127,7 +138,7 @@ class SongQuizRepository:
 
     def save_song_quiz(self, song_quiz: SongQuiz) -> SongQuiz:
         rd = redis_config()
-        # 내일
+        # 내일 날짜 
         new_day = datetime.date.today() + datetime.timedelta(days=1)
 
         key = str(new_day) + "_song_quiz"
@@ -140,9 +151,16 @@ class SongQuizRepository:
     """
     노래 ID 에 해당하는 유사도 조회
     """
-    def get_song_similarity(self, song_id) -> Song | None:
+    def get_song_similarity(self, song_id : str, key : str) -> Float | None:
         rd = redis_config()
-        return rd.get(song_id)
+
+        similarity_datas = rd.hgetall(key)
+
+        # redis 에 바이트 문자열로 저장되기 때문에 encode
+        song_id_byte = song_id.encode('utf-8')
+        similarity = similarity_datas.get(song_id_byte).decode('utf-8')
+
+        return similarity
 
 
 class SongQuizRankRepository:
@@ -150,11 +168,12 @@ class SongQuizRankRepository:
 
     """
     노래 ID, 순위 저장
+    redis 에 key : [내일날짜_song_quiz_rank], field : [노래 id] , value : [순위] 저장
     """
-
     def save_song_quiz_rank(self, song_quiz_rank: SongQuizRank) -> SongQuizRank:
         rd = redis_config()
-        # 내일
+        
+        # 내일 날짜
         new_day = datetime.date.today() + datetime.timedelta(days=1)
 
         key = str(new_day) + "_song_quiz_rank"
@@ -168,5 +187,19 @@ class SongQuizRankRepository:
     """
     노래 ID 에 해당하는 순위 조회
     """
-    def get_song_rank(self, song_id) -> Song | None:
-        return self.rd.get(song_id)
+    def get_song_rank(self, song_id , key : str) -> str:
+
+        rd = redis_config()
+
+        rank_datas = rd.hgetall(key)
+        print("rank_Datas", rank_datas)
+
+        # redis 에 바이트 문자열로 저장되기 때문에 encode
+        song_id_byte = song_id.encode('utf-8')
+
+        rank = str(rank_datas.get(song_id_byte))
+
+        # 해당하는 노래가 1000위 안에 안 들어 있을 수도 있다
+        # rank : None
+
+        return rank

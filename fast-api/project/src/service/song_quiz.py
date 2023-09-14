@@ -1,5 +1,7 @@
 from typing import List
 
+from numpy import double
+
 
 from database.orm import Song, SongQuiz, SongQuizRank
 from database.repository import SongRepository, SongQuizRepository, SongQuizRankRepository
@@ -82,7 +84,9 @@ class SongQuizService:
         song_id: str = self.today_song.id
 
         # DB 에 저장된 정답곡을 제외한 나머지 노래 정보
-        songs: List[Song] = self.song_repository.get_songs_except_today_song(song_id)
+        # songs: List[Song] = self.song_repository.get_songs_except_today_song(song_id)
+
+        songs: List[Song] = self.song_repository.get_songs()
 
         json_today_song = jsonable_encoder(self.today_song)
 
@@ -141,30 +145,34 @@ class SongQuizService:
     def search_song_result(
             self,
             song_name : str,
-            rd : redis.Redis,
-            song_repository: SongRepository ,
-            song_quiz_repository : SongQuizRepository,
-            song_quiz_rank_repository : SongQuizRankRepository
     ) -> List[SongQuizSchema]:
         
         # 검색한 곡과 이름이 같은 곡들 조회
-        search_songs : List[Song] = song_repository.get_song_by_name(song_name)
+        search_songs : List[Song] = self.song_repository.get_song_by_name(song_name)
 
         search_result = []
 
         for search_song in search_songs:
-            song_quiz = SongQuizSchema()
+            
+            today = str(datetime.date.today())
+            today_song_quiz =  today + "_song_quiz"
+            today_song_rank = today + "_song_quiz_rank"
+
+            print("today : ", today)
+
+            print("search_song : ", search_song.name, " search_song id : ", search_song.id)
 
             # 노래 유사도 조회
-            song_similarity : float = song_quiz_repository.get_song_similarity(search_song.id)
+            song_similarity : float = self.song_quiz_repository.get_song_similarity(search_song.id, today_song_quiz)
+
+            print("song_similarity" , song_similarity)
 
             # 노래 순위 반환
-            song_rank : int = song_quiz_rank_repository.get_song_rank(search_song.id)
+            song_rank : int = self.song_quiz_rank_repository.get_song_rank(search_song.id, today_song_rank)
 
-            song_quiz.name = song_name
-            song_quiz.similarity = song_similarity
-            song_quiz.rank = song_rank
-            song_quiz.id = search_song.id
+            # 해당 노래가 1000위 안에 안들 수 있다 -> None 반환
+
+            song_quiz = SongQuizSchema(id=search_song.id, name=search_song.name, rank=song_rank, similarity=song_similarity)
 
             search_result.append(song_quiz)
 

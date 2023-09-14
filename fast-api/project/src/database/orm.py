@@ -36,8 +36,8 @@ class Song(Base):
 
     
 
-    quiz = relationship('SongQuiz', back_populates="song")
-    rank = relationship('SongQuizRank', back_populates="song")
+    # quiz = relationship('SongQuiz', back_populates="song")
+    # rank = relationship('SongQuizRank', back_populates="song", )
 
     def __repr__(self):
         return f"Song(id={self.id}, name ={self.name}, album={self.album}, album_name={self.album_name}, artist = {self.artist}, artist_name ={self.artist_name} "
@@ -57,9 +57,9 @@ class SongQuiz(Base):
     id = Column(String, primary_key=True, nullable=False)
     similarity = Column(Double, nullable=False, default=0)
 
-    song_id = Column(String, ForeignKey('song.id'), nullable=False)
+    # song_id = Column(String, ForeignKey('song.id'), nullable=False)
 
-    song = relationship('Song', back_populates='quiz')
+    # song = relationship('Song', back_populates='quiz')
 
     @classmethod
     def create(cls, id: str, similarity: float) -> "SongQuiz":
@@ -78,8 +78,8 @@ class SongQuizRank(Base):
     id = Column(String, primary_key=True, nullable=False)
     rank = Column(Integer, nullable=False, default=0)
 
-    song_id = Column(String, ForeignKey('song.id'), nullable=False)
-    song = relationship('Song', back_populates='rank')
+    # song_id = Column(String, ForeignKey('song.id'), nullable=False)
+    # song = relationship('Song', back_populates='rank')
 
     @classmethod
     def create(cls, id: str, rank: int) -> "SongQuizRank":
