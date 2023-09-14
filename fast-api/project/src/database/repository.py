@@ -12,6 +12,7 @@ import datetime
 
 
 class SongRepository:
+    
 
     """
     노래 ID 에 해당하는 곡 정보 조회
@@ -130,6 +131,7 @@ class SongRepository:
 
 
 class SongQuizRepository:
+    rd = redis_config()
 
     """
     노래 ID, 노래 유사도 저장
@@ -137,7 +139,7 @@ class SongQuizRepository:
     """
 
     def save_song_quiz(self, song_quiz: SongQuiz) -> SongQuiz:
-        rd = redis_config()
+        #rd = redis_config()
         # 내일 날짜 
         new_day = datetime.date.today() + datetime.timedelta(days=1)
 
@@ -145,16 +147,16 @@ class SongQuizRepository:
         field = song_quiz.id
         value = song_quiz.similarity
 
-        rd.hset(key, field, value)
+        self.rd.hset(key, field, value)
         return song_quiz
     
     """
     노래 ID 에 해당하는 유사도 조회
     """
     def get_song_similarity(self, song_id : str, key : str) -> Float | None:
-        rd = redis_config()
+        # rd = redis_config()
 
-        similarity_datas = rd.hgetall(key)
+        similarity_datas = self.rd.hgetall(key)
 
         # redis 에 바이트 문자열로 저장되기 때문에 encode
         song_id_byte = song_id.encode('utf-8')
@@ -165,13 +167,14 @@ class SongQuizRepository:
 
 class SongQuizRankRepository:
 
+    rd = redis_config()
 
     """
     노래 ID, 순위 저장
     redis 에 key : [내일날짜_song_quiz_rank], field : [노래 id] , value : [순위] 저장
     """
     def save_song_quiz_rank(self, song_quiz_rank: SongQuizRank) -> SongQuizRank:
-        rd = redis_config()
+        # rd = redis_config()
         
         # 내일 날짜
         new_day = datetime.date.today() + datetime.timedelta(days=1)
@@ -180,7 +183,7 @@ class SongQuizRankRepository:
         field = song_quiz_rank.id
         value = song_quiz_rank.rank
 
-        rd.hset(key, field, value)
+        self.rd.hset(key, field, value)
         return song_quiz_rank
 
 
@@ -189,9 +192,9 @@ class SongQuizRankRepository:
     """
     def get_song_rank(self, song_id , key : str) -> str:
 
-        rd = redis_config()
+        #rd = redis_config()
 
-        rank_datas = rd.hgetall(key)
+        rank_datas = self.rd.hgetall(key)
         print("rank_Datas", rank_datas)
 
         # redis 에 바이트 문자열로 저장되기 때문에 encode
