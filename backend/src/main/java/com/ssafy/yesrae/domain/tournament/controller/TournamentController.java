@@ -63,6 +63,8 @@ public class TournamentController {
         Long userId = 1L;
         log.info("TournamentController_registTournament_start: " + userId);
 
+        tournamentService.registTournament(userId);
+
         log.info("TournamentController_registTournament_end: success");
         return CommonResponse.success(SUCCESS);
     }

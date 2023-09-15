@@ -9,5 +9,7 @@ public interface TournamentService {
 
     List<TournamentSongFindRes> findTournamentSong(FindTournamentSongGetReq findTournamentSongGetReq);
 
+    void registTournament(Long userId);
+
     void registTournamentResult(RegistTournamentResultPostReq registTournamentResultPostReq);
 }

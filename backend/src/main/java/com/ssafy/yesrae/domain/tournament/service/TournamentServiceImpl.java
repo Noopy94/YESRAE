@@ -1,9 +1,14 @@
 package com.ssafy.yesrae.domain.tournament.service;
 
+import com.ssafy.yesrae.common.exception.NoDataException;
 import com.ssafy.yesrae.domain.tournament.dto.request.FindTournamentSongGetReq;
 import com.ssafy.yesrae.domain.tournament.dto.request.RegistTournamentResultPostReq;
 import com.ssafy.yesrae.domain.tournament.dto.response.TournamentSongFindRes;
+import com.ssafy.yesrae.domain.tournament.entity.Tournament;
+import com.ssafy.yesrae.domain.tournament.repository.TournamentRepository;
 import com.ssafy.yesrae.domain.tournament.repository.TournamentSongRepository;
+import com.ssafy.yesrae.domain.user.entity.User;
+import com.ssafy.yesrae.domain.user.repository.UserRepository;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +24,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class TournamentServiceImpl implements TournamentService{
 
     private final TournamentSongRepository tournamentSongRepository;
+    private final UserRepository userRepository;
+    private final TournamentRepository tournamentRepository;
 
     @Autowired
-    public TournamentServiceImpl(TournamentSongRepository tournamentSongRepository) {
+    public TournamentServiceImpl(TournamentSongRepository tournamentSongRepository,
+        UserRepository userRepository, TournamentRepository tournamentRepository) {
         this.tournamentSongRepository = tournamentSongRepository;
+        this.userRepository = userRepository;
+        this.tournamentRepository = tournamentRepository;
     }
 
     /**
@@ -38,8 +48,29 @@ public class TournamentServiceImpl implements TournamentService{
 
         List<TournamentSongFindRes> findRes = tournamentSongRepository.findTournamentSong(findTournamentSongGetReq);
 
-        log.info("TemplateService_findAllTemplate_end: success");
+        log.info("TournamentService_findTournamentSong_end: success");
         return findRes;
+    }
+
+    /**
+     * 플레이 한 이상형 월드컵을 각 플레이 시점 마다 구분할 수 있도록 DB에 저장
+     * @param userId : 이상형월드컵 생성한 유저 ID
+     */
+    @Override
+    public void registTournament(Long userId) {
+
+        log.info("TournamentService_registTournament_start: "
+            + userId);
+
+        User user = userRepository.findById(userId)
+            .orElseThrow(NoDataException::new);
+        Tournament tournament = Tournament.builder()
+            .user(user)
+            .build();
+
+        tournamentRepository.save(tournament);
+
+        log.info("TournamentService_registTournament_end: success");
     }
 
     /**
