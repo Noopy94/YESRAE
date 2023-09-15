@@ -5,6 +5,7 @@ import com.ssafy.yesrae.domain.tournament.dto.request.FindTournamentSongGetReq;
 import com.ssafy.yesrae.domain.tournament.dto.request.RegistTournamentResultPostReq;
 import com.ssafy.yesrae.domain.tournament.dto.response.TournamentSongFindRes;
 import com.ssafy.yesrae.domain.tournament.entity.Tournament;
+import com.ssafy.yesrae.domain.tournament.entity.TournamentResult;
 import com.ssafy.yesrae.domain.tournament.repository.TournamentRepository;
 import com.ssafy.yesrae.domain.tournament.repository.TournamentSongRepository;
 import com.ssafy.yesrae.domain.user.entity.User;
@@ -54,7 +55,7 @@ public class TournamentServiceImpl implements TournamentService{
 
     /**
      * 플레이 한 이상형 월드컵을 각 플레이 시점 마다 구분할 수 있도록 DB에 저장
-     * @param userId : 이상형월드컵 생성한 유저 ID
+     * @param userId : 이상형 월드컵 생성한 유저 ID
      */
     @Override
     public void registTournament(Long userId) {
@@ -76,10 +77,25 @@ public class TournamentServiceImpl implements TournamentService{
     /**
      * 이상형 월드컵 결과를 DB에 저장하는 API
      * @param registTournamentResultPostReq : 이상형 월드컵 진행 결과 1등 ~ 4등
+     * @param userId : 이상형 월드컵 진행한 유저 Id
      */
     @Override
     public void registTournamentResult(
-        RegistTournamentResultPostReq registTournamentResultPostReq) {
-        
+        RegistTournamentResultPostReq registTournamentResultPostReq, Long userId) {
+
+        log.info("TournamentService_registTournamentResult_start: "
+            + registTournamentResultPostReq.toString() + ", " + userId);
+
+        Tournament tournament = tournamentRepository.findById(registTournamentResultPostReq.getTournamentId())
+            .orElseThrow(NoDataException::new);
+
+        TournamentResult tournamentResult = TournamentResult.builder()
+            .tournament(tournament)
+            .build();
+
+        tournamentRepository.save(tournament);
+
+        log.info("TournamentService_registTournamentResult_end: success");
+
     }
 }

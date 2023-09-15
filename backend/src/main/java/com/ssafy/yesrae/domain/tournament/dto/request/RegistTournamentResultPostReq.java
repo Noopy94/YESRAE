@@ -5,12 +5,14 @@ import lombok.Data;
 @Data
 public class RegistTournamentResultPostReq {
 
+    // 시행한 이상형 월드컵 ID
+    private Long tournamentId;
     // 이상형 월드컵 우승한 노래 ID
-    private String firstSongId;
+    private Long firstSongId;
     // 준우승한 노래 ID
-    private String secondSongId;
+    private Long secondSongId;
     // 4강에서 탈락한 노래 1 ID
-    private String semiFinalSongOneId;
+    private Long semiFinalSongOneId;
     // 4강에서 탈락한 노래 2 ID
-    private String semiFinalSongTwoId;
+    private Long semiFinalSongTwoId;
 }

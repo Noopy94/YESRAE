@@ -11,5 +11,5 @@ public interface TournamentService {
 
     void registTournament(Long userId);
 
-    void registTournamentResult(RegistTournamentResultPostReq registTournamentResultPostReq);
+    void registTournamentResult(RegistTournamentResultPostReq registTournamentResultPostReq, Long userId);
 }
