@@ -52,4 +52,9 @@ public class ArticleServiceImpl implements ArticleService{
         log.info("StoreService_insertStore_end: success");
         return articleEntity;
     }
+
+    @Override
+    public Boolean deleteArticle(Long stCode) {
+        return null;
+    }
 }
