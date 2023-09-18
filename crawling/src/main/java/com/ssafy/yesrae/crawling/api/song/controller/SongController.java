@@ -27,9 +27,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 public class SongController {
-    private static final String code = "AQAYwRIZFfogmk3Pj17_ZREbEUD7jBsua3DlUrzeZH9GnX8i_H3VlTOOpZrUAMoIh2y0_oAAp0xNOPtIwkkB3o73UXj_zg1shv5fwDRY2SOMfWUS-HQ5S6CUqmUGYw_9SxOON63JndkCabFvSrJpFDbs7QVcoin3oLto-Zpz";
-    private static final String authorization = "Basic NjVkMDNmN2Y3MTFkNDlkZjg3NDJkYjI3MGQ0NTg3YTk6MGJiYjI2NzgzMGFhNDkxYmEzOWEyZWFkNjhmNzJmNGY=";
-    private static final int startIndex=1838;
+    private static final String code = "";
+    private static final String authorization = "";
+    private static final int startIndex=0;
 
     StringBuilder sb;
     BufferedReader br;
