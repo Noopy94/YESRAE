@@ -74,16 +74,12 @@ public class TournamentController {
      */
     @PostMapping("/result")
     public CommonResponse<?> registTournamentResult(
-        RegistTournamentResultPostReq registTournamentResultPostReq, HttpServletRequest httpServletRequest) {
-
-        // TODO: JWT access-token 에서 유저 PK 꺼낼 수 있는 로직 구현 필요(인가 처리)
-        //Long userId = userService.getUserIdByToken(httpServletRequest.getHeader("access-token"));
-        Long userId = 1L; // 임시
+        RegistTournamentResultPostReq registTournamentResultPostReq) {
 
         log.info("TournamentController_registTournamentResult_start: "
-            + registTournamentResultPostReq.toString() + ", " + userId);
+            + registTournamentResultPostReq.toString());
 
-        tournamentService.registTournamentResult(registTournamentResultPostReq, userId);
+        tournamentService.registTournamentResult(registTournamentResultPostReq);
 
         log.info("TournamentController_registTournamentResult_end: success");
         return CommonResponse.success(SUCCESS);

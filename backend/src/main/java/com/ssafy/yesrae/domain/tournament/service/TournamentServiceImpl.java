@@ -6,7 +6,9 @@ import com.ssafy.yesrae.domain.tournament.dto.request.RegistTournamentResultPost
 import com.ssafy.yesrae.domain.tournament.dto.response.TournamentSongFindRes;
 import com.ssafy.yesrae.domain.tournament.entity.Tournament;
 import com.ssafy.yesrae.domain.tournament.entity.TournamentResult;
+import com.ssafy.yesrae.domain.tournament.entity.TournamentSong;
 import com.ssafy.yesrae.domain.tournament.repository.TournamentRepository;
+import com.ssafy.yesrae.domain.tournament.repository.TournamentResultRepository;
 import com.ssafy.yesrae.domain.tournament.repository.TournamentSongRepository;
 import com.ssafy.yesrae.domain.user.entity.User;
 import com.ssafy.yesrae.domain.user.repository.UserRepository;
@@ -27,13 +29,16 @@ public class TournamentServiceImpl implements TournamentService{
     private final TournamentSongRepository tournamentSongRepository;
     private final UserRepository userRepository;
     private final TournamentRepository tournamentRepository;
+    private final TournamentResultRepository tournamentResultRepository;
 
     @Autowired
     public TournamentServiceImpl(TournamentSongRepository tournamentSongRepository,
-        UserRepository userRepository, TournamentRepository tournamentRepository) {
+        UserRepository userRepository, TournamentRepository tournamentRepository,
+        TournamentResultRepository tournamentResultRepository) {
         this.tournamentSongRepository = tournamentSongRepository;
         this.userRepository = userRepository;
         this.tournamentRepository = tournamentRepository;
+        this.tournamentResultRepository = tournamentResultRepository;
     }
 
     /**
@@ -77,25 +82,52 @@ public class TournamentServiceImpl implements TournamentService{
     /**
      * 이상형 월드컵 결과를 DB에 저장하는 API
      * @param registTournamentResultPostReq : 이상형 월드컵 진행 결과 1등 ~ 4등
-     * @param userId : 이상형 월드컵 진행한 유저 Id
      */
     @Override
     public void registTournamentResult(
-        RegistTournamentResultPostReq registTournamentResultPostReq, Long userId) {
+        RegistTournamentResultPostReq registTournamentResultPostReq) {
 
         log.info("TournamentService_registTournamentResult_start: "
-            + registTournamentResultPostReq.toString() + ", " + userId);
+            + registTournamentResultPostReq.toString());
 
         Tournament tournament = tournamentRepository.findById(registTournamentResultPostReq.getTournamentId())
             .orElseThrow(NoDataException::new);
 
-        TournamentResult tournamentResult = TournamentResult.builder()
+        TournamentSong songOne = tournamentSongRepository.findById(registTournamentResultPostReq.getFirstSongId())
+            .orElseThrow(NoDataException::new);
+        TournamentSong songTwo = tournamentSongRepository.findById(registTournamentResultPostReq.getSecondSongId())
+            .orElseThrow(NoDataException::new);
+        TournamentSong songThree = tournamentSongRepository.findById(registTournamentResultPostReq.getSemiFinalSongOneId())
+            .orElseThrow(NoDataException::new);
+        TournamentSong songFour = tournamentSongRepository.findById(registTournamentResultPostReq.getSemiFinalSongTwoId())
+            .orElseThrow(NoDataException::new);
+
+        TournamentResult tournamentResultOne = TournamentResult.builder()
             .tournament(tournament)
+            .tournamentSong(songOne)
+            .rank(1)
+            .build();
+        TournamentResult tournamentResultTwo = TournamentResult.builder()
+            .tournament(tournament)
+            .tournamentSong(songTwo)
+            .rank(2)
+            .build();
+        TournamentResult tournamentResultThree = TournamentResult.builder()
+            .tournament(tournament)
+            .tournamentSong(songThree)
+            .rank(3)
+            .build();
+        TournamentResult tournamentResultFour = TournamentResult.builder()
+            .tournament(tournament)
+            .tournamentSong(songFour)
+            .rank(3)
             .build();
 
-        tournamentRepository.save(tournament);
+        tournamentResultRepository.save(tournamentResultOne);
+        tournamentResultRepository.save(tournamentResultTwo);
+        tournamentResultRepository.save(tournamentResultThree);
+        tournamentResultRepository.save(tournamentResultFour);
 
         log.info("TournamentService_registTournamentResult_end: success");
-
     }
 }

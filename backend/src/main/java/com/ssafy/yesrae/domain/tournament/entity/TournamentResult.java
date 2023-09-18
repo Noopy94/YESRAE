@@ -36,6 +36,6 @@ public class TournamentResult extends BaseEntity {
     @JoinColumn(name = "tournament_id")
     private Tournament tournament;
 
-    @Column(nullable = false, columnDefinition = " INT default 3")
+    @Column(nullable = false, columnDefinition = "INT default 3")
     private Integer rank;
 }
