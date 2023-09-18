@@ -27,9 +27,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 public class SongController {
-    private static final String code = "AQCCykvtI5ISC10En7db80mqMOvHd4QvTFftzgZJZHDwDqCi9U3Bw2EgJXHMNZDpdmUFpnesVj6JoaQe1YkJA5tnJwLVcAkmKV6mLNM4pXW3JTx_2CBruMJYrSPSFryJJ2YSdmL4dVhNQSlkZYDuiVo-PTunkUNO0LoAuJr3";
-    private static final String authorization = "Basic YzU1MWJmMjYyNDllNGFjZjllYWIxNzBhZWQ2MTRmYWI6MzIxZjMwZGIyYjI0NGMzZTk5MjRlZDc5Y2Q3Zjk5Mjk=";
-    private static final int startIndex=747;
+    private static final String code = "AQAYwRIZFfogmk3Pj17_ZREbEUD7jBsua3DlUrzeZH9GnX8i_H3VlTOOpZrUAMoIh2y0_oAAp0xNOPtIwkkB3o73UXj_zg1shv5fwDRY2SOMfWUS-HQ5S6CUqmUGYw_9SxOON63JndkCabFvSrJpFDbs7QVcoin3oLto-Zpz";
+    private static final String authorization = "Basic NjVkMDNmN2Y3MTFkNDlkZjg3NDJkYjI3MGQ0NTg3YTk6MGJiYjI2NzgzMGFhNDkxYmEzOWEyZWFkNjhmNzJmNGY=";
+    private static final int startIndex=1838;
 
     StringBuilder sb;
     BufferedReader br;
@@ -248,7 +248,11 @@ public class SongController {
                     String albumId = ObjectAlbum.get("id").getAsString();
                     // 여기 단순히 date가 아니라 20616 같은 경우도 있음... -> string 4글자 잘라서 int로 넣자
                     Integer releaseYear = Integer.parseInt(ObjectAlbum.get("release_date").getAsString().substring(0,4));
-                    String imgUrl = ObjectAlbum.get("images").getAsJsonArray().get(0).getAsJsonObject().get("url").getAsString();
+                    // 앨범아트가 없는 경우도 있다?
+                    String imgUrl = "NULL";
+                    if(!ObjectAlbum.get("images").getAsJsonArray().isEmpty()){
+                     imgUrl = ObjectAlbum.get("images").getAsJsonArray().get(0).getAsJsonObject().get("url").getAsString();
+                    }
                     URL AlbumURL = new URL("https://api.spotify.com/v1/albums/"+albumId+"?market=KR");
                     /* 앨범 ID 검색으로 받아야 할 것
                      * : 각 트랙의 ID, 각 트랙의 이름, 노래길이, 미리보기 URL */
