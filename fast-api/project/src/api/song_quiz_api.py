@@ -36,10 +36,9 @@ scheduler.add_job(song_quiz_update, "cron", hour= 16, minute = 0)
 scheduler.start()
 
 """
-TODO
 클라이언트 곡 제목 request
 song name 으로 조회 -> song id 로 -> similiarity 순위 조회
-입력한 곡의 정답 여부, 유사도 정보, 순위 정보 response
+return 입력한 곡의 정답 여부, 곡 이름, 유사도 정보, 순위 정보 
 """
 @router.post("/quiz", status_code=200, response_model= List[SongQuizSchema])
 async def song_search(

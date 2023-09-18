@@ -83,9 +83,6 @@ class SongQuizService:
         # 오늘의 노래 (정답곡)
         song_id: str = self.today_song.id
 
-        # DB 에 저장된 정답곡을 제외한 나머지 노래 정보
-        # songs: List[Song] = self.song_repository.get_songs_except_today_song(song_id)
-
         songs: List[Song] = self.song_repository.get_songs()
 
         json_today_song = jsonable_encoder(self.today_song)
@@ -171,7 +168,6 @@ class SongQuizService:
             song_rank : int = self.song_quiz_rank_repository.get_song_rank(search_song.id, today_song_rank)
 
             # 해당 노래가 1000위 안에 안들 수 있다 -> None 반환
-
             song_quiz = SongQuizSchema(id=search_song.id, name=search_song.name, rank=song_rank, similarity=song_similarity)
 
             search_result.append(song_quiz)
