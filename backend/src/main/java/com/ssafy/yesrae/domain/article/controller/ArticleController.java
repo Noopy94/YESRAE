@@ -2,6 +2,7 @@ package com.ssafy.yesrae.domain.article.controller;
 
 import com.ssafy.yesrae.common.exception.Template.FileIOException;
 import com.ssafy.yesrae.common.exception.Template.NotFoundException;
+import com.ssafy.yesrae.common.exception.Template.TemplateNoResultException;
 import com.ssafy.yesrae.common.exception.Template.TemplatePossessionFailException;
 import com.ssafy.yesrae.common.model.CommonResponse;
 import com.ssafy.yesrae.domain.article.dto.request.ArticleModifyPutReq;
@@ -13,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -104,5 +108,20 @@ public class ArticleController {
         } else {    // 수정 실패하면 Exception
             throw new TemplatePossessionFailException();
         }
+    }
+    /**
+     * Article List 조회
+     *
+     * @return
+     */
+    @GetMapping()
+    public CommonResponse<List<ArticleFindRes>> findAllArticle() {
+        log.info("ArticleController_findAllArticle_start: ");
+
+        Optional<List<ArticleFindRes>> findRes = Optional.ofNullable(
+                articleService.findAllArticle());
+
+        log.info("ArticleController_findAllArticle_end: " + findRes);
+        return CommonResponse.success(findRes.orElseThrow(TemplateNoResultException::new));
     }
 }

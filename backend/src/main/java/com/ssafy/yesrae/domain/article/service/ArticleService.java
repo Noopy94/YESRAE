@@ -17,4 +17,5 @@ public interface ArticleService {
 
     boolean modifyArticle(ArticleModifyPutReq articleModifyPutReq, MultipartFile files);
 
+    List<ArticleFindRes> findAllArticle();
 }

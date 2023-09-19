@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Transactional
@@ -70,7 +71,11 @@ public class ArticleServiceImpl implements ArticleService{
         log.info("StoreService_insertStore_end: success");
         return articleEntity;
     }
-
+    /**
+     * 게시글 삭제 API
+     *
+     * @param Id : 게시판의 Id
+     */
     @Override
     public Boolean deleteArticle(Long Id) {
         log.info("ArticleService_deleteArticle_start: ");
@@ -116,6 +121,11 @@ public class ArticleServiceImpl implements ArticleService{
         return articleFindRes;
     }
 
+    /**
+     * 유저가 게시글 수정하기 위한 API 서비스
+     *
+     * @param articleModifyPutReq : 게시판의 Id
+     */
     @Override
     public boolean modifyArticle(ArticleModifyPutReq articleModifyPutReq, MultipartFile files) {
         if (files != null) {
@@ -141,4 +151,40 @@ public class ArticleServiceImpl implements ArticleService{
 //        return false;
     }
 
+    /**
+     *  게시글 전체 조회 API에 대한 서비스
+     */
+    @Override
+    public List<ArticleFindRes> findAllArticle() {
+        log.info("ArticleService_findAll_start: ");
+
+        List<ArticleFindRes> res = articleRepository.findAll()
+                .stream().map(m -> ArticleFindRes.builder()
+                                .files(findArticleFiles(m))
+                                .content(m.getContent())
+                                .title(m.getTitle())
+                                .tagName(m.getTagEntity().getTagName())
+                                .createdDate(m.getCreatedDate())
+//                              .nickname()
+                                .build()
+                ).collect(Collectors.toList());
+
+        log.info("StoreService_findAll_end: success");
+        return res;
+    }
+
+
+    /**
+     * 파일 이름 List 생성을 위한 API
+     */
+    List<String> findArticleFiles(ArticleEntity articleEntity){
+        List<String> files = new ArrayList<>();
+        if(articleEntity.getType()){
+            List<PhotoEntity> pl = photoRepository.findByArticleEntity_Id(articleEntity.getId());
+            for(PhotoEntity p : pl){
+                files.add(p.getImage());
+            }
+        }
+        return files;
+    }
 }
