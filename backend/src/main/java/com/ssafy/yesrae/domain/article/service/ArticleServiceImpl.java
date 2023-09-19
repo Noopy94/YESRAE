@@ -38,7 +38,7 @@ public class ArticleServiceImpl implements ArticleService{
         String title = registInfo.getTitle();
         int type = registInfo.getType();
 
-//        //파일 저장
+//        //TODO : 파일 저장
 //        if (!Objects.isNull(fileList) && fileList.getSize() > 0) {
 //            String imgPath = s3Service.saveFile(fileList);
 //            stImg = "URL"+imgPath;
@@ -50,6 +50,7 @@ public class ArticleServiceImpl implements ArticleService{
                 .type(type)
                 .build();
         articleRepository.save(articleEntity);
+        articleEntity.insertArticle();
         log.info("StoreService_insertStore_end: success");
         return articleEntity;
     }
