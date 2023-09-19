@@ -2,6 +2,7 @@ package com.ssafy.yesrae.domain.article.service;
 
 import com.ssafy.yesrae.common.exception.NoDataException;
 import com.ssafy.yesrae.common.exception.Template.NotFoundException;
+import com.ssafy.yesrae.domain.article.dto.request.ArticleModifyPutReq;
 import com.ssafy.yesrae.domain.article.dto.request.ArticleRegistPostReq;
 import com.ssafy.yesrae.domain.article.dto.response.ArticleFindRes;
 import com.ssafy.yesrae.domain.article.entity.ArticleEntity;
@@ -114,4 +115,30 @@ public class ArticleServiceImpl implements ArticleService{
         log.info("ArticleService_findArticle_end: " + articleFindRes.toString());
         return articleFindRes;
     }
+
+    @Override
+    public boolean modifyArticle(ArticleModifyPutReq articleModifyPutReq, MultipartFile files) {
+        if (files != null) {
+            log.info("ArticleService_modifyArticle_start: " + articleModifyPutReq.toString() + ", "
+                    + files);
+        } else {
+            log.info("ArticleService_modifyArticle_start: " + articleModifyPutReq.toString());
+        }
+
+        ArticleEntity articleEntity = articleRepository.findById(articleModifyPutReq.getId())
+                .orElseThrow(NotFoundException::new);
+        // TODO: 현재 로그인 유저의 id와 글쓴이의 id가 일치할 때
+//        if (storeEntity.getUser().getId().equals(modifyInfo.getUserId())) {
+        // 점포 수정
+        TagEntity tagEntity = tagRepository.findById(articleModifyPutReq.getCategory())
+                .orElseThrow(NullPointerException::new);
+        articleEntity.modifyArticle(articleModifyPutReq.getTitle(), articleModifyPutReq.getContent(), tagEntity);
+//          TODO : 사진 어떻게 처리할지 관리
+        log.info("ArticleService_modifyArticle_end: true");
+        return true;
+//        }
+//        log.info("StoreService_modifyStore_end: false");
+//        return false;
+    }
+
 }

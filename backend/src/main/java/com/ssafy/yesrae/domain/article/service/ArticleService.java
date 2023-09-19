@@ -1,5 +1,6 @@
 package com.ssafy.yesrae.domain.article.service;
 
+import com.ssafy.yesrae.domain.article.dto.request.ArticleModifyPutReq;
 import com.ssafy.yesrae.domain.article.dto.request.ArticleRegistPostReq;
 import com.ssafy.yesrae.domain.article.dto.response.ArticleFindRes;
 import com.ssafy.yesrae.domain.article.entity.ArticleEntity;
@@ -13,5 +14,7 @@ public interface ArticleService {
     Boolean deleteArticle(Long Id);
 
     ArticleFindRes findArticle(Long Id);
+
+    boolean modifyArticle(ArticleModifyPutReq articleModifyPutReq, MultipartFile files);
 
 }

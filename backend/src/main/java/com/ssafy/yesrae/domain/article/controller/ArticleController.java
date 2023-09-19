@@ -4,6 +4,7 @@ import com.ssafy.yesrae.common.exception.Template.FileIOException;
 import com.ssafy.yesrae.common.exception.Template.NotFoundException;
 import com.ssafy.yesrae.common.exception.Template.TemplatePossessionFailException;
 import com.ssafy.yesrae.common.model.CommonResponse;
+import com.ssafy.yesrae.domain.article.dto.request.ArticleModifyPutReq;
 import com.ssafy.yesrae.domain.article.dto.request.ArticleRegistPostReq;
 import com.ssafy.yesrae.domain.article.dto.response.ArticleFindRes;
 import com.ssafy.yesrae.domain.article.entity.ArticleEntity;
@@ -84,6 +85,24 @@ public class ArticleController {
             return CommonResponse.success(articleFindRes);
         } else {    // 조회 실패하면 Exception
             throw new NotFoundException();
+        }
+    }
+    @PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public CommonResponse<?> modify(@RequestPart ArticleModifyPutReq articleModifyPutReq,
+                                    @RequestPart(value = "files", required = false) MultipartFile files) {
+        if (files != null) {
+            log.info("ArticleController_modify_start: " + articleModifyPutReq.toString() + ", "
+                    + files);
+        } else {
+            log.info("ArticleController_modify_start: " + articleModifyPutReq.toString());
+        }
+        boolean isModified = articleService.modifyArticle(articleModifyPutReq, files);
+
+        if (isModified) {   // 수정 성공하면 success
+            log.info("ArticleController_modify_end: success");
+            return CommonResponse.success(SUCCESS);
+        } else {    // 수정 실패하면 Exception
+            throw new TemplatePossessionFailException();
         }
     }
 }
