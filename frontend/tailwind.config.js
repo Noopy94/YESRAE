@@ -6,8 +6,8 @@ export default withMT({
     extend: {
       colors: {
         yesrae: {
-          0: '#AA57FF',
-          100: '#646CFF',
+          0: '#94E1FF',
+          100: '#BCAAFF',
           200: '#9399FF',
         },
       },
