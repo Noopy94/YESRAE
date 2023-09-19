@@ -1,9 +1,11 @@
 package com.ssafy.yesrae.domain.article.controller;
 
 import com.ssafy.yesrae.common.exception.Template.FileIOException;
+import com.ssafy.yesrae.common.exception.Template.NotFoundException;
 import com.ssafy.yesrae.common.exception.Template.TemplatePossessionFailException;
 import com.ssafy.yesrae.common.model.CommonResponse;
 import com.ssafy.yesrae.domain.article.dto.request.ArticleRegistPostReq;
+import com.ssafy.yesrae.domain.article.dto.response.ArticleFindRes;
 import com.ssafy.yesrae.domain.article.entity.ArticleEntity;
 import com.ssafy.yesrae.domain.article.service.ArticleService;
 import lombok.extern.slf4j.Slf4j;
@@ -62,6 +64,26 @@ public class ArticleController {
             return CommonResponse.success(SUCCESS);
         } else {    // 삭제 실패하면 Exception
             throw new TemplatePossessionFailException();
+        }
+    }
+
+    /**
+     * 유저가 게시글의 상세 정보를 확인하기 위한 API
+     *
+     * @param Id
+     */
+    @GetMapping("/{Id}")
+    public CommonResponse<?> findArticle(@PathVariable Long Id) {
+
+        log.info("ArticleController_find_start: " + Id);
+
+        ArticleFindRes articleFindRes = articleService.findArticle(Id);
+
+        if (articleFindRes != null) { // 조회 성공하면 조회 결과 return
+            log.info("ArticleController_find_end: " + articleFindRes.toString());
+            return CommonResponse.success(articleFindRes);
+        } else {    // 조회 실패하면 Exception
+            throw new NotFoundException();
         }
     }
 }

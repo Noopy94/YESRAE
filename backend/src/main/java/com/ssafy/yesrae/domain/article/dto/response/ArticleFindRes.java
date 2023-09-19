@@ -3,6 +3,9 @@ package com.ssafy.yesrae.domain.article.dto.response;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Data
 @Builder
 public class ArticleFindRes {
@@ -17,5 +20,7 @@ public class ArticleFindRes {
 
     private boolean type;
 
-    private String createdDate;
+    private LocalDateTime createdDate;
+
+    private List<String> files;
 }

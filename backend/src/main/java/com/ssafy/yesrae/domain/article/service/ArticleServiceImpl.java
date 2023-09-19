@@ -3,14 +3,20 @@ package com.ssafy.yesrae.domain.article.service;
 import com.ssafy.yesrae.common.exception.NoDataException;
 import com.ssafy.yesrae.common.exception.Template.NotFoundException;
 import com.ssafy.yesrae.domain.article.dto.request.ArticleRegistPostReq;
+import com.ssafy.yesrae.domain.article.dto.response.ArticleFindRes;
 import com.ssafy.yesrae.domain.article.entity.ArticleEntity;
+import com.ssafy.yesrae.domain.article.entity.PhotoEntity;
 import com.ssafy.yesrae.domain.article.entity.TagEntity;
 import com.ssafy.yesrae.domain.article.repository.ArticleRepository;
+import com.ssafy.yesrae.domain.article.repository.PhotoRepository;
 import com.ssafy.yesrae.domain.article.repository.TagRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Transactional
@@ -20,18 +26,23 @@ public class ArticleServiceImpl implements ArticleService{
     private final ArticleRepository articleRepository;
     private final TagRepository tagRepository;
 
-    public ArticleServiceImpl(ArticleRepository articleRepository, TagRepository tagRepository) {
+    private final PhotoRepository photoRepository;
+
+    public ArticleServiceImpl(ArticleRepository articleRepository, TagRepository tagRepository, PhotoRepository photoRepository) {
         this.articleRepository = articleRepository;
         this.tagRepository = tagRepository;
+        this.photoRepository = photoRepository;
     }
 
     @Override
-    public ArticleEntity registArticle(ArticleRegistPostReq articleRegistPostReq, MultipartFile file) {
-        if (file != null) {
+    public ArticleEntity registArticle(ArticleRegistPostReq articleRegistPostReq, MultipartFile files) {
+        boolean type = false;
+        if (files != null) {
             log.info("ArticleService_registArticle_start: " + articleRepository.toString() + ", "
-                    + file);
+                    + files);
         } else {
             log.info("ArticleService_registArticle_start: " + articleRepository.toString());
+            type = true;
         }
         //TODO 작성자 정보 가져오기
 //        User user = userRepository.findById(registInfo.getUserId())
@@ -51,6 +62,7 @@ public class ArticleServiceImpl implements ArticleService{
                 .content(content)
                 .title(title)
                 .tagEntity(tagEntity)
+                .type(type)
                 .build();
         articleRepository.save(articleEntity);
         articleEntity.insertArticle();
@@ -67,5 +79,39 @@ public class ArticleServiceImpl implements ArticleService{
         articleEntity.deleteArticle();
         log.info("ArticleService_deleteArticle_end: true");
         return true;
+    }
+
+    /**
+     * 유저가 게시글의 상세 정보를 확인하기 위한 API 서비스
+     *
+     * @param Id : 게시판의 Id
+     */
+    @Override
+    public ArticleFindRes findArticle(Long Id) {
+
+        log.info("ArticleService_findArticle_start: " + Id);
+
+        ArticleEntity articleEntity= articleRepository.findById(Id)
+                .orElseThrow(NotFoundException::new);
+        List<String> files = new ArrayList<>();
+        if(articleEntity.getType()){
+            List<PhotoEntity> pl = photoRepository.findByArticleEntity_Id(Id);
+            for(PhotoEntity p : pl){
+                files.add(p.getImage());
+            }
+        }
+
+        ArticleFindRes articleFindRes = ArticleFindRes.builder()
+                .content(articleEntity.getContent())
+                .tagName(articleEntity.getTagEntity().getTagName())
+                .title(articleEntity.getTitle())
+                .createdDate(articleEntity.getCreatedDate())
+                .files(files)
+//                .nickname()
+                .build();
+
+        // 게시글 상세 정보 조회 결과
+        log.info("ArticleService_findArticle_end: " + articleFindRes.toString());
+        return articleFindRes;
     }
 }
