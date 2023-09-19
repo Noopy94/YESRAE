@@ -1,15 +1,16 @@
 package com.ssafy.yesrae.domain.article.service;
 
 import com.ssafy.yesrae.common.exception.NoDataException;
+import com.ssafy.yesrae.common.exception.Template.NotFoundException;
 import com.ssafy.yesrae.domain.article.dto.request.ArticleRegistPostReq;
 import com.ssafy.yesrae.domain.article.entity.ArticleEntity;
+import com.ssafy.yesrae.domain.article.entity.TagEntity;
 import com.ssafy.yesrae.domain.article.repository.ArticleRepository;
+import com.ssafy.yesrae.domain.article.repository.TagRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.Objects;
 
 @Slf4j
 @Transactional
@@ -17,26 +18,29 @@ import java.util.Objects;
 public class ArticleServiceImpl implements ArticleService{
 
     private final ArticleRepository articleRepository;
+    private final TagRepository tagRepository;
 
-    public ArticleServiceImpl(ArticleRepository articleRepository) {
+    public ArticleServiceImpl(ArticleRepository articleRepository, TagRepository tagRepository) {
         this.articleRepository = articleRepository;
+        this.tagRepository = tagRepository;
     }
 
     @Override
-    public ArticleEntity registArticle(ArticleRegistPostReq registInfo, MultipartFile file) {
+    public ArticleEntity registArticle(ArticleRegistPostReq articleRegistPostReq, MultipartFile file) {
         if (file != null) {
-            log.info("ArticleService_registArticle_start: " + registInfo.toString() + ", "
+            log.info("ArticleService_registArticle_start: " + articleRepository.toString() + ", "
                     + file);
         } else {
-            log.info("ArticleService_registArticle_start: " + registInfo.toString());
+            log.info("ArticleService_registArticle_start: " + articleRepository.toString());
         }
         //TODO 작성자 정보 가져오기
 //        User user = userRepository.findById(registInfo.getUserId())
 //                .orElseThrow(UserNotFoundException::new);
-        int category = registInfo.getCategory();
-        String content = registInfo.getContent();
-        String title = registInfo.getTitle();
-        int type = registInfo.getType();
+        TagEntity tagEntity = tagRepository.findById(articleRegistPostReq.getCategory())
+                .orElseThrow(NotFoundException::new);
+        Long category = articleRegistPostReq.getCategory();
+        String content = articleRegistPostReq.getContent();
+        String title = articleRegistPostReq.getTitle();
 
 //        //TODO : 파일 저장
 //        if (!Objects.isNull(fileList) && fileList.getSize() > 0) {
@@ -44,10 +48,9 @@ public class ArticleServiceImpl implements ArticleService{
 //            stImg = "URL"+imgPath;
 //        }
         ArticleEntity articleEntity = ArticleEntity.builder()
-                .category(category)
                 .content(content)
                 .title(title)
-                .type(type)
+                .tagEntity(tagEntity)
                 .build();
         articleRepository.save(articleEntity);
         articleEntity.insertArticle();

@@ -26,7 +26,7 @@ public class ArticleEntity extends BaseEntity {
 //    private User user;
 
     @Column(nullable = false)
-    private Integer type;
+    private Boolean type;
 
     @Column(nullable = false, columnDefinition = "VARCHAR(40)")
     private String title;
@@ -35,8 +35,9 @@ public class ArticleEntity extends BaseEntity {
     private String content;
 
     //잡담(0), 질문(1), 추천(2)
-    @Column(nullable = false)
-    private Integer category;
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name="category", referencedColumnName = "Id")
+    private TagEntity tagEntity;
 
     @Column(name = "created_date",nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime createdDate;
@@ -48,6 +49,4 @@ public class ArticleEntity extends BaseEntity {
     public void insertArticle() {this.createdDate = LocalDateTime.now();}
     //삭제시 현재 시간으로 설정
     public void deleteArticle() {this.deletedAt = LocalDateTime.now();}
-
-
 }
