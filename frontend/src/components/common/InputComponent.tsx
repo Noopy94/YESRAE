@@ -21,14 +21,14 @@ export default function InputComponent({
   return (
     <div className="pl-8 py-4 relative">
       <input
-        className="w-48 h-8 rounded-sm pl-10 text-lg"
+        className="w-48 h-12 rounded-md pl-11 text-lg text-black"
         type={type}
         value={value}
         placeholder={placeholder}
         onChange={onChange}
         onKeyDown={onKeyDown}
       />
-      <MagnifyingGlassIcon className="w-8 h-8 absolute top-4 left-9 text-gray-900" />
+      <MagnifyingGlassIcon className="w-8 h-8 absolute top-6 left-9 text-gray-900" />
     </div>
   );
 }

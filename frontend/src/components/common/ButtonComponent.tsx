@@ -23,8 +23,8 @@ export default function ButtonComponent({
       'rounded w-28 h-8 border-2 bg-gradient-to-r from-yesrae-0 to-yesrae-100 text-xl';
   } else if (type === 'ismiddle') {
     buttonCss =
-      'rounded w-48 h-10 bg-gradient-to-r from-yesrae-0 to-yesrae-100 text-xl';
-    margin = 'border-b border-t py-3 mx-4 border-gray-900';
+      'rounded-md w-48 h-12 bg-gradient-to-r from-yesrae-0 to-yesrae-100 text-xl font-bold';
+    // margin = 'border-b border-t py-3 mx-4 border-gray-900';
   } else {
     buttonCss =
       'rounded-xl w-64 h-8 bg-gradient-to-r from-yesrae-0 to-yesrae-100 text-2xl';
