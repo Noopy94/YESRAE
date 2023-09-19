@@ -91,6 +91,7 @@ public class ArticleController {
             throw new NotFoundException();
         }
     }
+
     @PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public CommonResponse<?> modify(@RequestPart ArticleModifyPutReq articleModifyPutReq,
                                     @RequestPart(value = "files", required = false) MultipartFile files) {
