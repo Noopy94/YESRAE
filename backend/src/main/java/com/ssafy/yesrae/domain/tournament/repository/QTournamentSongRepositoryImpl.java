@@ -36,7 +36,8 @@ public class QTournamentSongRepositoryImpl implements QTournamentSongRepository{
         log.info("QTournamentSongRepository_findTournamentSong_start: "
             + findTournamentSongGetReq.toString());
 
-        //Todo : 랜덤으로 노래를 가져오도록 수정해야 함
+        //Todo : 랜덤으로 노래를 가져오도록 수정해야 함. 라운드 수에 맞춰서
+
         return queryFactory
             .select(Projections.constructor(TournamentSongFindRes.class,
                 tournamentSong.title.as("title"),
