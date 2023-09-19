@@ -26,7 +26,7 @@ public class ArticleEntity extends BaseEntity {
 //    private User user;
 
     @Column(nullable = false)
-    private int type;
+    private Integer type;
 
     @Column(nullable = false, columnDefinition = "VARCHAR(40)")
     private String title;
@@ -36,8 +36,18 @@ public class ArticleEntity extends BaseEntity {
 
     //잡담(0), 질문(1), 추천(2)
     @Column(nullable = false)
-    private int category;
+    private Integer category;
 
     @Column(name = "created_date",nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime createdDate;
+
+    @Column // 기본값 null
+    private LocalDateTime deletedAt;
+
+    //등록시 현재 시간으로 설정
+    public void insertArticle() {this.createdDate = LocalDateTime.now();}
+    //삭제시 현재 시간으로 설정
+    public void deleteArticle() {this.deletedAt = LocalDateTime.now();}
+
+
 }

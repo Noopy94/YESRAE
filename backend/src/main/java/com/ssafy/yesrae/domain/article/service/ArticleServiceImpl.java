@@ -1,5 +1,6 @@
 package com.ssafy.yesrae.domain.article.service;
 
+import com.ssafy.yesrae.common.exception.NoDataException;
 import com.ssafy.yesrae.domain.article.dto.request.ArticleRegistPostReq;
 import com.ssafy.yesrae.domain.article.entity.ArticleEntity;
 import com.ssafy.yesrae.domain.article.repository.ArticleRepository;
@@ -54,7 +55,13 @@ public class ArticleServiceImpl implements ArticleService{
     }
 
     @Override
-    public Boolean deleteArticle(Long stCode) {
-        return null;
+    public Boolean deleteArticle(Long Id) {
+        log.info("ArticleService_deleteArticle_start: ");
+        ArticleEntity articleEntity = articleRepository.findById(Id)
+                .orElseThrow(NoDataException::new);
+
+        articleEntity.deleteArticle();
+        log.info("ArticleService_deleteArticle_end: true");
+        return true;
     }
 }
