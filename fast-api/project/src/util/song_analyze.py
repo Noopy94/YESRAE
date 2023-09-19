@@ -105,11 +105,24 @@ def getTempo(y, sr):
 """
 # 입력 받은 노래의 멜로디 정보 추출
 def getMelody(y, sr):
+
+    # 간격 조절
+
     # 피치 정보
     melody, _ = librosa.core.piptrack(y=y, sr=sr)
     # S : 스펙토그램
     mel_freqs = librosa.feature.melspectrogram(S=melody, sr=sr)
     return mel_freqs
+
+def getMelodyModify(y, sr):
+
+    # melody, x, y = librosa.pyin(y, fmin=librosa.note_to_hz('C2'), fmax=librosa.note_to_hz('C7'))
+    # print("melody", melody)
+    # return melody
+
+    pass
+    
+
 
 """
 입력한 음원 파일명에 해당하는 파일 삭제
@@ -170,8 +183,14 @@ print(f"root path : {root_path}")
 
 
 # 오늘의 정답 노래 이름
-today_song_name = "aroha.wav"
+#today_song_name = "aroha.wav"
 # 오늘의 정답 노래 파일
+# today_song_file = root_path + today_song_name
+
+today_song_url = "https://p.scdn.co/mp3-preview/123dc7888494074e6e21cf643ec767448cdf3978?cid=c551bf26249e4acf9eab170aed614fab"
+# today_song_url = "https://p.scdn.co/mp3-preview/afb3b416f80fe7e3a504fd809af164fd6199f7aa?cid=b76e1a72191a49e1bd4cc3b5aaa2511b"
+
+today_song_name = getMusic(today_song_url)
 today_song_file = root_path + today_song_name
 
 
@@ -188,8 +207,9 @@ for input_url in url:
     # mp3_name = "aroha2.wav"
     
     mp3_file = root_path + mp3_name
+    # today_song_file = root_path + mp3_name
 
-    print("file 1 : {}".format(today_song_name))
+    # print("file 1 : {}".format(today_song_name))
     print("file 2 : {}".format(mp3_name))
 
     
@@ -197,16 +217,53 @@ for input_url in url:
     y2, sr2 = loadmusic(mp3_file)
 
     # 음원 파일에서 박자, 멜로디 추출
-    mel_freqs_1 = getMelody(y1, sr1)
-    mel_freqs_2 = getMelody(y2, sr2)
+    # getMelodyModify
+    mel_freqs_1 = getMelodyModify(y1, sr1)
+    mel_freqs_2 = getMelodyModify(y2, sr2)
 
-    print(f"mel_freqs_1 : {mel_freqs_1}")
-    print(f"mel_freqs_2 : {mel_freqs_2}")
+    # mel_freqs_1 = getMelody(y1, sr1)
+    # mel_freqs_2 = getMelody(y2, sr2)
+
+    #print(f"mel_freqs_1 : {mel_freqs_1}")
+    #print(f"mel_freqs_2 : {mel_freqs_2}")
+
+
+    # txt 파일 저장
+    output_file_1 = "mel_spectrogram_1.txt"
+    output_file_2 = "mel_spectrogram_2.txt"
+
+    x = 0
+    y = 0
+    for line in mel_freqs_1:
+        x += 1
+    #     for l in line:
+    #         y += 1
+    # print(f"{x} * {y}")
+    print(f"{x}")
+
+    x = 0
+    y = 0
+    for line in mel_freqs_2:
+        x += 1
+    #     for l in line:
+    #         y += 1
+    # print(f"{x} * {y}")
+    print(f"{x}")
+
+    with np.printoptions(threshold=np.inf):
+        np.savetxt(output_file_1, mel_freqs_1)
+        #print(mel_freqs_1)
+    
+    with np.printoptions(threshold=np.inf):
+        np.savetxt(output_file_2, mel_freqs_2)
+        #print(mel_freqs_2)
+    
 
     similarity_score = calSimilarity(getTempo(y1, sr1), getTempo(y2, sr2), mel_freqs_1, mel_freqs_2)
 
     print(f"Overall Similarity Score: {similarity_score}")
 
     deleteFile(mp3_name)
+    #deleteFile(today_song_name)
 
 
