@@ -104,4 +104,18 @@ public class TournamentController {
         log.info("TournamentController_findTournamentResult_end: " + findRes.toString());
         return CommonResponse.success(findRes);
     }
+
+    /**
+     *  이상형 월드컵 모든 유저들의 플레이 합한 결과 노래들을 1등 많이 한 순위로 정렬해서 가져오는 API
+     */
+    @GetMapping("/auth/rank")
+    public CommonResponse<?> findTournamentPopularSong() {
+
+        log.info("TournamentController_findTournamentPopularSong_start: ");
+
+        List<TournamentResultFindRes> findRes = null;
+
+        log.info("TournamentController_findTournamentPopularSong_end: " + findRes.toString());
+        return CommonResponse.success(findRes);
+    }
 }
