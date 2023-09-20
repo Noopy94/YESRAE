@@ -20,7 +20,7 @@ public class ArticleFindRes {
 
     private boolean type;
 
-    private LocalDateTime createdDate;
+    private String createdDate;
 
     private List<String> files;
 }

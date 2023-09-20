@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class ArticleModifyPutReq {
-    Long Id;
+    Long id;
     Long category;
     String content;
     String title;

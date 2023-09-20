@@ -1,7 +1,7 @@
 package com.ssafy.yesrae.domain.article.controller;
 
-import com.ssafy.yesrae.common.exception.Template.FileIOException;
-import com.ssafy.yesrae.common.exception.Template.NotFoundException;
+import com.ssafy.yesrae.common.exception.FileIOException;
+import com.ssafy.yesrae.common.exception.NotFoundException;
 import com.ssafy.yesrae.common.exception.Template.TemplateNoResultException;
 import com.ssafy.yesrae.common.exception.Template.TemplatePossessionFailException;
 import com.ssafy.yesrae.common.model.CommonResponse;
@@ -118,7 +118,8 @@ public class ArticleController {
     @GetMapping()
     public CommonResponse<List<ArticleFindRes>> findAllArticle() {
         log.info("ArticleController_findAllArticle_start: ");
-
+        int[][] com = new int[2][3];
+        System.out.println(com[0].length);
         Optional<List<ArticleFindRes>> findRes = Optional.ofNullable(
                 articleService.findAllArticle());
 

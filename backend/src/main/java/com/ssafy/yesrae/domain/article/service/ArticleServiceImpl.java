@@ -1,7 +1,7 @@
 package com.ssafy.yesrae.domain.article.service;
 
 import com.ssafy.yesrae.common.exception.NoDataException;
-import com.ssafy.yesrae.common.exception.Template.NotFoundException;
+import com.ssafy.yesrae.common.exception.NotFoundException;
 import com.ssafy.yesrae.domain.article.dto.request.ArticleModifyPutReq;
 import com.ssafy.yesrae.domain.article.dto.request.ArticleRegistPostReq;
 import com.ssafy.yesrae.domain.article.dto.response.ArticleFindRes;
@@ -12,6 +12,7 @@ import com.ssafy.yesrae.domain.article.repository.ArticleRepository;
 import com.ssafy.yesrae.domain.article.repository.PhotoRepository;
 import com.ssafy.yesrae.domain.article.repository.TagRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,6 +31,7 @@ public class ArticleServiceImpl implements ArticleService{
 
     private final PhotoRepository photoRepository;
 
+    @Autowired
     public ArticleServiceImpl(ArticleRepository articleRepository, TagRepository tagRepository, PhotoRepository photoRepository) {
         this.articleRepository = articleRepository;
         this.tagRepository = tagRepository;
@@ -111,7 +113,7 @@ public class ArticleServiceImpl implements ArticleService{
                 .content(articleEntity.getContent())
                 .tagName(articleEntity.getTagEntity().getTagName())
                 .title(articleEntity.getTitle())
-                .createdDate(articleEntity.getCreatedDate())
+                .createdDate(articleEntity.getCreatedDate().toString())
                 .files(files)
 //                .nickname()
                 .build();
@@ -164,7 +166,7 @@ public class ArticleServiceImpl implements ArticleService{
                                 .content(m.getContent())
                                 .title(m.getTitle())
                                 .tagName(m.getTagEntity().getTagName())
-                                .createdDate(m.getCreatedDate())
+                                .createdDate(m.getCreatedDate().toString())
 //                              .nickname()
                                 .build()
                 ).collect(Collectors.toList());
