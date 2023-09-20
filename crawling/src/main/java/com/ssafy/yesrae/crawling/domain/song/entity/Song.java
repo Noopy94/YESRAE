@@ -1,4 +1,4 @@
-package com.ssafy.yesrae.crawling.db.entity;
+package com.ssafy.yesrae.crawling.domain.song.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

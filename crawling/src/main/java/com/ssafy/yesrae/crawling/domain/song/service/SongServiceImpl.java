@@ -1,8 +1,11 @@
-package com.ssafy.yesrae.crawling.api.song.service;
+package com.ssafy.yesrae.crawling.domain.song.service;
 
-import com.ssafy.yesrae.crawling.api.song.request.SongRegistPostReq;
-import com.ssafy.yesrae.crawling.db.entity.Song;
-import com.ssafy.yesrae.crawling.db.repository.SongRepository;
+import com.ssafy.yesrae.crawling.domain.song.dto.request.SongRegistPostReq;
+import com.ssafy.yesrae.crawling.domain.song.dto.response.SongFindRes;
+import com.ssafy.yesrae.crawling.domain.song.entity.Song;
+import com.ssafy.yesrae.crawling.domain.song.repository.SongRepository;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Transactional
 @Service
-public class SongServiceImpl implements SongService{
+public class SongServiceImpl implements SongService {
 
     private final SongRepository songRepository;
 
@@ -82,5 +85,26 @@ public class SongServiceImpl implements SongService{
 
         log.info("SongService_registSong_end: success");
         return song;
+    }
+
+    @Override
+    public List<SongFindRes> findSongByArtistId(String artistId) {
+        List<Song> songs = songRepository.findByArtistId(artistId);
+        List<SongFindRes> findSongs = new ArrayList<>();
+        for (Song song : songs) {
+            findSongs.add(SongFindRes.builder()
+                .id(song.getId())
+                .name(song.getName())
+                .artistId(song.getArtistId())
+                .popularity(song.getPopularity())
+                .build());
+        }
+        return findSongs;
+    }
+
+    @Override
+    public void deleteSong(String Id) {
+        songRepository.delete(
+            songRepository.findById(Id).orElseThrow(IllegalArgumentException::new));
     }
 }
