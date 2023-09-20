@@ -9,6 +9,8 @@ export default withMT({
           0: '#94E1FF',
           100: '#BCAAFF',
           200: '#9399FF',
+          800: '#CDC8C8',
+          900: '#1A1A1A',
         },
       },
     },
