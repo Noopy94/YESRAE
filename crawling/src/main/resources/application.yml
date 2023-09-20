@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/yesrae?useSSL=false&serverTimezone=Asia/Seoul&useUnicode=true&characterEncoding=UTF-8
+    username: ssafy
+    password: ssafy
+    tomcat:
+      connection-properties: characterEncoding=UTF-8
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        # show_sql: true
+        format_sql: true
+    open-in-view: false
+
+logging.level:
+  root: info
+  org.hibernate.SQL: debug
+# org.hibernate.type: trace          #Spring boot 2.x, hibernate5
+# org.hibernate.orm.jdbc.bind: trace #Spring boot 3.x, hibernate6
