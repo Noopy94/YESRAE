@@ -4,6 +4,7 @@ import com.ssafy.yesrae.common.exception.NoDataException;
 import com.ssafy.yesrae.common.model.CommonResponse;
 import com.ssafy.yesrae.domain.tournament.dto.request.FindTournamentSongGetReq;
 import com.ssafy.yesrae.domain.tournament.dto.request.RegistTournamentResultPostReq;
+import com.ssafy.yesrae.domain.tournament.dto.response.TournamentResultFindRes;
 import com.ssafy.yesrae.domain.tournament.dto.response.TournamentSongFindRes;
 import com.ssafy.yesrae.domain.tournament.service.TournamentService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -83,5 +84,24 @@ public class TournamentController {
 
         log.info("TournamentController_registTournamentResult_end: success");
         return CommonResponse.success(SUCCESS);
+    }
+
+    /**
+     *  유저의 이상형 월드컵 플레이 결과 로그를 불러오는 API
+     */
+    @GetMapping("/result")
+    public CommonResponse<?> findTournamentResult(HttpServletRequest httpServletRequest) {
+
+        // TODO: JWT access-token 에서 유저 PK 꺼낼 수 있는 로직 구현 필요(인가 처리)
+        //Long userId = userService.getUserIdByToken(httpServletRequest.getHeader("access-token"));
+        Long userId = 1L; // 임시
+
+        log.info("TournamentController_findTournamentResult_start: "
+            + userId);
+
+        List<TournamentResultFindRes> findRes = tournamentService.findTournamentResult(userId);
+
+        log.info("TournamentController_findTournamentResult_end: " + findRes.toString());
+        return CommonResponse.success(findRes);
     }
 }

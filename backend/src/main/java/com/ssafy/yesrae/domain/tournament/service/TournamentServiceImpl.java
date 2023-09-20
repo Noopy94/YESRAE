@@ -3,6 +3,7 @@ package com.ssafy.yesrae.domain.tournament.service;
 import com.ssafy.yesrae.common.exception.NoDataException;
 import com.ssafy.yesrae.domain.tournament.dto.request.FindTournamentSongGetReq;
 import com.ssafy.yesrae.domain.tournament.dto.request.RegistTournamentResultPostReq;
+import com.ssafy.yesrae.domain.tournament.dto.response.TournamentResultFindRes;
 import com.ssafy.yesrae.domain.tournament.dto.response.TournamentSongFindRes;
 import com.ssafy.yesrae.domain.tournament.entity.Tournament;
 import com.ssafy.yesrae.domain.tournament.entity.TournamentResult;
@@ -129,5 +130,20 @@ public class TournamentServiceImpl implements TournamentService{
         tournamentResultRepository.save(tournamentResultFour);
 
         log.info("TournamentService_registTournamentResult_end: success");
+    }
+
+    /**
+     * 유저 Id 별 이상형 월드컵 결과를 가져오기 위한 서비스
+     * @param userId : 이상형 월드컵 플레이 유저 Id
+     */
+    @Override
+    public List<TournamentResultFindRes> findTournamentResult(Long userId) {
+        log.info("TournamentService_findTournamentResult_start: "
+            + userId);
+
+        List<TournamentResultFindRes> findRes = tournamentResultRepository.findTournamentResult(userId);
+
+        log.info("TournamentService_findTournamentResult_end: success");
+        return findRes;
     }
 }
