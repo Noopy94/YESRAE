@@ -3,6 +3,7 @@ package com.ssafy.yesrae.domain.tournament.repository;
 import static com.ssafy.yesrae.domain.tournament.entity.QTournamentSong.tournamentSong;
 
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.yesrae.domain.tournament.dto.request.FindTournamentSongGetReq;
 import com.ssafy.yesrae.domain.tournament.dto.response.TournamentSongFindRes;
@@ -36,14 +37,13 @@ public class QTournamentSongRepositoryImpl implements QTournamentSongRepository{
         log.info("QTournamentSongRepository_findTournamentSong_start: "
             + findTournamentSongGetReq.toString());
 
-        //Todo : 랜덤으로 노래를 가져오도록 수정해야 함. 라운드 수에 맞춰서
-
         return queryFactory
             .select(Projections.constructor(TournamentSongFindRes.class,
                 tournamentSong.title.as("title"),
                 tournamentSong.singer.as("singer"),
                 tournamentSong.url.as("url")))
             .from(tournamentSong)
+            .orderBy(Expressions.numberTemplate(Double.class, "RAND()").asc())
             .limit(findTournamentSongGetReq.getRound())
             .fetch();
     }
