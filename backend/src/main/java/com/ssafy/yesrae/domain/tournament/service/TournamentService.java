@@ -15,4 +15,6 @@ public interface TournamentService {
     void registTournamentResult(RegistTournamentResultPostReq registTournamentResultPostReq);
 
     List<TournamentResultFindRes> findTournamentResult(Long userId);
+
+    List<TournamentResultFindRes> findTournamentPopularSong();
 }
