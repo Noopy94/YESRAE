@@ -106,5 +106,6 @@ public class SongServiceImpl implements SongService {
     public void deleteSong(String Id) {
         songRepository.delete(
             songRepository.findById(Id).orElseThrow(IllegalArgumentException::new));
+        System.out.println(Id + "이 노래 지웠습니다.");
     }
 }

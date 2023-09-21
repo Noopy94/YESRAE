@@ -6,7 +6,6 @@ import com.google.gson.JsonParser;
 import com.ssafy.yesrae.crawling.domain.song.dto.request.SongRegistPostReq;
 import com.ssafy.yesrae.crawling.domain.song.dto.response.SongFindRes;
 import com.ssafy.yesrae.crawling.domain.song.service.SongService;
-import jakarta.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,7 +32,7 @@ public class SongController {
 
     private static final String code = "";
     private static final String authorization = "";
-    private static final int startIndex = 2058;
+    private static final int startIndex = 0;
 
     StringBuilder sb;
     BufferedReader br;
@@ -206,7 +205,7 @@ public class SongController {
                     e.printStackTrace();
                 }
                 URL ArtistURL = new URL("https://api.spotify.com/v1/artists/" + artistId
-                    + "/albums?include_groups=single,album&market=KR&limit=50");
+                    + "/albums?include_groups=single,album&market=KR&limit=50&locale=ko_KR");
                 /* 가수 ID 검색으로 받아야 할 것
                  * : 가수 이름, 앨범 ID, 앨범 이름, 발매 시기
                  * 이 후 앨범 ID로 다시 track을 검색한다. */
@@ -268,7 +267,7 @@ public class SongController {
                             .get("url").getAsString();
                     }
                     URL AlbumURL = new URL(
-                        "https://api.spotify.com/v1/albums/" + albumId + "?market=KR");
+                        "https://api.spotify.com/v1/albums/" + albumId + "?locale=ko_KR");
                     /* 앨범 ID 검색으로 받아야 할 것
                      * : 각 트랙의 ID, 각 트랙의 이름, 노래길이, 미리보기 URL */
                     sb = new StringBuilder();
@@ -434,7 +433,7 @@ public class SongController {
         }
     }
 
-    @PostConstruct
+    //    @PostConstruct
     public void deleteDuplicates() throws IOException {
         FileInputStream file = new FileInputStream("C:\\dev\\A304\\crawling\\singer.xlsx");
         IOUtils.setByteArrayMaxOverride(Integer.MAX_VALUE);
@@ -443,26 +442,21 @@ public class SongController {
         for (int sheetIndex = 0; sheetIndex < startIndex; sheetIndex++) {
             String artistId = sheet.getRow(sheetIndex).getCell(0).getStringCellValue();
             List<SongFindRes> songs = songService.findSongByArtistId(artistId);
-            HashMap<String, Integer> map = new HashMap<>();
+            HashMap<String, String[]> map = new HashMap<>();
             for (SongFindRes song : songs) {
-                if (song.getName().contains("(live)") || song.getName().contains("(Live)")
-                    || song.getName().contains("(inst)") || song.getName().contains("(Inst)")
-                    || song.getName().contains("inst.") || song.getName().contains("Inst.")
-                    || song.getName().contains("(MR)") || song.getName().contains("instrumental")) {
+                if (song.getName().contains(" version") || song.getName().contains(" Version")) {
                     songService.deleteSong(song.getId());
-                }
-                if (map.containsKey(song.getName())) {
-                    if (map.get(song.getName()) > song.getPopularity()) {
+                } else if (map.containsKey(song.getName())) {
+                    if (Integer.parseInt(map.get(song.getName())[0]) >= song.getPopularity()) {
                         songService.deleteSong((song.getId()));
                     } else {
-                        map.put(song.getName(), song.getPopularity());
-                        // 이 때 이미 map 에 들어있던 노래의 id 로 삭제해야하는데 방법은?
-                        // String인 id 값과 Integer인 populartiy를 같은 value로 보관할 방법
-                        // String 배열로 넣어서 Integer로 string 으로 바꾸기?
-//                        songService.deleteSong();
+                        songService.deleteSong(map.get(song.getName())[1]);
+                        map.put(song.getName(),
+                            new String[]{song.getPopularity().toString(), song.getId()});
                     }
                 } else {
-                    map.put(song.getName(), song.getPopularity());
+                    map.put(song.getName(),
+                        new String[]{song.getPopularity().toString(), song.getId()});
                 }
             }
         }
