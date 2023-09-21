@@ -7,7 +7,6 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.Where;
 
-import java.text.DateFormat;
 import java.time.LocalDateTime;
 
 @Getter
@@ -37,7 +36,7 @@ public class ArticleEntity extends BaseEntity {
     //잡담(0), 질문(1), 추천(2)
     @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name="category", referencedColumnName = "Id")
-    private TagEntity tagEntity;
+    private CategoryEntity categoryEntity;
 
     @Column(name = "created_date",nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime createdDate;
@@ -55,8 +54,8 @@ public class ArticleEntity extends BaseEntity {
 
     public void modifyArticle() {this.updateDate = LocalDateTime.now();}
 
-    public void modifyArticle(String title, String content, TagEntity tagEntity){
-        this.tagEntity = tagEntity;
+    public void modifyArticle(String title, String content, CategoryEntity categoryEntity){
+        this.categoryEntity = categoryEntity;
         this.title = title;
         this.content = content;
     }

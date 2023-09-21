@@ -6,11 +6,11 @@ import com.ssafy.yesrae.domain.article.dto.request.ArticleModifyPutReq;
 import com.ssafy.yesrae.domain.article.dto.request.ArticleRegistPostReq;
 import com.ssafy.yesrae.domain.article.dto.response.ArticleFindRes;
 import com.ssafy.yesrae.domain.article.entity.ArticleEntity;
+import com.ssafy.yesrae.domain.article.entity.CategoryEntity;
 import com.ssafy.yesrae.domain.article.entity.PhotoEntity;
-import com.ssafy.yesrae.domain.article.entity.TagEntity;
 import com.ssafy.yesrae.domain.article.repository.ArticleRepository;
 import com.ssafy.yesrae.domain.article.repository.PhotoRepository;
-import com.ssafy.yesrae.domain.article.repository.TagRepository;
+import com.ssafy.yesrae.domain.article.repository.CategoryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,14 +27,14 @@ import java.util.stream.Collectors;
 public class ArticleServiceImpl implements ArticleService{
 
     private final ArticleRepository articleRepository;
-    private final TagRepository tagRepository;
+    private final CategoryRepository categoryRepository;
 
     private final PhotoRepository photoRepository;
 
     @Autowired
-    public ArticleServiceImpl(ArticleRepository articleRepository, TagRepository tagRepository, PhotoRepository photoRepository) {
+    public ArticleServiceImpl(ArticleRepository articleRepository, CategoryRepository categoryRepository, PhotoRepository photoRepository) {
         this.articleRepository = articleRepository;
-        this.tagRepository = tagRepository;
+        this.categoryRepository = categoryRepository;
         this.photoRepository = photoRepository;
     }
 
@@ -51,7 +51,7 @@ public class ArticleServiceImpl implements ArticleService{
         //TODO 작성자 정보 가져오기
 //        User user = userRepository.findById(registInfo.getUserId())
 //                .orElseThrow(UserNotFoundException::new);
-        TagEntity tagEntity = tagRepository.findById(articleRegistPostReq.getCategory())
+        CategoryEntity categoryEntity = categoryRepository.findById(articleRegistPostReq.getCategory())
                 .orElseThrow(NotFoundException::new);
         Long category = articleRegistPostReq.getCategory();
         String content = articleRegistPostReq.getContent();
@@ -65,7 +65,7 @@ public class ArticleServiceImpl implements ArticleService{
         ArticleEntity articleEntity = ArticleEntity.builder()
                 .content(content)
                 .title(title)
-                .tagEntity(tagEntity)
+                .categoryEntity(categoryEntity)
                 .type(type)
                 .build();
         articleRepository.save(articleEntity);
@@ -111,7 +111,7 @@ public class ArticleServiceImpl implements ArticleService{
 
         ArticleFindRes articleFindRes = ArticleFindRes.builder()
                 .content(articleEntity.getContent())
-                .tagName(articleEntity.getTagEntity().getTagName())
+                .tagName(articleEntity.getCategoryEntity().getTagName())
                 .title(articleEntity.getTitle())
                 .createdDate(articleEntity.getCreatedDate().toString())
                 .files(files)
@@ -142,9 +142,9 @@ public class ArticleServiceImpl implements ArticleService{
         // TODO: 현재 로그인 유저의 id와 글쓴이의 id가 일치할 때
 //        if (storeEntity.getUser().getId().equals(modifyInfo.getUserId())) {
         // 점포 수정
-        TagEntity tagEntity = tagRepository.findById(articleModifyPutReq.getCategory())
+        CategoryEntity categoryEntity = categoryRepository.findById(articleModifyPutReq.getCategory())
                 .orElseThrow(NullPointerException::new);
-        articleEntity.modifyArticle(articleModifyPutReq.getTitle(), articleModifyPutReq.getContent(), tagEntity);
+        articleEntity.modifyArticle(articleModifyPutReq.getTitle(), articleModifyPutReq.getContent(), categoryEntity);
 //          TODO : 사진 어떻게 처리할지 관리
         log.info("ArticleService_modifyArticle_end: true");
         return true;
@@ -160,12 +160,13 @@ public class ArticleServiceImpl implements ArticleService{
     public List<ArticleFindRes> findAllArticle() {
         log.info("ArticleService_findAll_start: ");
 
+
         List<ArticleFindRes> res = articleRepository.findAll()
                 .stream().map(m -> ArticleFindRes.builder()
                                 .files(findArticleFiles(m))
                                 .content(m.getContent())
                                 .title(m.getTitle())
-                                .tagName(m.getTagEntity().getTagName())
+                                .tagName(m.getCategoryEntity().getTagName())
                                 .createdDate(m.getCreatedDate().toString())
 //                              .nickname()
                                 .build()
