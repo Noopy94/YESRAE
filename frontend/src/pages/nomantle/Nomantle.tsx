@@ -31,8 +31,10 @@ export default function Nomantle(){
 
   const category = ["#", "앨범 아트", "추측한 노래", "유사도", "유사도 순위"];
 
+  // 임시 데이터
   const song_info = [
-    { index: 2, rank: 5, album_img: 'https://i.scdn.co/image/ab67616d0000b273da4d50ff045b2a463f56035a', title: '상남자', similarity: 90 }
+    { index: 2, rank: 5, album_img: 'https://i.scdn.co/image/ab67616d0000b273da4d50ff045b2a463f56035a', title: '상남자', similarity: 90 },
+    { index : 5, rank : 1, album_img : 'https://i.scdn.co/image/ab67616d0000b27367c2fc3f114b250085a4fab6', title : 'A', similarity : 100},
   ]
 
     return (
@@ -48,7 +50,6 @@ export default function Nomantle(){
           <input
                 type= "text"
                 className="h-12 text-lg text-white rounded-xl w-96 pl-11 bg-yesrae-900"
-                value= ""
                 placeholder="추측할 노래 제목을 입력하세요"
                 onChange={onChangeSearch}
                 onKeyDown={onHandleKeyDown}
