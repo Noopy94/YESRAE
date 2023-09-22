@@ -33,7 +33,6 @@ public class SongServiceImpl implements SongService {
         String albumName = songInfo.getAlbumName();
         String artistId = songInfo.getArtistId();
         String artistName = songInfo.getArtistName();
-        String genre = songInfo.getGenre();
         String imgUrl = songInfo.getImgUrl();
         String previewUrl = songInfo.getPreviewUrl();
         Integer releaseYear = songInfo.getReleaseYear();
@@ -60,7 +59,6 @@ public class SongServiceImpl implements SongService {
             .albumName(albumName)
             .artistId(artistId)
             .artistName(artistName)
-            .genre(genre)
             .imgUrl(imgUrl)
             .previewUrl(previewUrl)
             .releaseYear(releaseYear)
@@ -107,5 +105,10 @@ public class SongServiceImpl implements SongService {
         songRepository.delete(
             songRepository.findById(Id).orElseThrow(IllegalArgumentException::new));
         System.out.println(Id + "이 노래 지웠습니다.");
+    }
+
+    @Override
+    public List<Song> findAllSong() {
+        return songRepository.findAll();
     }
 }

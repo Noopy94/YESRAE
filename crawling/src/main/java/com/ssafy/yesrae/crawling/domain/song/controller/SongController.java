@@ -5,7 +5,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ssafy.yesrae.crawling.domain.song.dto.request.SongRegistPostReq;
 import com.ssafy.yesrae.crawling.domain.song.dto.response.SongFindRes;
+import com.ssafy.yesrae.crawling.domain.song.entity.Song;
 import com.ssafy.yesrae.crawling.domain.song.service.SongService;
+import jakarta.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -300,11 +302,6 @@ public class SongController {
                     conn.disconnect();
                     text = sb.toString();
                     JsonObject trackObject = parser.parse(text).getAsJsonObject();
-                    JsonArray genres = trackObject.get("genres").getAsJsonArray();
-                    String genre = null;
-                    if (!genres.isEmpty()) {
-                        genre = genres.get(0).getAsString();
-                    }
                     JsonArray tracks = trackObject.get("tracks").getAsJsonObject()
                         .getAsJsonArray("items");
                     for (int trackIndex = 0; trackIndex < tracks.size(); trackIndex++) {
@@ -405,7 +402,6 @@ public class SongController {
                         registInfo.setAlbumName(albumName);
                         registInfo.setArtistId(artistId);
                         registInfo.setArtistName(artistName);
-                        registInfo.setGenre(genre);
                         registInfo.setImgUrl(imgUrl);
                         registInfo.setPreviewUrl(previewURL);
                         registInfo.setReleaseYear(releaseYear);
@@ -461,5 +457,103 @@ public class SongController {
             }
         }
         file.close();
+    }
+
+    @PostConstruct
+    public void changeSongName() throws IOException, InterruptedException {
+        getToken();
+        List<Song> songList = songService.findAllSong();
+        // 노래 돌아가면서 곡 이름이랑 가수 이름 수정해서 올려주기
+        for (int songStartIndex = 0; songStartIndex < songList.size() / 50; songStartIndex++) {
+            System.out.println(songStartIndex + "번째 50받기 들어갑니다");
+            sb = new StringBuilder();
+            String line;
+            sb.append(songList.get(songStartIndex * 50).getId());
+            for (int songIndex = (songStartIndex * 50) + 1;
+                songIndex < (songStartIndex + 1) * 50 && songIndex < songList.size();
+                songIndex++) {
+                sb.append("," + songList.get(songIndex).getId());
+            }
+            String songs = sb.toString();
+            System.out.println("노래모음" + songs);
+            URL TrackURL = new URL(
+                "https://api.spotify.com/v1/tracks?ids=" + songs
+                    + "&locale=ko_KR");
+            sb = new StringBuilder();
+            HttpURLConnection conn = (HttpURLConnection) TrackURL.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Authorization", "Bearer " + Atoken);
+            if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+                br = new BufferedReader(new InputStreamReader(conn.getInputStream(),
+                    StandardCharsets.UTF_8));
+            } else if (conn.getResponseCode() == 429) {
+                System.out.println("너무 자주했어요 잠깐쉽니다");
+                Thread.sleep(10000);
+                songStartIndex--;
+                continue;
+                // 너무 자주 api 보냈을 때
+            } else if (conn.getResponseCode() == 401) {
+                // 토큰 문제
+                System.out.println("한시간 됐네요 토큰 갱신합니다.");
+                changeToken();
+                songStartIndex--;
+                continue;
+            } else {
+                System.out.println(
+                    "갱신 오류남" + conn.getResponseMessage() + " 어디서? 여기서" + songStartIndex);
+                break;
+            }
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            br.close();
+            conn.disconnect();
+            String text = sb.toString();
+            JsonObject trackObject = parser.parse(text).getAsJsonObject();
+            JsonArray tracks = trackObject.get("tracks").getAsJsonArray();
+            for (int trackIndex = 0; trackIndex < tracks.size(); trackIndex++) {
+                int num = songStartIndex * 50 + trackIndex;
+                JsonObject ObjectTrack = tracks.get(trackIndex).getAsJsonObject();
+                String trackName = ObjectTrack.get("name").getAsString();
+                JsonArray artists = ObjectTrack.get("artists").getAsJsonArray();
+                JsonObject artist = new JsonObject();
+                for (int i = 0; i < artists.size(); i++) {
+                    artist = artists.get(i).getAsJsonObject();
+                    if (artist.get("id").getAsString()
+                        .equals(songList.get(num).getArtistId())) {
+                        break;
+                    }
+                }
+                String albumName = ObjectTrack.get("album").getAsJsonObject().get("name")
+                    .getAsString();
+                String artistName = artist.get("name").getAsString();
+                SongRegistPostReq registInfo = new SongRegistPostReq();
+                registInfo.setId(songList.get(num).getId());
+                registInfo.setName(trackName);
+                registInfo.setAlbumId(songList.get(num).getAlbumId());
+                registInfo.setAlbumName(albumName);
+                registInfo.setArtistId(songList.get(num).getArtistId());
+                registInfo.setArtistName(artistName);
+                registInfo.setImgUrl(songList.get(num).getImgUrl());
+                registInfo.setPreviewUrl(songList.get(num).getPreviewUrl());
+                registInfo.setReleaseYear(songList.get(num).getReleaseYear());
+                registInfo.setDuration(songList.get(num).getDuration());
+                registInfo.setPopularity(songList.get(num).getPopularity());
+                registInfo.setAcousticness(songList.get(num).getAcousticness());
+                registInfo.setDanceability(songList.get(num).getDanceability());
+                registInfo.setEnergy(songList.get(num).getEnergy());
+                registInfo.setInstrumentalness(songList.get(num).getInstrumentalness());
+                registInfo.setTune(songList.get(num).getTune());
+                registInfo.setLiveness(songList.get(num).getLiveness());
+                registInfo.setLoudness(songList.get(num).getLoudness());
+                registInfo.setMode(songList.get(num).getMode());
+                registInfo.setSpeechiness(songList.get(num).getSpeechiness());
+                registInfo.setTempo(songList.get(num).getTempo());
+                registInfo.setTimeSignature(songList.get(num).getTimeSignature());
+                registInfo.setValence(songList.get(num).getValence());
+                registInfo.setTodaySong(false);
+                songService.registSong(registInfo);
+            }
+        }
     }
 }

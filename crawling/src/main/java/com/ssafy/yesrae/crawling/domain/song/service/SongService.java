@@ -12,4 +12,6 @@ public interface SongService {
     List<SongFindRes> findSongByArtistId(String artistId);
 
     void deleteSong(String Id);
+
+    List<Song> findAllSong();
 }
