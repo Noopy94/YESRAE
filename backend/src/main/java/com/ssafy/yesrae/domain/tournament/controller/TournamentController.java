@@ -4,6 +4,7 @@ import com.ssafy.yesrae.common.exception.NoDataException;
 import com.ssafy.yesrae.common.model.CommonResponse;
 import com.ssafy.yesrae.domain.tournament.dto.request.FindTournamentSongGetReq;
 import com.ssafy.yesrae.domain.tournament.dto.request.RegistTournamentResultPostReq;
+import com.ssafy.yesrae.domain.tournament.dto.response.TournamentPopularSongFindRes;
 import com.ssafy.yesrae.domain.tournament.dto.response.TournamentResultFindRes;
 import com.ssafy.yesrae.domain.tournament.dto.response.TournamentSongFindRes;
 import com.ssafy.yesrae.domain.tournament.service.TournamentService;
@@ -52,7 +53,7 @@ public class TournamentController {
     }
 
     /**
-     *  플레이 한 이상형 월드컵을 각 플레이 시점 마다 구분할 수 있도록 DB에 저장하는 API
+     *  플레이 한 이상형 월드컵을 각 플레이 마다 구분할 수 있도록 DB에 저장
      */
     @PostMapping
     public CommonResponse<?> registTournament(
@@ -111,9 +112,9 @@ public class TournamentController {
     @GetMapping("/auth/rank")
     public CommonResponse<?> findTournamentPopularSong() {
 
-        log.info("TournamentController_findTournamentPopularSong_start: ");
+        log.info("TournamentController_findTournamentPopularSong_start");
 
-        List<TournamentResultFindRes> findRes = null;
+        List<TournamentPopularSongFindRes> findRes = tournamentService.findTournamentPopularSong();
 
         log.info("TournamentController_findTournamentPopularSong_end: " + findRes.toString());
         return CommonResponse.success(findRes);

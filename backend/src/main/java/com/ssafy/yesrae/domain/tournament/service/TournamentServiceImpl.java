@@ -3,6 +3,7 @@ package com.ssafy.yesrae.domain.tournament.service;
 import com.ssafy.yesrae.common.exception.NoDataException;
 import com.ssafy.yesrae.domain.tournament.dto.request.FindTournamentSongGetReq;
 import com.ssafy.yesrae.domain.tournament.dto.request.RegistTournamentResultPostReq;
+import com.ssafy.yesrae.domain.tournament.dto.response.TournamentPopularSongFindRes;
 import com.ssafy.yesrae.domain.tournament.dto.response.TournamentResultFindRes;
 import com.ssafy.yesrae.domain.tournament.dto.response.TournamentSongFindRes;
 import com.ssafy.yesrae.domain.tournament.entity.Tournament;
@@ -60,7 +61,7 @@ public class TournamentServiceImpl implements TournamentService{
     }
 
     /**
-     * 플레이 한 이상형 월드컵을 각 플레이 시점 마다 구분할 수 있도록 DB에 저장
+     * 플레이 한 이상형 월드컵을 각 플레이 마다 구분할 수 있도록 DB에 저장
      * @param userId : 이상형 월드컵 생성한 유저 ID
      */
     @Override
@@ -144,6 +145,19 @@ public class TournamentServiceImpl implements TournamentService{
         List<TournamentResultFindRes> findRes = tournamentResultRepository.findTournamentResult(userId);
 
         log.info("TournamentService_findTournamentResult_end: success");
+        return findRes;
+    }
+
+    /**
+     * 이상형 월드컵 모든 유저들의 플레이 합한 결과 노래들을 1등 많이 한 순위로 정렬해서 가져오는 API
+     */
+    @Override
+    public List<TournamentPopularSongFindRes> findTournamentPopularSong() {
+        log.info("TournamentService_findTournamentPopularSong_start");
+
+        List<TournamentPopularSongFindRes> findRes = tournamentResultRepository.findTournamentPopularSong();
+
+        log.info("TournamentService_findTournamentPopularSong_end: success");
         return findRes;
     }
 }

@@ -1,5 +1,6 @@
 package com.ssafy.yesrae.domain.tournament.repository;
 
+import com.ssafy.yesrae.domain.tournament.dto.response.TournamentPopularSongFindRes;
 import com.ssafy.yesrae.domain.tournament.dto.response.TournamentResultFindRes;
 import java.util.List;
 
@@ -9,4 +10,6 @@ import java.util.List;
 public interface QTournamentResultRepository {
 
     List<TournamentResultFindRes> findTournamentResult(Long userId);
+
+    List<TournamentPopularSongFindRes> findTournamentPopularSong();
 }

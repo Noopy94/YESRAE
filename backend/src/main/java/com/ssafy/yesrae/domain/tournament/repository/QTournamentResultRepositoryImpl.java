@@ -7,6 +7,7 @@ import static com.ssafy.yesrae.domain.tournament.entity.QTournamentSong.tourname
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.yesrae.domain.tournament.dto.response.TournamentPopularSongFindRes;
 import com.ssafy.yesrae.domain.tournament.dto.response.TournamentResultFindRes;
 import jakarta.persistence.EntityManager;
 import java.util.List;
@@ -47,6 +48,27 @@ public class QTournamentResultRepositoryImpl implements QTournamentResultReposit
             .innerJoin(tournamentResult.tournamentSong, tournamentSong)
             .innerJoin(tournamentResult.tournament, tournament)
             .where(userIdEq(userId))
+            .orderBy(tournament.date.desc())
+            .fetch();
+    }
+
+    /**
+     * 이상형 월드컵 모든 유저들의 플레이 합한 결과, 노래들의 인기 순위를 가져오기 위한 Query
+     */
+    @Override
+    public List<TournamentPopularSongFindRes> findTournamentPopularSong() {
+
+        log.info("QTournamentSongRepository_findTournamentPopularSong_start");
+
+        return queryFactory
+            .select(Projections.constructor(TournamentPopularSongFindRes.class,
+                tournamentSong.title.as("title"),
+                tournamentSong.singer.as("singer"),
+                tournamentSong.singer.as("songSinger")))
+            .from(tournamentResult)
+            .innerJoin(tournamentResult.tournamentSong, tournamentSong)
+            .innerJoin(tournamentResult.tournament, tournament)
+            .where()
             .orderBy(tournament.date.desc())
             .fetch();
     }
