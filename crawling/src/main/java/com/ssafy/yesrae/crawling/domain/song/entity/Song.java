@@ -1,4 +1,4 @@
-package com.ssafy.yesrae.crawling.db.entity;
+package com.ssafy.yesrae.crawling.domain.song.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,6 +19,7 @@ import org.hibernate.annotations.DynamicInsert;
 @SuperBuilder
 @Entity
 public class Song {
+
     @Id
     private String id;
 
@@ -36,9 +37,6 @@ public class Song {
 
     @Column(nullable = false, columnDefinition = "VARCHAR(255) CHARACTER SET UTF8")
     private String artistName;
-
-    @Column(length = 40)
-    private String genre;
 
     @Column(nullable = false)
     private String imgUrl;
@@ -60,7 +58,7 @@ public class Song {
     private Float acousticness;
 
     // 1에 가까울수록 댄스에 적합한 곡입니다.
-    @Column(nullable = false, columnDefinition = "FLOAT DEFAULT 0" )
+    @Column(nullable = false, columnDefinition = "FLOAT DEFAULT 0")
     private Float danceability;
 
     // 1에 가까울수록 빠르고 시끄럽습니다.
