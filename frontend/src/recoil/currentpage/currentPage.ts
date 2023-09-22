@@ -2,10 +2,11 @@ import { atom } from 'recoil';
 
 // 초기 상태를 정의합니다.
 const initialPageState = {
-  pageName: 'PlayList', // 현재 페이지의 이름
+  pageName: 'PlayList',
 };
 
+// 현재 페이지 전역변수, 현재 페이지에 따라서 HeaderNav의 상태가 달라짐
 export const currentPageState = atom({
-  key: 'currentPageState', // 고유한 키 값을 제공합니다.
-  default: initialPageState, // 초기 상태를 설정합니다.
+  key: 'currentPageState',
+  default: initialPageState,
 });
