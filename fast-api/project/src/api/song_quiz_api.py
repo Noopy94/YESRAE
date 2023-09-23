@@ -2,7 +2,7 @@ from typing import List
 from fastapi import Depends, Body, APIRouter
 from apscheduler.schedulers.background import BackgroundScheduler
 from schema.request import SearchSongQuizRequest
-from schema.response import SongQuizSchema
+from schema.response import SongQuizSchema, SongTitleSchema, SongTotalRankSchema
 from service import song_quiz
 from service.song_quiz import SongQuizService
 
@@ -41,7 +41,7 @@ song name 으로 조회 -> song id 로 -> similiarity 순위 조회
 return 입력한 곡의 정답 여부, 곡 이름, 유사도 정보, 순위 정보 
 """
 @router.post("/quiz", status_code=200, response_model= List[SongQuizSchema])
-async def song_search(
+async def song_guess(
         search_request : SearchSongQuizRequest,
         song_quiz_service: SongQuizService = Depends(get_song_quiz_service)
     ):
@@ -53,3 +53,31 @@ async def song_search(
     song_quiz_result : List[SongQuizSchema] = song_quiz_service.search_song_result(song_name)
 
     return song_quiz_result
+
+
+"""
+TODO
+request : 곡 제목
+response : 해당 곡 제목으로 시작하는 유사한 제목의 곡 5곡
+"""
+@router.post("/quiz/search", status_code=200, response_model=List[SongTitleSchema])
+async def song_search(
+        search_request : SearchSongQuizRequest,
+        song_quiz_service: SongQuizService = Depends(get_song_quiz_service)
+):
+    song_name = search_request.get("name")
+
+    print("song_name", song_name)
+
+    
+
+
+"""
+TODO
+response : 전체 유사도 1000곡 정보 
+"""
+@router.get("/quiz/result", status_code=200, response_model=List[SongTotalRankSchema])
+async def song_ranks(
+    song_quiz_service: SongQuizService = Depends(get_song_quiz_service)
+):
+    pass
