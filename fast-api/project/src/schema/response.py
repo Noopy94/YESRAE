@@ -41,7 +41,7 @@ class SongTotalRankSchema(BaseModel):
     title : str
     similarity : float
     singer : str
-    rank : int
+    rank : Optional[int]
 
     class Config:
         from_attributes = True

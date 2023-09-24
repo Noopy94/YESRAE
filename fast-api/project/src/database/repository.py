@@ -23,7 +23,7 @@ class SongRepository:
     def get_song_by_id(self, song_id: str) -> Song | None:
         try:
             session = SessionFactory()
-            return session.query(Song).filter(Song.id == song_id)
+            return session.query(Song).filter(Song.id == song_id).all()
         finally:
             session.close()
 
@@ -148,15 +148,17 @@ class SongQuizRepository:
     """
     노래 ID 에 해당하는 유사도 조회
     """
-    def get_song_similarity(self, song_id : str, key : str) -> Float | None:
+    def get_song_similarity(self, song_id : str, key : str, check : bool) -> Float | None:
 
         similarity_datas = self.rd.hgetall(key)
 
-        # redis 에 바이트 문자열로 저장되기 때문에 encode
-        #song_id_byte = song_id.encode('utf-8')
-        #similarity = similarity_datas.get(song_id_byte).decode('utf-8')
+        if check:
 
-        similarity = similarity_datas.get(song_id).decode('utf-8')
+        # redis 에 바이트 문자열로 저장되기 때문에 encode
+            song_id_byte = song_id.encode('utf-8')
+            similarity = similarity_datas.get(song_id_byte).decode('utf-8')
+        else:
+            similarity = similarity_datas.get(song_id).decode('utf-8')
 
         return similarity
     
@@ -210,19 +212,23 @@ class SongQuizRankRepository:
     """
     노래 ID 에 해당하는 순위 조회
     """
-    def get_song_rank(self, song_id , key : str) -> int:
+    def get_song_rank(self, song_id , key : str) ->  Optional[int]:
 
         rank_datas = self.rd.hgetall(key)
 
         # redis 에 바이트 문자열로 저장되기 때문에 encode
         song_id_byte = song_id.encode('utf-8')
 
-        rank = int(rank_datas.get(song_id_byte))
+        rank = rank_datas.get(song_id_byte)
 
         # 해당하는 노래가 1000위 안에 안 들어 있을 수도 있다
         # rank : None
+        if rank is not None:
+            rank = int(rank)
+            return rank
+        else:
+            return None
 
-        return rank
     
 
     """
@@ -241,7 +247,7 @@ class SongQuizRankRepository:
     """
     def get_all_song_rank(self, day):
 
-        key = str(day) + "_song_quiz"
+        key = str(day) + "_song_quiz_rank"
         # song_quiz_rank 에 저장한 모든 정보 가져오기
         rank_datas = self.rd.hgetall(key)
 

@@ -198,12 +198,13 @@ def calSimilarity(tempo1, tempo2, mel_mean_var_concat1, mel_mean_var_concat2):
     return similarity_score
 
 
+"""
+test
+"""
+
 if __name__ == "__main__":
 
     try:
-
-        
-
         # 음원 파일 저장하는 경로
         root_path = os.getcwd() +"\\"
         print(f"root path : {root_path}")
@@ -220,10 +221,6 @@ if __name__ == "__main__":
         y1, sr1 = loadmusic(today_song_file)
 
         mel_mean_var_concat_1 = getMelody(y1, sr1)
-
-        # feature_list = []
-        # feature_list.append(mel_mean_var_concat_1)
-
 
         # 30초 미리 듣기 API 저장
         url = ['https://p.scdn.co/mp3-preview/a76a5bfcf5145901bd4b7ca88e248a2d897950d6?cid=c551bf26249e4acf9eab170aed614fab', 'https://p.scdn.co/mp3-preview/492d170729d672b0e224f399e116d5dafb80755f?cid=c551bf26249e4acf9eab170aed614fab'
@@ -243,10 +240,6 @@ if __name__ == "__main__":
 
             # 음원 파일에서 박자, 멜로디 추출
             mel_mean_var_concat_2 = getMelody(y2, sr2)
-
-            # feature_list.append(mel_mean_var_concat_2)
-            # print("len :", len(feature_list))
-
 
             # txt 파일 저장
             # output_file_1 = "mel_spectrogram_1.txt"
@@ -270,86 +263,4 @@ if __name__ == "__main__":
         print("error :", e)
         deleteFile(mp3_name)
         deleteFile(today_song_name)
-
-
-    # """
-    # 초기 계획 TEST 용
-    # url 에서 음원 파일 가져와서 박자, 멜로디 정보 추출후 유사도 계산
-    # """
-
-    # # 30초 미리 듣기 API 저장
-    # url = ["https://p.scdn.co/mp3-preview/afb3b416f80fe7e3a504fd809af164fd6199f7aa?cid=b76e1a72191a49e1bd4cc3b5aaa2511b"]
-
-    # # 음원 파일 저장하는 경로
-    # root_path = os.getcwd() +"\\"
-    # print(f"root path : {root_path}")
-
-    # os.chdir(root_path + "\\src")
-    # # 오늘의 정답 노래 이름
-    # #today_song_name = "aroha.wav"
-    # # 오늘의 정답 노래 파일
-    # # today_song_file = root_path + today_song_name
-
-    # today_song_url = "https://p.scdn.co/mp3-preview/123dc7888494074e6e21cf643ec767448cdf3978?cid=c551bf26249e4acf9eab170aed614fab"
-    # # today_song_url = "https://p.scdn.co/mp3-preview/afb3b416f80fe7e3a504fd809af164fd6199f7aa?cid=b76e1a72191a49e1bd4cc3b5aaa2511b"
-
-    # today_song_name = getMusic(today_song_url)
-    # today_song_file = root_path + today_song_name
-
-
-    # """
-    # ==================유사도 TEST 용==================
-    # """
-    # # for input_url in range(1):
-    # for input_url in url:
-
-    #     mp3_name = getMusic(input_url)
-
-    #     # 음악 파일 로드
-    #     # nomantle_name = "Cruel_Summer.mp3"
-    #     # mp3_name = "aroha2.wav"
-        
-    #     mp3_file = root_path + mp3_name
-    #     # today_song_file = root_path + mp3_name
-
-    #     # print("file 1 : {}".format(today_song_name))
-    #     print("file 2 : {}".format(mp3_name))
-
-        
-    #     y1, sr1 = loadmusic(today_song_file)
-    #     y2, sr2 = loadmusic(mp3_file)
-
-    #     # 음원 파일에서 박자, 멜로디 추출
-    #     # getMelodyModify
-    #     mel_freqs_1 = getMelody(y1, sr1)
-    #     mel_freqs_2 = getMelody(y2, sr2)
-
-    #     # mel_freqs_1 = getMelody(y1, sr1)
-    #     # mel_freqs_2 = getMelody(y2, sr2)
-
-    #     #print(f"mel_freqs_1 : {mel_freqs_1}")
-    #     #print(f"mel_freqs_2 : {mel_freqs_2}")
-
-
-    #     # txt 파일 저장
-    #     output_file_1 = "mel_spectrogram_1.txt"
-    #     output_file_2 = "mel_spectrogram_2.txt"
-
-
-    #     with np.printoptions(threshold=np.inf):
-    #         np.savetxt(output_file_1, mel_freqs_1)
-    #         #print(mel_freqs_1)
-        
-    #     with np.printoptions(threshold=np.inf):
-    #         np.savetxt(output_file_2, mel_freqs_2)
-    #         #print(mel_freqs_2)
-        
-
-    #     similarity_score = calSimilarity(getTempo(y1, sr1), getTempo(y2, sr2), mel_freqs_1, mel_freqs_2)
-
-    #     print(f"Overall Similarity Score: {similarity_score}")
-
-    #     deleteFile(mp3_name)
-    #     deleteFile(today_song_name)
-
 

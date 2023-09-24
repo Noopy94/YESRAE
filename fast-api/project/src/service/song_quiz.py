@@ -13,18 +13,14 @@ logger = logging.getLogger(__name__)
 
 
 class SongQuizService:
-    today_song: Song
 
-    song_repository = SongRepository()
-    song_quiz_repository = SongQuizRepository()
-    song_quiz_rank_repository = SongQuizRankRepository()
-    calculate_util = CalculateUtil()
-    #################
-
-
-    # def __init__(self) -> None:
-    #     redis_config()
-
+    def __init__(self):
+        
+        self.today_song: Song
+        self.song_repository = SongRepository()
+        self.song_quiz_repository = SongQuizRepository()
+        self.song_quiz_rank_repository = SongQuizRankRepository()
+        self.calculate_util = CalculateUtil()
 
     def song_quiz_update(self):
         self.today_song = self.select_today_song()
@@ -145,7 +141,7 @@ class SongQuizService:
         self.song_quiz_rank_repository.expire_rank_data()
 
 
-        
+    ####################################################
     """
     추측하기 했을 때 검색어에 해당하는 노래 제목, 노래 유사도, 노래 순위 반환
     song_name : 추측한 노래 제목
@@ -158,6 +154,8 @@ class SongQuizService:
         # 검색한 곡과 이름이 같은 곡들 조회
         # 같은 제목의 곡이 여러 개 존재 가능
         search_songs : List[Song] = self.song_repository.get_song_by_name(song_name)
+
+        
 
         search_result = []
         # 검색한 곡 정보 없을 수 있다
@@ -172,8 +170,10 @@ class SongQuizService:
                 logging.info(f"today : {today}")
                 logging.info(f"search_song : {search_song.name} , search_song id : {search_song.id}")
 
+                logging.info(f"today_song_quiz {today_song_quiz}")
+
                 # 노래 유사도 조회
-                song_similarity : float = self.song_quiz_repository.get_song_similarity(search_song.id, today_song_quiz)
+                song_similarity : float = self.song_quiz_repository.get_song_similarity(search_song.id, today_song_quiz, True)
 
                 logging.info(f"song_similarity : {song_similarity}")
 
@@ -190,6 +190,8 @@ class SongQuizService:
 
 
                 search_result.append(song_quiz)
+        else:
+            logging.info("검색한 곡이 존재하지 않습니다.")
 
         return search_result
     
@@ -202,7 +204,8 @@ class SongQuizService:
             self,
             song_name : str,
     )-> List[SongTitleSchema]:
-        search_songs : List[Song] = self.song_repository.get_similar_song_name(str)
+
+        search_songs : List[Song] = self.song_repository.get_similar_song_name(song_name)
 
         search_result = []
 
@@ -210,11 +213,11 @@ class SongQuizService:
             logging.info("해당 입력으로 시작하는 곡들 존재")
 
             for song in search_songs:
-                song_title = SongTitleSchema(id = song.id, title = song.name, singer = song.artist_name)
 
+                song_title = SongTitleSchema(id = song.id, title = song.name, singer = song.artist_name)
                 logging.info(f"id : {song.id} , title : {song.name}, singer : {song.artist_name}")
 
-                search_result.append(song)
+                search_result.append(song_title)
         
         else:
             logging.info("해당 입력으로 시작하는 곡들이 존재하지 않습니다")
@@ -239,19 +242,21 @@ class SongQuizService:
         rank_datas = self.song_quiz_rank_repository.get_all_song_rank(today)
 
         rank_info = []
+        print("rank data", rank_datas.items())
   
         # 해당 ID 로 유사도 조회
         if rank_datas:
-            for song_id, song_rank in rank_datas.items():
+            for idx, (id, rank) in enumerate(rank_datas.items()):
                 today_song_quiz =  str(today) + "_song_quiz"
 
                 # 노래 유사도 조회
-                song_similarity : float = self.song_quiz_repository.get_song_similarity(song_id, today_song_quiz)
+                song_similarity : float = self.song_quiz_repository.get_song_similarity(id, today_song_quiz, False)
 
-                # 해당 ID 로 title, singer 조회
-                song : Song = self.song_repository.get_song_by_id(song_id)
+                song : Song = self.song_repository.get_song_by_id(id)[0]
 
-                song_rank_info = SongTotalRankSchema(id= song_id, title= song.name, similarity= song_similarity, singer= song.artist_name, rank=song_rank)
+                song_rank = int(rank)
+
+                song_rank_info = SongTotalRankSchema(id= id, title= song.name, similarity= song_similarity, singer= song.artist_name, rank=song_rank)
 
                 rank_info.append(song_rank_info)
         

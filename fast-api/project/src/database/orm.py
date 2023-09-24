@@ -40,7 +40,7 @@ class Song(Base):
     # rank = relationship('SongQuizRank', back_populates="song", )
 
     def __repr__(self):
-        return f"Song(id={self.id}, name ={self.name}, album={self.album}, album_name={self.album_name}, artist = {self.artist}, artist_name ={self.artist_name} "
+        return f"Song(id={self.id}, name ={self.name}, album_id={self.album_id}, album_name={self.album_name}, artist_name ={self.artist_name})"
     
     def set_today_song(self) -> "Song":
         self.today_song = True

@@ -36,7 +36,7 @@ scheduler = BackgroundScheduler()
 
 # 스케줄러 실행되는 것 확인 완료
 # 시간 설정
-scheduler.add_job(song_quiz_update, "cron", hour= 11, minute = 36)
+scheduler.add_job(song_quiz_update, "cron", hour= 0, minute = 14)
 
 scheduler.start()
 
@@ -96,7 +96,7 @@ async def song_ranks(
 ):
     
     song_rank_info : List[SongTotalRankSchema] = song_quiz_service.get_ranks()
-
+    
     if not song_rank_info:
         raise HTTPException(status_code=404, detail="노래 순위 정보가 반환되지 않았습니다")
 
