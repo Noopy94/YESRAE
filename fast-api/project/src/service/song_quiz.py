@@ -1,20 +1,15 @@
 from typing import List
-
-from numpy import double
-
-
 from database.orm import Song, SongQuiz, SongQuizRank
 from database.repository import SongRepository, SongQuizRepository, SongQuizRankRepository
-#from datetime import datetime
 import random
-from config.redis_config import redis_config
-from schema.response import SongQuizSchema
+from schema.response import SongQuizSchema, SongTitleSchema, SongTotalRankSchema
 from util.song_calculate import SongInfo, CalculateUtil
-import redis
-from database.connection import get_db
 from fastapi.encoders import jsonable_encoder
 import datetime
 
+from config.log_config  import logging
+
+logger = logging.getLogger(__name__)
 
 
 class SongQuizService:
@@ -24,10 +19,11 @@ class SongQuizService:
     song_quiz_repository = SongQuizRepository()
     song_quiz_rank_repository = SongQuizRankRepository()
     calculate_util = CalculateUtil()
+    #################
 
-    def __init__(self) -> None:
-        redis_config()
 
+    # def __init__(self) -> None:
+    #     redis_config()
 
 
     def song_quiz_update(self):
@@ -50,7 +46,7 @@ class SongQuizService:
         # 인기 높은 100곡 조회
         popular: List[Song] | None = self.song_repository.get_popular_song()
 
-        print("popular song")
+        logging.info("select popular song")
 
         # 날짜, 시간으로 seed 생성
         seed = int(datetime.datetime.now().timestamp()) % 100
@@ -58,21 +54,24 @@ class SongQuizService:
 
         today_song: Song = popular[seed]
 
-        print("today_song", today_song.name)
+        logging.info(f"today_song : {today_song.name}")
 
-        # 새로운 오늘의 노래를 선정하면서 이전에 선정되었던 today_song column 은 false 로 변경
+        # 새로운 오늘의 노래를 선정하면서 이전에 선정되었던 today_song 은 false 로 변경
         prior_today_song : Song = self.song_repository.get_today_song()
 
         if prior_today_song is None:
-            print("이전의 오늘의 노래를 찾지 못했습니다.")
+            logging.info("이전의 오늘의 노래를 찾지 못했습니다")
+
         else:
-            print("prior_song_name", prior_today_song.name)
+            logging.info(f"prior_song_name : {prior_today_song.name}")
             prior_today_song = self.song_repository.update_prior_song(prior_today_song)
 
         today_song = self.song_repository.update_today_song(today_song)
-        print("오늘의 노래", today_song.name)
+
+        logging.info(f"오늘의 노래 : {today_song.name}")
 
         return today_song
+
 
     """
     노맨틀 정답곡과 DB 에 있는 나머지 곡들과 의 유사도 계산해서 song_quiz 테이블에 저장
@@ -100,8 +99,10 @@ class SongQuizService:
             song_quiz: SongQuiz = SongQuiz.create(id=song.id, similarity=similarity)
 
             saved_song_quiz : SongQuiz = self.song_quiz_repository.save_song_quiz(song_quiz)
-            
-        # TODO : 이틀 전의 song_quiz, song_quiz_rank 데이터는 삭제
+        
+        # 60 시간 후 유사도 데이터 삭제
+        self.song_quiz_repository.expire_similarity_data()
+
 
 
 
@@ -114,65 +115,150 @@ class SongQuizService:
     ):
         count = 1000
 
-        rd = redis_config()
+        #rd = redis_config()
 
-        new_day = datetime.date.today() + datetime.timedelta(days=1)
+        # new_day = datetime.date.today() + datetime.timedelta(days=1)
 
-        key = str(new_day) + "_song_quiz"
+        # key = str(new_day) + "_song_quiz"
 
         # song_quiz 에 저장한 모든 정보 가져오기
-        rank_datas = rd.hgetall(key)
+
+        # rank_datas = self.rd.hgetall(key)
+
+        similarity_datas = self.song_quiz_repository.get_all_song_similarity()
 
         # song_quiz 의 모든 정보를 가져와서 순위를 정렬해서 1000곡까지 slice
-        sorted_rank_data = sorted(rank_datas.items(), key = lambda x : float(x[1]), reverse= True)[:1000]
+        sorted_rank_data = sorted(similarity_datas.items(), key = lambda x : float(x[1]), reverse= True)[:1000]
 
-        print("rank_datas", sorted_rank_data[0])
+        # 1 위 곡
+        logging.info(f"1위 곡 : {sorted_rank_data[0]}")
         
-        # redis 에 id 와 rank 정보 저장
+        # redis 에 노래 id 와 rank 정보 저장
         for idx, rank_data in enumerate(sorted_rank_data):
-            print("rank_data", idx, rank_data[0])
+            logging.info(f"idx : {idx}, rank_data : {rank_data[0]}")
+
             song_quiz_rank : SongQuizRank = SongQuizRank.create(id=rank_data[0], rank=idx + 1)
 
             saved_song_quiz_rank : SongQuizRank = self.song_quiz_rank_repository.save_song_quiz_rank(song_quiz_rank)
+        
+        # 60 시간 후 rank 데이터 삭제
+        self.song_quiz_rank_repository.expire_rank_data()
+
 
         
     """
-    검색어에 해당하는 노래 제목, 노래 유사도, 노래 순위 반환
+    추측하기 했을 때 검색어에 해당하는 노래 제목, 노래 유사도, 노래 순위 반환
+    song_name : 추측한 노래 제목
     """
-    def search_song_result(
+    def get_song_result(
             self,
             song_name : str,
     ) -> List[SongQuizSchema]:
         
         # 검색한 곡과 이름이 같은 곡들 조회
+        # 같은 제목의 곡이 여러 개 존재 가능
         search_songs : List[Song] = self.song_repository.get_song_by_name(song_name)
 
         search_result = []
+        # 검색한 곡 정보 없을 수 있다
+        if search_songs:
 
-        for search_song in search_songs:
-            
-            today = str(datetime.date.today())
-            today_song_quiz =  today + "_song_quiz"
-            today_song_rank = today + "_song_quiz_rank"
+            for search_song in search_songs:
+                
+                today = str(datetime.date.today())
+                today_song_quiz =  today + "_song_quiz"
+                today_song_rank = today + "_song_quiz_rank"
 
-            print("today : ", today)
+                logging.info(f"today : {today}")
+                logging.info(f"search_song : {search_song.name} , search_song id : {search_song.id}")
 
-            print("search_song : ", search_song.name, " search_song id : ", search_song.id)
+                # 노래 유사도 조회
+                song_similarity : float = self.song_quiz_repository.get_song_similarity(search_song.id, today_song_quiz)
 
-            # 노래 유사도 조회
-            song_similarity : float = self.song_quiz_repository.get_song_similarity(search_song.id, today_song_quiz)
+                logging.info(f"song_similarity : {song_similarity}")
 
-            print("song_similarity" , song_similarity)
+                # 노래 순위 반환
+                song_rank : int = self.song_quiz_rank_repository.get_song_rank(search_song.id, today_song_rank)
 
-            # 노래 순위 반환
-            song_rank : int = self.song_quiz_rank_repository.get_song_rank(search_song.id, today_song_rank)
+                logging.info(f"rank : {song_rank}")
 
-            # 해당 노래가 1000위 안에 안들 수 있다 -> None 반환
-            song_quiz = SongQuizSchema(id=search_song.id, name=search_song.name, rank=song_rank, similarity=song_similarity)
+                # 해당 노래가 1000위 안에 안들 수 있다 -> None 반환
+                song_quiz = SongQuizSchema(id=search_song.id, title =search_song.name, rank=song_rank, similarity=song_similarity ,album_img= search_song.img_url, answer= False)
 
-            search_result.append(song_quiz)
+                if song_rank == 1:
+                    song_quiz.answer = True
+
+
+                search_result.append(song_quiz)
 
         return search_result
     
 
+    """
+    사용자 입력시 해당 글자로 시작하는 곡 5개 반환
+    song_name : 입력한 노래 제목
+    """
+    def search_song_title(
+            self,
+            song_name : str,
+    )-> List[SongTitleSchema]:
+        search_songs : List[Song] = self.song_repository.get_similar_song_name(str)
+
+        search_result = []
+
+        if search_songs:
+            logging.info("해당 입력으로 시작하는 곡들 존재")
+
+            for song in search_songs:
+                song_title = SongTitleSchema(id = song.id, title = song.name, singer = song.artist_name)
+
+                logging.info(f"id : {song.id} , title : {song.name}, singer : {song.artist_name}")
+
+                search_result.append(song)
         
+        else:
+            logging.info("해당 입력으로 시작하는 곡들이 존재하지 않습니다")
+        
+        return search_result
+    
+
+    """
+    전체 순위 보기 결과
+    """
+    def get_ranks(
+            self
+    )-> List[SongTotalRankSchema]:
+
+
+        #오늘 순위 보기 위해 오늘의 날짜 설정
+        today = datetime.date.today() 
+
+        logging.info(f"오늘 날짜 : {today}")
+
+        # rank 전체 조회
+        rank_datas = self.song_quiz_rank_repository.get_all_song_rank(today)
+
+        rank_info = []
+  
+        # 해당 ID 로 유사도 조회
+        if rank_datas:
+            for song_id, song_rank in rank_datas.items():
+                today_song_quiz =  str(today) + "_song_quiz"
+
+                # 노래 유사도 조회
+                song_similarity : float = self.song_quiz_repository.get_song_similarity(song_id, today_song_quiz)
+
+                # 해당 ID 로 title, singer 조회
+                song : Song = self.song_repository.get_song_by_id(song_id)
+
+                song_rank_info = SongTotalRankSchema(id= song_id, title= song.name, similarity= song_similarity, singer= song.artist_name, rank=song_rank)
+
+                rank_info.append(song_rank_info)
+        
+        return rank_info
+
+                
+
+
+        
+

@@ -35,25 +35,9 @@ class SongRepository:
     def get_song_by_name(self, song_name: str) -> List[Song] | None:
         try:
             session = SessionFactory()
-            return session.query(Song).filter(Song.name.startswith(song_name)).all()
+            return session.query(Song).filter(Song.name == song_name).all()
         finally:
             session.close()
-
-    """
-    노래 30초 멜로디 정보 저장
-    :song   :음악 
-    """
-    """
-    def update_melody(self, song: Song) -> Song | None:
-        try:
-            session = SessionFactory()
-            session.add(instance=song)
-            session.commit()
-            session.refresh(instance=song)
-            return song
-        finally:
-            session.close()
-    """
 
     """
     인기도 높은 100 곡 DB 에서 조회
@@ -126,6 +110,18 @@ class SongRepository:
         finally:
             session.close()
 
+    """
+    해당 입력으로 시작하는 곡 이름 5곡 조회
+    """
+    def get_similar_song_name(self, song_name : str)  -> List[Song] | None:
+        try:
+            session = SessionFactory()
+            return session.query(Song).filter(Song.name.startswith(song_name)).limit(5).all()
+        finally:
+            session.close()
+    
+
+
     
 
 
@@ -139,7 +135,6 @@ class SongQuizRepository:
     """
 
     def save_song_quiz(self, song_quiz: SongQuiz) -> SongQuiz:
-        #rd = redis_config()
         # 내일 날짜 
         new_day = datetime.date.today() + datetime.timedelta(days=1)
 
@@ -154,15 +149,41 @@ class SongQuizRepository:
     노래 ID 에 해당하는 유사도 조회
     """
     def get_song_similarity(self, song_id : str, key : str) -> Float | None:
-        # rd = redis_config()
 
         similarity_datas = self.rd.hgetall(key)
 
         # redis 에 바이트 문자열로 저장되기 때문에 encode
-        song_id_byte = song_id.encode('utf-8')
-        similarity = similarity_datas.get(song_id_byte).decode('utf-8')
+        #song_id_byte = song_id.encode('utf-8')
+        #similarity = similarity_datas.get(song_id_byte).decode('utf-8')
+
+        similarity = similarity_datas.get(song_id).decode('utf-8')
 
         return similarity
+    
+    """
+    유사도 데이터 60시간 후 삭제
+    """
+    def expire_similarity_data(self):
+
+        new_day = datetime.date.today() + datetime.timedelta(days=1)
+        key = str(new_day) + "_song_quiz"
+        # 60 시간 후 삭제
+        self.rd.expire(key, 216000)
+    
+
+    """
+    song_quiz 에 있는 모든 정보 조회 (전날에 rank 테이블에 데이터 저장할 때 사용)
+    """
+    def get_all_song_similarity(self):
+
+        new_day = datetime.date.today() + datetime.timedelta(days=1)
+
+        key = str(new_day) + "_song_quiz"
+        # song_quiz 에 저장한 모든 정보 가져오기
+        rank_datas = self.rd.hgetall(key)
+
+        return rank_datas
+
 
 
 class SongQuizRankRepository:
@@ -174,7 +195,6 @@ class SongQuizRankRepository:
     redis 에 key : [내일날짜_song_quiz_rank], field : [노래 id] , value : [순위] 저장
     """
     def save_song_quiz_rank(self, song_quiz_rank: SongQuizRank) -> SongQuizRank:
-        # rd = redis_config()
         
         # 내일 날짜
         new_day = datetime.date.today() + datetime.timedelta(days=1)
@@ -190,19 +210,39 @@ class SongQuizRankRepository:
     """
     노래 ID 에 해당하는 순위 조회
     """
-    def get_song_rank(self, song_id , key : str) -> str:
-
-        #rd = redis_config()
+    def get_song_rank(self, song_id , key : str) -> int:
 
         rank_datas = self.rd.hgetall(key)
-        print("rank_Datas", rank_datas)
 
         # redis 에 바이트 문자열로 저장되기 때문에 encode
         song_id_byte = song_id.encode('utf-8')
 
-        rank = str(rank_datas.get(song_id_byte))
+        rank = int(rank_datas.get(song_id_byte))
 
         # 해당하는 노래가 1000위 안에 안 들어 있을 수도 있다
         # rank : None
 
         return rank
+    
+
+    """
+    순위 데이터 60시간 후 삭제
+    """
+    def expire_rank_data(self):
+
+        new_day = datetime.date.today() + datetime.timedelta(days=1)
+        key = str(new_day) + "_song_quiz_rank"
+        # 60 시간 후 삭제
+        self.rd.expire(key, 216000)
+
+    
+    """
+    원하는 날짜 song_quiz_rank 에 있는 모든 정보 조회
+    """
+    def get_all_song_rank(self, day):
+
+        key = str(day) + "_song_quiz"
+        # song_quiz_rank 에 저장한 모든 정보 가져오기
+        rank_datas = self.rd.hgetall(key)
+
+        return rank_datas
