@@ -47,9 +47,8 @@ public class UserController {
     public CommonResponse<?> login(@RequestHeader("Authorization") String accessToken) {
         // 프론트에서는 localStorage의 user 그대로 보내면 됨
 
+        User user = userService.login(accessToken);
 
-        userService.login(accessToken);
-
-        return CommonResponse.success(null);
+        return CommonResponse.success(user);
     }
 }
