@@ -9,12 +9,14 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Slf4j
 @Component
@@ -36,7 +38,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             if (oAuth2User.getRole() == Role.GUEST) {
                 String accessToken = jwtService.createAccessToken(oAuth2User.getEmail());
                 response.addHeader(jwtService.getAccessHeader(), "Bearer " + accessToken);
-                response.sendRedirect("oauth2/sign-up"); // 프론트의 회원가입 추가 정보 입력 폼으로 리다이렉트
+                response.sendRedirect("http://localhost:5173/user/signup"); // 프론트의 회원가입 추가 정보 입력 폼으로 리다이렉트
 
                 jwtService.sendAccessAndRefreshToken(response, accessToken, null);
                 // TODO: Exception 커스텀화
@@ -62,5 +64,11 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
         jwtService.updateRefreshToken(oAuth2User.getEmail(), refreshToken);
+
+        // TODO: 배포 시 url 수정
+        response.sendRedirect(UriComponentsBuilder.fromUriString("http://localhost:5173/oauth2/")
+            .queryParam("accessToken", accessToken)
+            .queryParam("refreshToken", refreshToken).build().encode(StandardCharsets.UTF_8)
+            .toUriString());
     }
 }

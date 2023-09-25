@@ -1,6 +1,5 @@
 package com.ssafy.yesrae.domain.template.repository;
 
-
 import com.ssafy.yesrae.domain.template.dto.request.TemplateFindByConditionGetReq;
 import com.ssafy.yesrae.domain.template.dto.response.TemplateFindRes;
 import java.util.List;
