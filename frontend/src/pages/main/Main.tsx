@@ -1,6 +1,5 @@
 import HeaderNav from '../../components/HeaderNav/HeaderNav';
 import MusicPlayer from '../../components/playercontroller/MusicPlayer';
-import { Carousel } from 'react-responsive-carousel';
 import SongCarousel from '../../components/common/SongCarousel';
 import PlayListCarousel from '../../components/common/PlayListCarousel';
 
