@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class PlayListTagRegistPostReq {
 
-    Long playListId;
-    String tagName;
+    private Long playListId;
+    private String tagName;
 
 }

@@ -8,9 +8,9 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 public class PlayListRegistPostReq {
 
-    Long userId;
-    Integer isPublic;
-    String title;
-    String description;
-    List<PlayListSong> musicList;
+    private Long userId;
+    private Integer isPublic;
+    private String title;
+    private String description;
+    private List<PlayListSong> musicList;
 }

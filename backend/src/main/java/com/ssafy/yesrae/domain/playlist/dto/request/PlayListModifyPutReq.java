@@ -8,9 +8,9 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 public class PlayListModifyPutReq {
 
-    Long playListId;
-    Integer isPublic;
-    String title;
-    String description;
+    private Long playListId;
+    private Integer isPublic;
+    private String title;
+    private String description;
 
 }

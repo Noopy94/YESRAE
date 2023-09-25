@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -54,6 +55,7 @@ public class PlayListServiceImpl implements PlayListService{
     private final UserRepository userRepository;
     private final S3Uploader s3Uploader;
 
+    @Autowired
     public PlayListServiceImpl(PlayListLikeRepository playListLikeRepository,
         PlayListRepository playListRepository, PlayListSongRepository playListSongRepository,
         PlayListTagRepository playListTagRepository, UserRepository userRepository,
@@ -284,7 +286,7 @@ public class PlayListServiceImpl implements PlayListService{
         PlayList playList = playListRepository.findById(playListId)
             .orElseThrow(PlayListNotFoundException::new);
 
-        List<PlayListSong> playListSongs = playListSongRepository.findByPlaylist(playList);
+        List<PlayListSong> playListSongs = playListSongRepository.findByPlayList(playList);
 
         // playListSongs 배열을 받아서 SongId 확인해서 다시 Song들을 반환할거임;
         //
@@ -356,7 +358,7 @@ public class PlayListServiceImpl implements PlayListService{
                     .viewCount(m.getViewCount())
                     .likeCount(m.getLikeCount())
                     .imgUrl(m.getImgUrl())
-                    .created_data(m.getCreatedData())
+                    .created_data(m.getCreatedAt())
                     .build()
                 );
 
@@ -365,27 +367,32 @@ public class PlayListServiceImpl implements PlayListService{
     }
 
     @Override
-    public Page<PlayListGetResponse> searchByTagPlayList(String keyword, Pageable pageable){
-
-        log.info("PlayListService_searchByTagPlayList_start: " + keyword + ", "
-            + pageable.toString());
-
-        Page<PlayListGetResponse> playListGetResponses = playListRepository.findByPlayListTags_TagNameAndIsPublic(keyword, 1, pageable)
-                .map(m -> PlayListGetResponse.builder()
-                    .id(m.getId())
-                    .user_id(m.getUser().getId())
-                    .title(m.getTitle())
-                    .description(m.getDescription())
-                    .viewCount(m.getViewCount())
-                    .likeCount(m.getLikeCount())
-                    .imgUrl(m.getImgUrl())
-                    .created_data(m.getCreatedData())
-                    .build()
-                );
-
-        log.info("PlayListService_searchByTagPlayList_end");
-        return playListGetResponses;
+    public Page<PlayListGetResponse> searchByTagPlayList(String keyword, Pageable pageable) {
+        return null;
     }
+
+//    @Override
+//    public Page<PlayListGetResponse> searchByTagPlayList(String keyword, Pageable pageable){
+//
+//        log.info("PlayListService_searchByTagPlayList_start: " + keyword + ", "
+//            + pageable.toString());
+//
+//        Page<PlayListGetResponse> playListGetResponses = playListRepository.findByTagName_PlayLisTagAndIsPublic(keyword, 1, pageable)
+//                .map(m -> PlayListGetResponse.builder()
+//                    .id(m.getId())
+//                    .user_id(m.getUser().getId())
+//                    .title(m.getTitle())
+//                    .description(m.getDescription())
+//                    .viewCount(m.getViewCount())
+//                    .likeCount(m.getLikeCount())
+//                    .imgUrl(m.getImgUrl())
+//                    .created_data(m.getCreatedAt())
+//                    .build()
+//                );
+//
+//        log.info("PlayListService_searchByTagPlayList_end");
+//        return playListGetResponses;
+//    }
 
     @Override
     public Long countPlayListLike(Long playListId)  {

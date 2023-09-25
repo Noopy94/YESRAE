@@ -48,7 +48,7 @@ public class PlayList extends BaseEntity {
     private String imgUrl; //img url
 
     @CreationTimestamp
-    private LocalDateTime createdData;
+    private LocalDateTime createdAt;
 
     @Column // 기본값 null
     private LocalDateTime deletedAt;
@@ -68,7 +68,7 @@ public class PlayList extends BaseEntity {
         this.isPublic = modifyInfo.getIsPublic();
         this.title = modifyInfo.getTitle();
         this.description = modifyInfo.getDescription();
-        this.createdData =LocalDateTime.now();
+        this.createdAt =LocalDateTime.now();
     }
 
     public void deletePlayList() {

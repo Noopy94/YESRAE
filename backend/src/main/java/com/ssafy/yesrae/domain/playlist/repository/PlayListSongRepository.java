@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
 public interface PlayListSongRepository extends JpaRepository<PlayListSong, Long> {
 
     // PlayList에 있는 노래들 가져오기
-    List<PlayListSong> findByPlaylist(PlayList playList);
+    List<PlayListSong> findByPlayList(PlayList playlist);
 
     PlayListSong findBySongAndPlayList(Song song, PlayList playList);
 
