@@ -39,13 +39,15 @@ export default function Nomantle(){
   // TODO : 정답일 경우 모달 보여주기 및 순위 보기 버튼으로 변경
   //const [isAnswer, setAnswer] = useState(false);
 
-  
+  // TODO : 포기하기 모달 -> 버튼 위치 변경되는 문제
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // TODO :  유사도 정보 보여줄때 가장 최근이 위로 오고
+  // 유사도 정보 보여줄때 가장 최근이 위로 오기 ->OK
 
   
-  // TODO : 그 밑에는 지금까지 정보 유사도 높은 순으로 정렬되어서 쌓기
-  
+  // TODO : 그 밑에는 지금까지 정보 유사도 높은 순으로 정렬되어서 쌓기 & 이미 검색 내역 있는 경우 배제
+  // TODO : 안녕 입력 후 클릭했을 때 errorMsg 가 뜨는 문제
+
   useEffect(() => {
     
     if(inputValue){
@@ -53,7 +55,7 @@ export default function Nomantle(){
     }else{
       setTitleList([]);
     }
-  }, [inputValue]);
+  }, [inputValue, errorMsg]);
 
   const onChangeSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
@@ -78,9 +80,10 @@ export default function Nomantle(){
     }
   };
 
-  const handleListItemClick = (song_name : string) => {
+  const handleListItemClick = async (song_name : string) => {
+    setErrorMsg('');
     setInputValue(song_name);
-    handleGuess(inputValue);
+    await handleGuess(inputValue);
   };
 
 
@@ -98,7 +101,6 @@ export default function Nomantle(){
       const data = await getSongResult(song_name);
 
       console.log("검색 결과 데이터입니다", data);
-      console.log("데이터 길이 ", data.length);
 
       if (Array.isArray(data) && data.length > 0) {
         // data 중에서 similarity 가 가장 높은 데이터 찾기
@@ -107,7 +109,7 @@ export default function Nomantle(){
         });
 
         // 지금까지 추측쌓기
-        if (recentGuess !== null){
+        if (recentGuess !== null && !songInfoGuess.includes(recentGuess)){
           setSongInfoGuess((prevSongInfoGuess) => [...prevSongInfoGuess, recentGuess]);
         }
 
@@ -118,8 +120,9 @@ export default function Nomantle(){
         setRecentGuess(maxSimilarityItem);
 
         setTitleList([]);
+
+        setErrorMsg('');
       } else {
-        console.error('데이터가 유효하지 않습니다.');
         setErrorMsg(`${song_name}은 존재하지 않는 곡 제목입니다.`);
       }
     } catch (error) {
@@ -140,6 +143,16 @@ export default function Nomantle(){
       handleButtonClick();
     }
   };
+
+  // 모달 열기
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
 
 
   const category = ["#", "앨범 아트", "추측한 노래", "유사도", "유사도 순위"];
@@ -174,6 +187,7 @@ export default function Nomantle(){
                   onChange={onChangeSearch}
                   onKeyDown={onHandleKeyDown}
                   onKeyPress={handleInputKeyPress}
+                  value = {inputValue}
               />
               {titleList.length > 0 && (
                 <ul>
@@ -190,6 +204,20 @@ export default function Nomantle(){
           </div>
           <div className='w-6/8'>
             {errorMsg && <p className='mt-10 text-center text-yesrae-0'>{errorMsg}</p>}
+            {
+              recentGuess && 
+              <div className='flex items-center justify-center mt-20 text-xl text-yesrae-0'>
+                <div className="w-56 mx-2 text-center">
+                  {recentGuess.title}
+                </div>
+                <div className="w-56 mx-2 text-center">
+                  {recentGuess.similarity.toFixed(2)}%
+                </div>
+                <div className="w-56 mx-2 text-center">
+                  {recentGuess.rank}
+                </div>
+              </div>
+            }
             <div className="mt-24">
               <Category categories={category}/>
               <hr/>
@@ -198,10 +226,21 @@ export default function Nomantle(){
               <SongInfo songinfo = {songInfoGuess} />
             </div>
           </div>
-          
-          <button type="button" className="flex items-center justify-center w-24 h-12 my-28 rounded-xl bg-yesrae-900" >
-                포기하기
-          </button>
+          <div>
+              <button type="button" className="flex items-center justify-center w-24 h-12 my-28 rounded-xl bg-yesrae-900 hover:bg-gray-800" onClick={openModal}>
+                    포기하기
+                    
+              </button>
+              {isModalOpen && (
+                      <div className="modal">
+                        <div className="modal-content">
+                          <span className="close" onClick={closeModal}>&times;</span>
+                          <p>모달 내용을 여기에 추가하세요.</p>
+                        </div>
+                      </div>
+              )}
+          </div>
+        
         </div>
       );
 }
