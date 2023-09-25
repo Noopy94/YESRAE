@@ -1,12 +1,18 @@
 package com.ssafy.yesrae.domain.user.service;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.ssafy.yesrae.common.exception.DuplicateEmailException;
 import com.ssafy.yesrae.common.exception.DuplicateNicknameException;
+import com.ssafy.yesrae.common.exception.NotFoundException;
+import com.ssafy.yesrae.common.exception.user.UserNotFoundException;
 import com.ssafy.yesrae.domain.user.Role;
 import com.ssafy.yesrae.domain.user.dto.request.UserRegistPostReq;
 import com.ssafy.yesrae.domain.user.entity.User;
 import com.ssafy.yesrae.domain.user.repository.UserRepository;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
+    @Value("${jwt.secretKey}")
+    private String secretKey;
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -43,5 +52,21 @@ public class UserServiceImpl implements UserService {
 
         user.passwordEncode(passwordEncoder);
         userRepository.save(user);
+    }
+
+    @Override
+    public User login(String accessToken) {
+
+        String email = Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
+                .build()
+                .verify(Optional.of(accessToken)
+                    .filter(token -> token.startsWith("Bearer "))
+                    .map(token -> token.replace("Bearer " , ""))
+                    .orElseThrow(NotFoundException::new))
+                .getClaim("email")
+                .asString())
+            .orElseThrow(NotFoundException::new);
+
+        return userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
     }
 }
