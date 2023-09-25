@@ -36,7 +36,7 @@ scheduler = BackgroundScheduler()
 
 # 스케줄러 실행되는 것 확인 완료
 # 시간 설정
-scheduler.add_job(song_quiz_update, "cron", hour= 14, minute = 31)
+scheduler.add_job(song_quiz_update, "cron", hour= 22, minute = 14)
 
 scheduler.start()
 
@@ -57,9 +57,6 @@ async def song_guess(
 
     # 동일한 제목의 곡들이 여러개 있을 수 있다
     song_quiz_result : List[SongQuizSchema] = song_quiz_service.get_song_result(song_name)
-
-    if not song_quiz_result:
-        raise HTTPException(status_code=404, detail="추측하는 노래 존재하지 X")
 
     return song_quiz_result
 
