@@ -11,13 +11,13 @@ import lombok.Data;
 @Builder
 public class TournamentResultFindRes {
 
-    String date;
+    private String date;
 
-    String songTitle;
+    private String songTitle;
 
-    String songSinger;
+    private String songSinger;
 
-    Integer rank;
+    private Integer rank;
 
     //Querydsl을 위한 생성자
     public TournamentResultFindRes() {

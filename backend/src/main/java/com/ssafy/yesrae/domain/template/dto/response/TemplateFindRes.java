@@ -10,11 +10,11 @@ import lombok.Data;
 @Builder
 public class TemplateFindRes {
 
-    String title;
+    private String title;
 
-    String content;
+    private String content;
 
-    Integer viewCount;
+    private Integer viewCount;
 
     //Querydsl 을 위한 생성자
 

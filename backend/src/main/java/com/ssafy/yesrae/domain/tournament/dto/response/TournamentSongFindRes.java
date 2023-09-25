@@ -10,11 +10,11 @@ import lombok.Data;
 @Builder
 public class TournamentSongFindRes {
 
-    String title;
+    private String title;
 
-    String singer;
+    private String singer;
 
-    String url;
+    private String url;
 
     //Querydsl을 위한 생성자
     public TournamentSongFindRes() {
