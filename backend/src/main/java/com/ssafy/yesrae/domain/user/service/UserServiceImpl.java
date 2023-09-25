@@ -8,6 +8,7 @@ import com.ssafy.yesrae.common.exception.NotFoundException;
 import com.ssafy.yesrae.common.exception.user.UserNotFoundException;
 import com.ssafy.yesrae.domain.user.Role;
 import com.ssafy.yesrae.domain.user.dto.request.UserRegistPostReq;
+import com.ssafy.yesrae.domain.user.dto.response.UserFindRes;
 import com.ssafy.yesrae.domain.user.entity.User;
 import com.ssafy.yesrae.domain.user.repository.UserRepository;
 import java.util.Optional;
@@ -55,18 +56,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User login(String accessToken) {
+    public UserFindRes login(String accessToken) {
+
+        String alteredToken = Optional.of(accessToken)
+            .filter(token -> token.startsWith("Bearer "))
+            .map(token -> token.replace("Bearer ", ""))
+            .orElseThrow(NotFoundException::new);
 
         String email = Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
                 .build()
-                .verify(Optional.of(accessToken)
-                    .filter(token -> token.startsWith("Bearer "))
-                    .map(token -> token.replace("Bearer " , ""))
-                    .orElseThrow(NotFoundException::new))
+                .verify(alteredToken)
                 .getClaim("email")
                 .asString())
             .orElseThrow(NotFoundException::new);
 
-        return userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+
+        return UserFindRes.builder()
+            .email(user.getEmail())
+            .nickname(user.getNickname())
+            .imageUrl(user.getImageUrl())
+            .age(user.getAge())
+            .accessToken(alteredToken)
+            .refreshToken(user.getRefreshToken())
+            .build();
     }
 }
