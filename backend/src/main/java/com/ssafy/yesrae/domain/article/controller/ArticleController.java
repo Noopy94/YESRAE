@@ -8,7 +8,7 @@ import com.ssafy.yesrae.common.model.CommonResponse;
 import com.ssafy.yesrae.domain.article.dto.request.ArticleModifyPutReq;
 import com.ssafy.yesrae.domain.article.dto.request.ArticleRegistPostReq;
 import com.ssafy.yesrae.domain.article.dto.response.ArticleFindRes;
-import com.ssafy.yesrae.domain.article.entity.ArticleEntity;
+import com.ssafy.yesrae.domain.article.entity.Article;
 import com.ssafy.yesrae.domain.article.service.ArticleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class ArticleController {
      * Article 등록을 위한 API
      */
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public CommonResponse<?> insertArticle(@RequestPart ArticleRegistPostReq articleRegistPostReq, @RequestPart(value = "files", required = false) MultipartFile files) {
+    public CommonResponse<?> insertArticle(@RequestPart ArticleRegistPostReq articleRegistPostReq, @RequestPart(value = "files", required = false) List<MultipartFile> files) {
 
         if (files != null) { // 게시물에 파일 있으면
             log.info("ArticleController_regist_start: " + articleRegistPostReq.toString() + ", "
@@ -46,8 +46,8 @@ public class ArticleController {
             log.info("ArticleController_regist_start: " + articleRegistPostReq.toString());
         }
 
-        ArticleEntity articleEntity = articleService.registArticle(articleRegistPostReq, files);
-        if (articleEntity != null) {  // regist 성공하면 success
+        Article article = articleService.registArticle(articleRegistPostReq, files);
+        if (article != null) {  // regist 성공하면 success
             log.info("ArticleController_regist_end: success");
             return CommonResponse.success(SUCCESS);
         } else {    // 실패하면 Exception
@@ -95,7 +95,7 @@ public class ArticleController {
 
     @PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public CommonResponse<?> modify(@RequestPart ArticleModifyPutReq articleModifyPutReq,
-                                    @RequestPart(value = "files", required = false) MultipartFile files) {
+                                    @RequestPart(value = "files", required = false) List<MultipartFile> files) {
         if (files != null) {
             log.info("ArticleController_modify_start: " + articleModifyPutReq.toString() + ", "
                     + files);
