@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.ssafy.yesrae.common.exception.DuplicateEmailException;
 import com.ssafy.yesrae.common.exception.DuplicateNicknameException;
 import com.ssafy.yesrae.common.exception.NotFoundException;
+import com.ssafy.yesrae.common.exception.user.UserNotFoundException;
 import com.ssafy.yesrae.domain.user.Role;
 import com.ssafy.yesrae.domain.user.dto.request.UserRegistPostReq;
 import com.ssafy.yesrae.domain.user.entity.User;
@@ -61,13 +62,11 @@ public class UserServiceImpl implements UserService {
                 .verify(Optional.of(accessToken)
                     .filter(token -> token.startsWith("Bearer "))
                     .map(token -> token.replace("Bearer " , ""))
-                    .orElseThrow(IllegalArgumentException::new))
+                    .orElseThrow(NotFoundException::new))
                 .getClaim("email")
                 .asString())
-            .orElseThrow(IllegalArgumentException::new);
+            .orElseThrow(NotFoundException::new);
 
-        // TODO: email로 유저 찾아서 유저 정보 return
-
-        return userRepository.findByEmail(email).orElseThrow(NotFoundException::new);
+        return userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
     }
 }

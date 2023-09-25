@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.ssafy.yesrae.common.model.CommonResponse;
 import com.ssafy.yesrae.domain.user.dto.request.UserRegistPostReq;
+import com.ssafy.yesrae.domain.user.dto.response.UserFindRes;
 import com.ssafy.yesrae.domain.user.entity.User;
 import com.ssafy.yesrae.domain.user.service.UserService;
 import java.util.Optional;
@@ -45,10 +46,18 @@ public class UserController {
 
     @PostMapping("/login")
     public CommonResponse<?> login(@RequestHeader("Authorization") String accessToken) {
-        // 프론트에서는 localStorage의 user 그대로 보내면 됨
 
         User user = userService.login(accessToken);
 
-        return CommonResponse.success(user);
+        UserFindRes userFindRes = UserFindRes.builder()
+            .email(user.getEmail())
+            .nickname(user.getNickname())
+            .imageUrl(user.getImageUrl())
+            .age(user.getAge())
+            .accessToken(accessToken)
+            .refreshToken(user.getRefreshToken())
+            .build();
+
+        return CommonResponse.success(userFindRes);
     }
 }
