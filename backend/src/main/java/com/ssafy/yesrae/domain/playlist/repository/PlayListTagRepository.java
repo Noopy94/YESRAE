@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 public interface PlayListTagRepository extends JpaRepository<PlayListTag, Long> {
 
     // PlayList에 있는 태그들 가져오기
-    List<PlayListTag> findByPlaylist(PlayList playList);
+    List<PlayListTag> findByPlayList(PlayList playList);
 
     List<PlayListTag> findByTagName(String tagName);
 

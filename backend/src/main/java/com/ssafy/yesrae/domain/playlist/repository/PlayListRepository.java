@@ -6,6 +6,7 @@ import com.ssafy.yesrae.domain.user.entity.User;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,7 +22,10 @@ public interface PlayListRepository extends JpaRepository<PlayList, Long> {
 
     //파라미터로 받은 키워드를 포함(LIKE와 같음)하는 제목을 가진 글들을 반환 (페이지네이션)
     Page<PlayList> findByTitleContainingAndIsPublic(String keyword, Integer isPublic, Pageable pageable);
+//    likeCount 기준 정렬해서 100개 가져오기
+    Page<PlayList> findTop100ByOrderByLikeCountDesc(Pageable pageable);
+//    //viewCount 기준으로 100개 가져오기
+    Page<PlayList> findTop100ByOrderByViewCountDesc(Pageable pageable);
 
-    Page<PlayList> findByPlayListTags_TagNameAndIsPublic(String tagName, Integer isPublic, Pageable pageable);
 
 }
