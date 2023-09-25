@@ -38,11 +38,11 @@ public class ArticleEntity extends BaseEntity {
     @JoinColumn(name="category", referencedColumnName = "Id")
     private CategoryEntity categoryEntity;
 
-    @Column(name = "created_date",nullable = false, columnDefinition = "TIMESTAMP")
+    @Column(name = "created_At",nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime createdDate;
 
     @Column
-    private LocalDateTime updateDate;
+    private LocalDateTime updatedAt;
 
     @Column // 기본값 null
     private LocalDateTime deletedAt;
@@ -52,7 +52,7 @@ public class ArticleEntity extends BaseEntity {
     //삭제시 현재 시간으로 설정
     public void deleteArticle() {this.deletedAt = LocalDateTime.now();}
 
-    public void modifyArticle() {this.updateDate = LocalDateTime.now();}
+    public void modifyArticle() {this.updatedAt = LocalDateTime.now();}
 
     public void modifyArticle(String title, String content, CategoryEntity categoryEntity){
         this.categoryEntity = categoryEntity;
