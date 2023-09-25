@@ -6,6 +6,7 @@ from schema.response import SongQuizSchema, SongTitleSchema, SongTotalRankSchema
 from util.song_calculate import SongInfo, CalculateUtil
 from fastapi.encoders import jsonable_encoder
 import datetime
+import json
 
 from config.log_config  import logging
 
@@ -111,20 +112,11 @@ class SongQuizService:
     ):
         count = 1000
 
-        #rd = redis_config()
-
-        # new_day = datetime.date.today() + datetime.timedelta(days=1)
-
-        # key = str(new_day) + "_song_quiz"
-
-        # song_quiz 에 저장한 모든 정보 가져오기
-
-        # rank_datas = self.rd.hgetall(key)
-
         similarity_datas = self.song_quiz_repository.get_all_song_similarity()
 
         # song_quiz 의 모든 정보를 가져와서 순위를 정렬해서 1000곡까지 slice
         sorted_rank_data = sorted(similarity_datas.items(), key = lambda x : float(x[1]), reverse= True)[:1000]
+
 
         # 1 위 곡
         logging.info(f"1위 곡 : {sorted_rank_data[0]}")
@@ -133,15 +125,21 @@ class SongQuizService:
         for idx, rank_data in enumerate(sorted_rank_data):
             logging.info(f"idx : {idx}, rank_data : {rank_data[0]}")
 
-            song_quiz_rank : SongQuizRank = SongQuizRank.create(id=rank_data[0], rank=idx + 1)
+            result : list = self.song_repository.get_song_by_id(rank_data[0])
+
+            name : str = result[0].name
+
+            singer : str = result[0].artist_name 
+
+            logging.info(f"artist name : {singer}")
+
+            song_quiz_rank : SongQuizRank = SongQuizRank.create(id=rank_data[0], rank=idx + 1, similarity=rank_data[1], name=name, singer = singer)
 
             saved_song_quiz_rank : SongQuizRank = self.song_quiz_rank_repository.save_song_quiz_rank(song_quiz_rank)
         
         # 60 시간 후 rank 데이터 삭제
         self.song_quiz_rank_repository.expire_rank_data()
 
-
-    ####################################################
     """
     추측하기 했을 때 검색어에 해당하는 노래 제목, 노래 유사도, 노래 순위 반환
     song_name : 추측한 노래 제목
@@ -225,7 +223,9 @@ class SongQuizService:
         return search_result
     
 
+   
     """
+    rank 테이블 변경 후
     전체 순위 보기 결과
     """
     def get_ranks(
@@ -241,26 +241,34 @@ class SongQuizService:
         # rank 전체 조회
         rank_datas = self.song_quiz_rank_repository.get_all_song_rank(today)
 
+        logging.info(f"rank_datas!! {rank_datas}")
+
         rank_info = []
-        print("rank data", rank_datas.items())
+
+        logging.info("rank data item!!", rank_datas.items())
   
         # 해당 ID 로 유사도 조회
         if rank_datas:
-            for idx, (id, rank) in enumerate(rank_datas.items()):
+            for idx, (id, song) in enumerate(rank_datas.items()):
                 today_song_quiz =  str(today) + "_song_quiz"
 
+                json_data = json.loads(song.decode('utf-8'))
+
+                id = id.decode('utf-8')
+                song_name = json_data.get("name")
+                similarity = json_data.get("similarity")
+                rank = json_data.get("rank")
+                singer = json_data.get("singer")
+                
+
                 # 노래 유사도 조회
-                song_similarity : float = self.song_quiz_repository.get_song_similarity(id, today_song_quiz, False)
-
-                song : Song = self.song_repository.get_song_by_id(id)[0]
-
-                song_rank = int(rank)
-
-                song_rank_info = SongTotalRankSchema(id= id, title= song.name, similarity= song_similarity, singer= song.artist_name, rank=song_rank)
+                song_rank_info = SongTotalRankSchema(id= id, title= song_name, similarity= similarity, singer= singer, rank=rank)
 
                 rank_info.append(song_rank_info)
         
-        return rank_info
+        sorted_rank_info = sorted(rank_info, key=lambda x: x.rank)
+        
+        return sorted_rank_info
 
                 
 

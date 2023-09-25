@@ -77,15 +77,22 @@ class SongQuizRank(Base):
 
     id = Column(String, primary_key=True, nullable=False)
     rank = Column(Integer, nullable=False, default=0)
+    similarity = Column(Double, nullable=False, default=0)
+    name = Column(String, nullable=False)
+    singer = Column(String, nullable=False)
+
 
     # song_id = Column(String, ForeignKey('song.id'), nullable=False)
     # song = relationship('Song', back_populates='rank')
 
     @classmethod
-    def create(cls, id: str, rank: int) -> "SongQuizRank":
+    def create(cls, id: str, rank: int, similarity : Double, name : str, singer : str) -> "SongQuizRank":
         return cls(
             id=id,
             rank=rank,
+            similarity = similarity,
+            name = name,
+            singer = singer
         )
 
     def __repr__(self):
