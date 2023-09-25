@@ -1,4 +1,4 @@
-package com.ssafy.yesrae.crawling.api.song.request;
+package com.ssafy.yesrae.crawling.domain.song.dto.request;
 
 import lombok.Data;
 

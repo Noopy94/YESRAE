@@ -5,7 +5,6 @@ import com.ssafy.yesrae.common.model.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,35 +23,32 @@ import org.hibernate.annotations.DynamicInsert;
 public class Song extends BaseEntity {
 
 
-    @Column(nullable = false, length = 40)
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) CHARACTER SET UTF8")
     private String name;
 
     @Column(nullable = false, length = 40)
     private String albumId;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) CHARACTER SET UTF8")
     private String albumName;
 
     @Column(nullable = false, length = 40)
     private String artistId;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) CHARACTER SET UTF8")
     private String artistName;
 
     @Column(length = 40)
     private String genre;
 
-    @Column(nullable = false)
+    @Column
     private String imgUrl;
 
     @Column
     private String previewUrl;
 
-    @Column(nullable = false, columnDefinition = "DATE")
-    private LocalDate releaseDate;
-
-    @Column(nullable = false, columnDefinition = "FLOAT DEFAULT 0")
-    private Float similarity;
+    @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
+    private Integer releaseYear;
 
     @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
     private Integer duration;
@@ -108,7 +104,9 @@ public class Song extends BaseEntity {
     @Column(nullable = false, columnDefinition = "FLOAT DEFAULT 0")
     private Float valence;
 
-
+    // 노래 꼬맨틀 참여 여부
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT 0")
+    private Boolean todaySong;
 
 }
 
