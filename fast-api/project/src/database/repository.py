@@ -244,14 +244,15 @@ class SongQuizRankRepository:
 
         rank_info = song_info_datas.get(song_id_byte)
 
-        rank = json.loads(rank_info.decode('utf-8')).get("rank")
-        
-        logging.info(f"rank : {rank}")
+        logging.info(f"rank_info : {rank_info}")
 
         # 해당하는 노래가 1000위 안에 안 들어 있을 수도 있다
-        # rank : None
-        if rank is not None:
-            rank = int(rank)
+        if rank_info is not None:
+
+            rank = json.loads(rank_info.decode('utf-8')).get("rank")
+        
+            logging.info(f"rank : {rank}")
+
             return rank
         else:
             return None
