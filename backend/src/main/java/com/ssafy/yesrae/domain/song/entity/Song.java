@@ -1,10 +1,10 @@
 package com.ssafy.yesrae.domain.song.entity;
 
-
 import com.ssafy.yesrae.common.model.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,8 +20,8 @@ import org.hibernate.annotations.DynamicInsert;
 @DynamicInsert
 @SuperBuilder
 @Entity
-public class Song extends BaseEntity {
 
+public class Song extends BaseEntity {
 
     @Column(nullable = false, columnDefinition = "VARCHAR(255) CHARACTER SET UTF8")
     private String name;
@@ -109,4 +109,3 @@ public class Song extends BaseEntity {
     private Boolean todaySong;
 
 }
-
