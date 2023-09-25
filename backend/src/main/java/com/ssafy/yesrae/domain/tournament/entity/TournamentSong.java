@@ -3,6 +3,7 @@ package com.ssafy.yesrae.domain.tournament.entity;
 import com.ssafy.yesrae.common.model.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,4 +35,13 @@ public class TournamentSong extends BaseEntity {
     @Column(nullable = false)
     private String url;
 
+    @Column(nullable = false, columnDefinition = "INT default 0")
+    private Integer vote;
+
+    /**
+     * 이상형 월드컵 플레이 시마다 1위로 뽑힌 곡에 대하여 득표 수 올리기 위한 메소드
+     */
+    public void addVote() {
+        this.vote++;
+    }
 }

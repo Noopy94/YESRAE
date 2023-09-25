@@ -130,6 +130,8 @@ public class TournamentServiceImpl implements TournamentService{
         tournamentResultRepository.save(tournamentResultThree);
         tournamentResultRepository.save(tournamentResultFour);
 
+        songOne.addVote();
+
         log.info("TournamentService_registTournamentResult_end: success");
     }
 
@@ -155,7 +157,7 @@ public class TournamentServiceImpl implements TournamentService{
     public List<TournamentPopularSongFindRes> findTournamentPopularSong() {
         log.info("TournamentService_findTournamentPopularSong_start");
 
-        List<TournamentPopularSongFindRes> findRes = tournamentResultRepository.findTournamentPopularSong();
+        List<TournamentPopularSongFindRes> findRes = tournamentSongRepository.findTournamentPopularSong();
 
         log.info("TournamentService_findTournamentPopularSong_end: success");
         return findRes;

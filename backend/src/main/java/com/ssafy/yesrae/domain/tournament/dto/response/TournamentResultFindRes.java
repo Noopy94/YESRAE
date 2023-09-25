@@ -1,14 +1,12 @@
 package com.ssafy.yesrae.domain.tournament.dto.response;
 
 import java.time.LocalDateTime;
-import lombok.Builder;
 import lombok.Data;
 
 /**
  *  개인 별 이상형 월드컵 결과 Response
  */
 @Data
-@Builder
 public class TournamentResultFindRes {
 
     private String date;
