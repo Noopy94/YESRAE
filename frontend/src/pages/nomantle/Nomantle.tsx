@@ -188,7 +188,7 @@ export default function Nomantle(){
                 추측하기
             </button>
           </div>
-          <div className='w-full'>
+          <div className='w-6/8'>
             {errorMsg && <p className='mt-10 text-center text-yesrae-0'>{errorMsg}</p>}
             <div className="mt-24">
               <Category categories={category}/>
