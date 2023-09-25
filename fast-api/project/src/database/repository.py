@@ -10,6 +10,7 @@ from database.orm import SongQuiz, SongQuizRank
 import datetime
 import json
 import logging
+from config.mongodb_config import mongo_db
 
 class SongRepository:
     
@@ -279,3 +280,10 @@ class SongQuizRankRepository:
         rank_datas = self.rd.hgetall(key)
 
         return rank_datas
+    
+
+
+class SongVectorRepository():
+    col = mongo_db.song_vector
+
+    

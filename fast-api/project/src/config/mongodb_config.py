@@ -2,6 +2,7 @@ from pymongo import MongoClient
 import os
 from dotenv import load_dotenv
 
+
 MONGO_DB_HOST = os.getenv("MONGO_DB_HOST")
 MONGO_DB_PORT = os.getenv("MONGO_DB_PORT")
 MONGO_DB_NAME = os.getenv("MONGO_DB_NAME")
