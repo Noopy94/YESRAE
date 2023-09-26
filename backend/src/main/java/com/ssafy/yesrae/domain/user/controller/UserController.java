@@ -1,6 +1,7 @@
 package com.ssafy.yesrae.domain.user.controller;
 
 import com.ssafy.yesrae.common.model.CommonResponse;
+import com.ssafy.yesrae.domain.user.dto.request.UserFollowCheckGetReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserFollowPostReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserRegistPostReq;
 import com.ssafy.yesrae.domain.user.dto.response.UserFindRes;
@@ -70,5 +71,18 @@ public class UserController {
         log.info("UserController_findFollow_end: success");
 
         return CommonResponse.success(userFollowFindResList);
+    }
+
+    @GetMapping("/follow/check")
+    public CommonResponse<?> checkFollow(
+        UserFollowCheckGetReq userFollowCheckGetReq) {
+
+        log.info("UserController_checkFollow_start: " + userFollowCheckGetReq.toString());
+
+        boolean isFollowed = userService.checkFollow(userFollowCheckGetReq);
+
+        log.info("UserController_checkFollow_end: success");
+
+        return CommonResponse.success(isFollowed);
     }
 }

@@ -1,10 +1,10 @@
 package com.ssafy.yesrae.domain.user.dto.request;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-@Getter
+@Data
 public class UserRegistPostReq {
 
     // 자체 로그인을 위한 dto

@@ -7,6 +7,7 @@ import com.ssafy.yesrae.common.exception.DuplicateNicknameException;
 import com.ssafy.yesrae.common.exception.NotFoundException;
 import com.ssafy.yesrae.common.exception.user.UserNotFoundException;
 import com.ssafy.yesrae.domain.user.Role;
+import com.ssafy.yesrae.domain.user.dto.request.UserFollowCheckGetReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserFollowPostReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserRegistPostReq;
 import com.ssafy.yesrae.domain.user.dto.response.UserFindRes;
@@ -141,5 +142,25 @@ public class UserServiceImpl implements UserService {
         log.info("UserService_findFollow_end: success");
 
         return userFollowFindResList;
+    }
+
+    @Override
+    public boolean checkFollow(UserFollowCheckGetReq userFollowCheckGetReq) {
+        log.info("UserService_checkFollow_start: " + userFollowCheckGetReq.toString());
+
+        UserFollowId userFollowId = UserFollowId.builder()
+            .user(userFollowCheckGetReq.getId())
+            .followerUser(userFollowCheckGetReq.getFollowerId())
+            .build();
+
+        UserFollow userFollow = userFollowRepository.findById(userFollowId).orElse(null);
+
+        System.out.println(userFollow);
+
+        boolean isFollowed = userFollow != null;
+
+        log.info("UserService_checkFollow_end: success");
+
+        return isFollowed;
     }
 }

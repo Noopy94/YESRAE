@@ -1,5 +1,6 @@
 package com.ssafy.yesrae.domain.user.service;
 
+import com.ssafy.yesrae.domain.user.dto.request.UserFollowCheckGetReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserFollowPostReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserRegistPostReq;
 import com.ssafy.yesrae.domain.user.dto.response.UserFindRes;
@@ -15,4 +16,6 @@ public interface UserService {
     public void follow(UserFollowPostReq userFollowPostReq);
 
     public List<UserFollowFindRes> findFollow(Long userId);
+
+    public boolean checkFollow(UserFollowCheckGetReq userFollowCheckGetReq);
 }

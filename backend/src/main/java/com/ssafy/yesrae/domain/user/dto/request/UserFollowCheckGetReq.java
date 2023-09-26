@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Data
-public class UserFollowPostReq {
+public class UserFollowCheckGetReq {
 
     private Long id;
     private Long followerId;
