@@ -8,13 +8,21 @@ import {
   Typography,
 } from '@material-tailwind/react';
 
+const BASE_URL = 'http://localhost:8080/';
+
 const Login = () => {
-  const handleKakaoLogin = () => {};
-  const handleNaverLogin = () => {};
-  const handleGoogleLogin = () => {};
+  const handleKakaoLogin = () => {
+    window.location.href = BASE_URL + 'oauth2/authorization/kakao';
+  };
+  const handleNaverLogin = () => {
+    window.location.href = BASE_URL + 'oauth2/authorization/naver';
+  };
+  const handleGoogleLogin = () => {
+    window.location.href = BASE_URL + 'oauth2/authorization/google';
+  };
 
   return (
-    <div className="flex justify-center w-screen">
+    <div className="flex justify-center w-screen my-36">
       <Card className="w-[30rem]">
         <CardHeader
           variant="gradient"
