@@ -10,7 +10,7 @@ from database.orm import SongQuiz, SongQuizRank
 import datetime
 import json
 import logging
-from config.mongodb_config import mongo_db
+from config.mongodb_config import mongo_db, collection
 
 class SongRepository:
     
@@ -285,6 +285,21 @@ class SongQuizRankRepository:
 
 
 class SongVectorRepository():
-    col = mongo_db.song_vector
+
+    # col = mongo_db["song_vector"]
+
+    # def __init__(self) -> None:
+    #     self.col = mongo_db.song_vector
+    
+    """
+    vector 데이터 저장
+    """
+    def save_vector(self, song_vector : json):
+        song_vector_id = collection.insert_one(song_vector).inserted_id
+
+        logging.info(f"song_vector_id : {song_vector_id}")
+
+
+    
 
     

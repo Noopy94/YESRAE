@@ -13,6 +13,10 @@ from annoy import AnnoyIndex
 from song_analyze import calSimilarity, deleteFile, getMelody, getTempo, loadmusic, getMusic
 
 
+def annoy():
+    pass
+
+
 if __name__ == "__main__":
 
     try:
