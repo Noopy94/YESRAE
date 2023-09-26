@@ -48,6 +48,9 @@ export default function Nomantle(){
   // TODO : 그 밑에는 지금까지 정보 유사도 높은 순으로 정렬되어서 쌓기 & 이미 검색 내역 있는 경우 배제
   // TODO : 안녕 입력 후 클릭했을 때 errorMsg 가 뜨는 문제
 
+
+  let index = 1;
+
   useEffect(() => {
     
     if(inputValue){
@@ -104,19 +107,25 @@ export default function Nomantle(){
 
       if (Array.isArray(data) && data.length > 0) {
         // data 중에서 similarity 가 가장 높은 데이터 찾기
-        const maxSimilarityItem = data.reduce((maxItem, currentItem) => {
-          return currentItem.similarity > maxItem.similarity ? currentItem : maxItem;
-        });
+          const maxSimilarityItem = data.reduce((maxItem, currentItem) => {
+            return currentItem.similarity > maxItem.similarity ? currentItem : maxItem;
+          });
 
-        // 지금까지 추측쌓기
-        if (recentGuess !== null && !songInfoGuess.includes(recentGuess)){
-          setSongInfoGuess((prevSongInfoGuess) => [...prevSongInfoGuess, recentGuess]);
-        }
+          // 이미 songInfoGuess에 있는지 여부를 확인하는 함수
+          const isDuplicate = (maxSimilarityItem : SongInfo) => {
+            return songInfoGuess.some((existingItem) => existingItem.id === maxSimilarityItem.id);
+          };
+
+          // 최근 추측이 중복되지 않고, songInfoGuess에 없다면 저장
+          if (recentGuess !== null && !isDuplicate(recentGuess)) {
+            setSongInfoGuess((prevSongInfoGuess) => [...prevSongInfoGuess, recentGuess]);
+          }
 
         // 정렬
         songInfoGuess.sort((a, b) => b.similarity - a.similarity);
   
         // 가장 최근 추측
+        // TODO: 이미 있다면 가장 최근에 넣으면 X
         setRecentGuess(maxSimilarityItem);
 
         setTitleList([]);
@@ -202,45 +211,63 @@ export default function Nomantle(){
                 추측하기
             </button>
           </div>
-          <div className='w-6/8'>
+          <div className='w-4/6'>
             {errorMsg && <p className='mt-10 text-center text-yesrae-0'>{errorMsg}</p>}
-            {
-              recentGuess && 
-              <div className='flex items-center justify-center mt-20 text-xl text-yesrae-0'>
-                <div className="w-56 mx-2 text-center">
-                  {recentGuess.title}
-                </div>
-                <div className="w-56 mx-2 text-center">
-                  {recentGuess.similarity.toFixed(2)}%
-                </div>
-                <div className="w-56 mx-2 text-center">
-                  {recentGuess.rank}
-                </div>
-              </div>
-            }
             <div className="mt-24">
               <Category categories={category}/>
               <hr/>
             </div>
             <div className="mt-8">
+              {
+                recentGuess && 
+                <div className="flex items-center justify-center mb-10">
+                  <div className="flex items-center justify-center w-1/6 mx-16">#{index++}</div>
+                  <img src={recentGuess.album_img} alt="앨범 아트" className="w-1/6 mx-8 " />
+                  <div className="flex items-center justify-center w-1/6 mx-16">{recentGuess.title}</div>
+                  {recentGuess.rank == 1 ? (
+                      <div className="flex items-center justify-center w-1/6 mx-16">{Math.floor(recentGuess.similarity)} %</div>
+                    ): (
+                      <div className="flex items-center justify-center w-1/6 mx-16">{recentGuess.similarity.toFixed(2)} %</div>
+                    )}
+                  
+                  {recentGuess.answer === true? (
+                    <div className="flex items-center justify-center w-1/6 mx-16">
+                      <span>정답 !</span>
+                    </div>
+                  ) : (
+                    <div className="flex w-1/6 mx-16">
+                      <div className="flex items-center justify-center mb-2 text-center">{recentGuess.rank !== null ? recentGuess.rank : "순위밖"}</div>
+                      <div className="h-full bg-white">
+                        <div
+                          className="h-5 bg-gradient-to-r from-yesrae-0 to-yesrae-100"
+                          style={{ width: `${recentGuess.similarity}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              }
               <SongInfo songinfo = {songInfoGuess} />
             </div>
           </div>
           <div>
               <button type="button" className="flex items-center justify-center w-24 h-12 my-28 rounded-xl bg-yesrae-900 hover:bg-gray-800" onClick={openModal}>
                     포기하기
-                    
               </button>
               {isModalOpen && (
                       <div className="modal">
                         <div className="modal-content">
                           <span className="close" onClick={closeModal}>&times;</span>
-                          <p>모달 내용을 여기에 추가하세요.</p>
+                          <div>
+                            <p>순위를 보시겠습니까? </p>
+                            <button type="button" className="flex items-center justify-center w-24 h-12 my-28 rounded-xl bg-yesrae-900 hover:bg-gray-800" >
+                                  순위보기 
+                            </button>
+                          </div>
                         </div>
                       </div>
               )}
           </div>
-        
         </div>
       );
 }
