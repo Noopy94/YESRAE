@@ -15,7 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -39,7 +41,7 @@ public class TournamentController {
      *  이상형 월드컵을 시작하기 위해 이상형 월드컵 게임에 들어올 노래 가져오기
      */
     @GetMapping("/auth/song")
-    public CommonResponse<?> findTournamentSong(FindTournamentSongGetReq findTournamentSongGetReq) {
+    public CommonResponse<?> findTournamentSong(@RequestParam FindTournamentSongGetReq findTournamentSongGetReq) {
 
         log.info("TournamentController_findTournamentSong_start: "
             + findTournamentSongGetReq.toString());
@@ -76,7 +78,7 @@ public class TournamentController {
      */
     @PostMapping("/result")
     public CommonResponse<?> registTournamentResult(
-        RegistTournamentResultPostReq registTournamentResultPostReq) {
+        @RequestBody RegistTournamentResultPostReq registTournamentResultPostReq) {
 
         log.info("TournamentController_registTournamentResult_start: "
             + registTournamentResultPostReq.toString());
