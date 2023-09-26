@@ -1,16 +1,19 @@
 package com.ssafy.yesrae.domain.user.controller;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.ssafy.yesrae.common.model.CommonResponse;
+import com.ssafy.yesrae.domain.user.dto.request.UserFollowCheckGetReq;
+import com.ssafy.yesrae.domain.user.dto.request.UserFollowPostReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserRegistPostReq;
 import com.ssafy.yesrae.domain.user.dto.response.UserFindRes;
-import com.ssafy.yesrae.domain.user.entity.User;
+import com.ssafy.yesrae.domain.user.dto.response.UserFollowCheckRes;
+import com.ssafy.yesrae.domain.user.dto.response.UserFollowFindRes;
+import com.ssafy.yesrae.domain.user.dto.response.UserNicknameFindRes;
 import com.ssafy.yesrae.domain.user.service.UserService;
-import java.util.Optional;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -33,13 +36,13 @@ public class UserController {
 
 
     @PostMapping("/regist")
-    public CommonResponse<?> regist(@RequestBody UserRegistPostReq userRegistPostReq) {
+    public CommonResponse<?> registUser(@RequestBody UserRegistPostReq userRegistPostReq) {
 
-        log.info("UserController_regist_start: " + userRegistPostReq.toString());
+        log.info("UserController_registUser_start: " + userRegistPostReq.toString());
 
         userService.regist(userRegistPostReq);
 
-        log.info("UserController_regist_end: success");
+        log.info("UserController_registUser_end: success");
 
         return CommonResponse.success(SUCCESS);
     }
@@ -47,17 +50,54 @@ public class UserController {
     @PostMapping("/login")
     public CommonResponse<?> login(@RequestHeader("Authorization") String accessToken) {
 
-        User user = userService.login(accessToken);
-
-        UserFindRes userFindRes = UserFindRes.builder()
-            .email(user.getEmail())
-            .nickname(user.getNickname())
-            .imageUrl(user.getImageUrl())
-            .age(user.getAge())
-            .accessToken(accessToken)
-            .refreshToken(user.getRefreshToken())
-            .build();
+        UserFindRes userFindRes = userService.login(accessToken);
 
         return CommonResponse.success(userFindRes);
+    }
+
+    @PostMapping("/follow")
+    public CommonResponse<?> registFollow(@RequestBody UserFollowPostReq userFollowPostReq) {
+
+        userService.follow(userFollowPostReq);
+
+        return CommonResponse.success(SUCCESS);
+    }
+
+    @GetMapping("/follow/{userId}")
+    public CommonResponse<?> findFollow(@PathVariable Long userId) {
+
+        log.info("UserController_findFollow_start: userId - " + userId);
+
+        List<UserFollowFindRes> userFollowFindResList = userService.findFollow(userId);
+
+        log.info("UserController_findFollow_end: success");
+
+        return CommonResponse.success(userFollowFindResList);
+    }
+
+    @GetMapping("/follow/check")
+    public CommonResponse<?> checkFollow(UserFollowCheckGetReq userFollowCheckGetReq) {
+
+        log.info("UserController_checkFollow_start: " + userFollowCheckGetReq.toString());
+
+        UserFollowCheckRes userFollowCheckRes = UserFollowCheckRes.builder()
+            .isFollowed(userService.checkFollow(userFollowCheckGetReq))
+            .build();
+
+        log.info("UserController_checkFollow_end: success");
+
+        return CommonResponse.success(userFollowCheckRes);
+    }
+
+    @GetMapping("/nickname/{userId}")
+    public CommonResponse<?> findNickname(@PathVariable Long userId) {
+
+        log.info("UserController_findNickname_start: userId - " + userId);
+
+        UserNicknameFindRes userNicknameFindRes = userService.findNickname(userId);
+
+        log.info("UserController_findNickname_end: success");
+
+        return CommonResponse.success(userNicknameFindRes);
     }
 }

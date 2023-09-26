@@ -11,13 +11,13 @@ import com.ssafy.yesrae.config.oauth2.handler.OAuth2LoginFailureHandler;
 import com.ssafy.yesrae.config.oauth2.handler.OAuth2LoginSuccessHandler;
 import com.ssafy.yesrae.config.oauth2.service.CustomOAuth2UserService;
 import com.ssafy.yesrae.domain.user.repository.UserRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -27,6 +27,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -52,7 +55,9 @@ public class SecurityConfig {
             .httpBasic(AbstractHttpConfigurer::disable) // httpBasic 사용 X
             .formLogin(AbstractHttpConfigurer::disable) // FormLogin 사용 X
             .csrf(AbstractHttpConfigurer::disable) // csrf 보안 사용 X
-            .cors(AbstractHttpConfigurer::disable) // cors 보안 사용 X
+            .cors(
+                httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(
+                    corsConfigurationSource())) // cors 보안 사용 X
             .headers(httpSecurityHeadersConfigurer ->
                 httpSecurityHeadersConfigurer
                     .frameOptions(FrameOptionsConfig::disable)
@@ -150,5 +155,20 @@ public class SecurityConfig {
     public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() {
         return new JwtAuthenticationProcessingFilter(
             jwtService, userRepository);
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOriginPattern("*");
+        configuration.setAllowedMethods(
+            List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setExposedHeaders(List.of("*"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:8080"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
