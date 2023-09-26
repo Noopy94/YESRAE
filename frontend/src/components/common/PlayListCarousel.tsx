@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
 
 interface playList {
   id: number;
@@ -61,12 +62,16 @@ const PlayListCarousel: React.FC<playListProps> = ({ playLists }) => {
         <div className="flex items-center w-full">
           {playLists.slice(startIndex, endIndex).map((playList) => (
             <div key={playList.id} className="relative px-3 carousel-slide">
-              <img
-                src={playList.imageUrl}
-                alt={playList.title}
-                className="w-64 h-64"
-              />
-              <h2 className="text-xl font-semibold">{playList.title}</h2>
+              <Link to={`/playList/${playList.id}`}>
+                <img
+                  src={playList.imageUrl}
+                  alt={playList.title}
+                  className="w-64 h-64"
+                />
+              </Link>
+              <h2 className="w-64 overflow-hidden text-lg font-semibold overflow-ellipsis whitespace-nowrap">
+                {playList.title}
+              </h2>
               <p className="text-gray-600">{playList.userNickName}</p>
             </div>
           ))}

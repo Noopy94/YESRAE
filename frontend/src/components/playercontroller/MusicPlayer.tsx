@@ -58,8 +58,12 @@ const MusicPlayer: React.FC = () => {
     <div className="fixed bottom-0 left-0 flex w-full p-2 bg-gray-900 shadow-md ">
       <img
         src="https://i.scdn.co/image/ab67616d0000b273034c3a8ba89c6a5ecfda3175"
-        className="w-12 h-12 mr-4"
+        className="w-12 h-12"
       ></img>
+      <div className="px-4">
+        <div>노래 제목</div>
+        <div className="text-sm">가수 이름</div>
+      </div>
       <button
         className={`bg-${
           isPlaying ? 'red-500' : 'blue-500'

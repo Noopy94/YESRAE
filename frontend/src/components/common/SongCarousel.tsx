@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
 
 interface Song {
-  id: number;
+  id: string;
   imageUrl: string;
   title: string;
   artistName: string;
@@ -61,8 +62,16 @@ const SongCarousel: React.FC<SongCarouselProps> = ({ songs }) => {
         <div className="flex items-center w-full">
           {songs.slice(startIndex, endIndex).map((song) => (
             <div key={song.id} className="relative px-3 carousel-slide">
-              <img src={song.imageUrl} alt={song.title} className="w-64 h-64" />
-              <h2 className="text-xl font-semibold">{song.title}</h2>
+              <Link to={`/song/${song.id}`}>
+                <img
+                  src={song.imageUrl}
+                  alt={song.title}
+                  className="w-64 h-64"
+                />
+              </Link>
+              <h2 className="w-64 overflow-hidden text-lg font-semibold overflow-ellipsis whitespace-nowrap">
+                {song.title}
+              </h2>
               <p className="text-gray-600">{song.artistName}</p>
             </div>
           ))}

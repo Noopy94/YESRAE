@@ -73,16 +73,18 @@ export default function HeaderNav() {
 
   return (
     <div className="fixed w-64 h-full bg-black border-r border-gray-900">
-      <img src={Logo} alt="YESRAE LOGO" className="p-4" />
+      <Link to="/">
+        <img src={Logo} alt="YESRAE LOGO" className="p-4" />
+      </Link>
       <div className="p-3 border-t-2 border-gray-900">
-        {user.name ? (
+        {user.nickName ? (
           <div>
             <img
               src={user.imgUrl}
-              alt={user.name}
+              alt={user.nickName}
               className="w-12 h-12 rounded-full"
             />
-            <div>{user.name}님 안녕하세요.</div>
+            <div>{user.nickName}님 안녕하세요.</div>
           </div>
         ) : (
           <div>

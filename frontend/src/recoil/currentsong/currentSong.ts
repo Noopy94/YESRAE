@@ -2,7 +2,7 @@ import { atom } from 'recoil';
 
 // 플레이 리스트 초기상태
 const initialCurrentSongState = {
-  songId: 0,
+  songId: '',
   songTitle: '',
   songUrl: '',
   songArtist: '',
