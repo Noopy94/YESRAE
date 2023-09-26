@@ -133,7 +133,7 @@ public class ArticleServiceImpl implements ArticleService{
                 .orElseThrow(NotFoundException::new);
         List<String> files = new ArrayList<>();
         if(article.getType()){
-            List<Photo> pl = photoRepository.findByArticleEntity_Id(Id);
+            List<Photo> pl = photoRepository.findByArticle_Id(Id);
             for(Photo p : pl){
                 files.add(p.getPath());
             }
@@ -232,7 +232,7 @@ public class ArticleServiceImpl implements ArticleService{
     List<String> findArticleFiles(Article article){
         List<String> files = new ArrayList<>();
         if(article.getType()){
-            List<Photo> pl = photoRepository.findByArticleEntity_Id(article.getId());
+            List<Photo> pl = photoRepository.findByArticle_Id(article.getId());
             for(Photo p : pl){
                 files.add(p.getPath());
             }
