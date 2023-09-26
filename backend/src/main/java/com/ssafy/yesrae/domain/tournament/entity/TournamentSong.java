@@ -35,7 +35,7 @@ public class TournamentSong extends BaseEntity {
     @Column(nullable = false)
     private String url;
 
-    @Column(nullable = false, columnDefinition = "INT default 0")
+    @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
     private Integer vote;
 
     /**

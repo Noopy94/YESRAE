@@ -107,22 +107,22 @@ public class TournamentServiceImpl implements TournamentService{
         TournamentResult tournamentResultOne = TournamentResult.builder()
             .tournament(tournament)
             .tournamentSong(songOne)
-            .rank(1)
+            .ranking(1)
             .build();
         TournamentResult tournamentResultTwo = TournamentResult.builder()
             .tournament(tournament)
             .tournamentSong(songTwo)
-            .rank(2)
+            .ranking(2)
             .build();
         TournamentResult tournamentResultThree = TournamentResult.builder()
             .tournament(tournament)
             .tournamentSong(songThree)
-            .rank(3)
+            .ranking(3)
             .build();
         TournamentResult tournamentResultFour = TournamentResult.builder()
             .tournament(tournament)
             .tournamentSong(songFour)
-            .rank(3)
+            .ranking(3)
             .build();
 
         tournamentResultRepository.save(tournamentResultOne);
