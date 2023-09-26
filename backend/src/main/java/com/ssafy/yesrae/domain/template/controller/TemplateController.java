@@ -1,12 +1,12 @@
 package com.ssafy.yesrae.domain.template.controller;
 
+import com.ssafy.yesrae.common.exception.Template.TemplateNoResultException;
+import com.ssafy.yesrae.common.exception.Template.TemplatePossessionFailException;
+import com.ssafy.yesrae.common.model.CommonResponse;
 import com.ssafy.yesrae.domain.template.dto.request.TemplateFindByConditionGetReq;
 import com.ssafy.yesrae.domain.template.dto.request.TemplateRegistPostReq;
 import com.ssafy.yesrae.domain.template.dto.response.TemplateFindRes;
 import com.ssafy.yesrae.domain.template.service.TemplateService;
-import com.ssafy.yesrae.common.exception.Template.TemplateNoResultException;
-import com.ssafy.yesrae.common.exception.Template.TemplatePossessionFailException;
-import com.ssafy.yesrae.common.model.CommonResponse;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -43,8 +43,9 @@ public class TemplateController {
      * @param templateRegistPostReq : 게시글 등록할 때 입력한 정보
      */
     @PostMapping
-    public CommonResponse<?> regist(@RequestBody TemplateRegistPostReq templateRegistPostReq) {
-        
+    public CommonResponse<?> registTemplate(
+        @RequestBody TemplateRegistPostReq templateRegistPostReq) {
+
         log.info("TemplateController_regist_start: " + templateRegistPostReq.toString());
 
         templateService.registTemplate(templateRegistPostReq);
@@ -57,7 +58,7 @@ public class TemplateController {
      * 게시글 목록 조회 API
      */
     @GetMapping
-    public CommonResponse<?> findAll() {
+    public CommonResponse<?> findAllTemplate() {
 
         log.info("TemplateController_findAll_start: ");
 
@@ -70,13 +71,14 @@ public class TemplateController {
     }
 
     /**
-     *  게시글 검색어로 검색하여 조회 API
+     * 게시글 검색어로 검색하여 조회 API
      */
     @GetMapping("/search")
-    public CommonResponse<?> findByCondition(
+    public CommonResponse<?> findByConditionTemplate(
         TemplateFindByConditionGetReq templateFindByConditionGetReq) {
 
-        log.info("TemplateController_findByCondition_start: " + templateFindByConditionGetReq.toString());
+        log.info("TemplateController_findByCondition_start: "
+            + templateFindByConditionGetReq.toString());
 
         // 검색 결과 없을 경우 어떻게 할지 보완 필요 (현재 null 이 아니라 빈 리스트라서 exception 발동 안 함)ㄴ
         Optional<List<TemplateFindRes>> findRes = Optional.ofNullable(
@@ -90,7 +92,7 @@ public class TemplateController {
      * 게시글을 삭제하기 위한 API
      */
     @PutMapping("/delete/{articleId}")
-    public CommonResponse<?> delete(@PathVariable Long articleId) {
+    public CommonResponse<?> deleteTemplate(@PathVariable Long articleId) {
 
         log.info("TemplateController_delete_start: " + articleId);
 
