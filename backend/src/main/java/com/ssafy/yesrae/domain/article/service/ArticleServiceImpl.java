@@ -1,7 +1,7 @@
 package com.ssafy.yesrae.domain.article.service;
 
-import com.ssafy.yesrae.common.exception.NoDataException;
 import com.ssafy.yesrae.common.exception.NotFoundException;
+import com.ssafy.yesrae.common.exception.user.UserNotFoundException;
 import com.ssafy.yesrae.common.model.FileDto;
 import com.ssafy.yesrae.common.util.FileUploader;
 import com.ssafy.yesrae.domain.article.dto.request.ArticleDeletePutReq;
@@ -14,6 +14,8 @@ import com.ssafy.yesrae.domain.article.entity.Photo;
 import com.ssafy.yesrae.domain.article.repository.ArticleRepository;
 import com.ssafy.yesrae.domain.article.repository.PhotoRepository;
 import com.ssafy.yesrae.domain.article.repository.CategoryRepository;
+import com.ssafy.yesrae.domain.user.entity.User;
+import com.ssafy.yesrae.domain.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,13 +36,15 @@ public class ArticleServiceImpl implements ArticleService{
     private final CategoryRepository categoryRepository;
     private final PhotoRepository photoRepository;
     private final FileUploader fileUploader;
+    private final UserRepository userRepository;
 
     @Autowired
-    public ArticleServiceImpl(ArticleRepository articleRepository, CategoryRepository categoryRepository, PhotoRepository photoRepository, FileUploader fileUploader) {
+    public ArticleServiceImpl(ArticleRepository articleRepository, CategoryRepository categoryRepository, PhotoRepository photoRepository, FileUploader fileUploader, UserRepository userRepository) {
         this.articleRepository = articleRepository;
         this.categoryRepository = categoryRepository;
         this.photoRepository = photoRepository;
         this.fileUploader = fileUploader;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -54,8 +58,8 @@ public class ArticleServiceImpl implements ArticleService{
             type = true;
         }
         //TODO 작성자 정보 가져오기
-//        User user = userRepository.findById(registInfo.getUserId())
-//                .orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findById(articleRegistPostReq.getUserId())
+                .orElseThrow(UserNotFoundException::new);
         Category categoryEntity = categoryRepository.findById(articleRegistPostReq.getCategory())
                 .orElseThrow(NotFoundException::new);
         Long category = articleRegistPostReq.getCategory();
@@ -67,6 +71,7 @@ public class ArticleServiceImpl implements ArticleService{
                 .title(title)
                 .category(categoryEntity)
                 .type(type)
+                .user(user)
                 .build();
         articleRepository.save(article);
         article.insertArticle();
@@ -164,38 +169,34 @@ public class ArticleServiceImpl implements ArticleService{
 
         Article article = articleRepository.findById(articleModifyPutReq.getId())
                 .orElseThrow(NotFoundException::new);
-        // TODO: 현재 로그인 유저의 id와 글쓴이의 id가 일치할 때
         if (article.getUser().getId().equals(articleModifyPutReq.getUserId())) {
-        // 점포 수정
-        Category category = categoryRepository.findById(articleModifyPutReq.getCategory())
-                .orElseThrow(NullPointerException::new);
-        article.modifyArticle(articleModifyPutReq.getTitle(), articleModifyPutReq.getContent(), category);
-//          TODO : 사진 어떻게 처리할지 관리
-
-        // 게시글 기존 사진 전부 삭제
-        List<Photo> photoList = photoRepository.findByArticle(article);
-        // DB 에서 사진 삭제 처리
-        for (Photo photo : photoList) {
-            photo.deletePhoto();
-        }
-
-        // 게시글 사진 다시 업로드
-        if (!Objects.isNull(files) && files.get(0).getSize() > 0) {
-            List<FileDto> fileDtoList = fileUploader.fileUpload(files, "article");
-            for (FileDto fileDto : fileDtoList) {
-                Photo photo = Photo.builder()
-                        .article(article)
-                        .fileName(fileDto.getFileName())
-                        .originalName(fileDto.getOriginalName())
-                        .path(fileDto.getPath())
-                        .contentType(fileDto.getContentType())
-                        .build();
-
-                photoRepository.save(photo);
+            // 점포 수정
+            Category category = categoryRepository.findById(articleModifyPutReq.getCategory())
+                    .orElseThrow(NullPointerException::new);
+            article.modifyArticle(articleModifyPutReq.getTitle(), articleModifyPutReq.getContent(), category);
+            // 게시글 기존 사진 전부 삭제
+            List<Photo> photoList = photoRepository.findByArticle(article);
+            // DB 에서 사진 삭제 처리
+            for (Photo photo : photoList) {
+                photo.deletePhoto();
             }
-        }
-        log.info("ArticleService_modifyArticle_end: true");
-        return true;
+            // 게시글 사진 다시 업로드
+            if (!Objects.isNull(files) && files.get(0).getSize() > 0) {
+                List<FileDto> fileDtoList = fileUploader.fileUpload(files, "article");
+                for (FileDto fileDto : fileDtoList) {
+                    Photo photo = Photo.builder()
+                            .article(article)
+                            .fileName(fileDto.getFileName())
+                            .originalName(fileDto.getOriginalName())
+                            .path(fileDto.getPath())
+                            .contentType(fileDto.getContentType())
+                            .build();
+
+                    photoRepository.save(photo);
+                }
+            }
+            log.info("ArticleService_modifyArticle_end: true");
+            return true;
         }
         log.info("ArticleService_modifyArticle_end: false");
         return false;

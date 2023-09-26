@@ -6,9 +6,8 @@ import java.sql.Timestamp;
 
 @Data
 public class ArticleRegistPostReq {
-//TODO
-//    //F-Key
-//    private Long userId;
+    //F-Key
+    private Long userId;
 
     // 내용
     private String content;
