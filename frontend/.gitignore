@@ -15,6 +15,7 @@ dist-ssr
 # Ignore package lock files
 package-lock.json
 pnpm-lock.yaml
+.env
 
 # Editor directories and files
 .vscode/*
