@@ -156,8 +156,6 @@ public class UserServiceImpl implements UserService {
 
         UserFollow userFollow = userFollowRepository.findById(userFollowId).orElse(null);
 
-        System.out.println(userFollow);
-
         boolean isFollowed = userFollow != null;
 
         log.info("UserService_checkFollow_end: success");
