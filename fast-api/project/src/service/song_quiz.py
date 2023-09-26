@@ -85,13 +85,18 @@ class SongQuizService:
 
         today_song_info: SongInfo = SongInfo(**json_today_song)
 
+        logging.info(f"today song , 선정한 오늘의 노래 {self.today_song.name}")
+
         for song in songs:
             json_compare_song = jsonable_encoder(song)
             
             compare_song_info = SongInfo(**json_compare_song)
 
             # 오늘의 노래와 DB 에 있는 나머지 노래들 간에 유사도 계산
-            similarity: float = self.calculate_util.calculate(today_song_info, compare_song_info)
+            similarity: float = self.calculate_util.calculate(today_song_info, compare_song_info) 
+
+            if similarity < 100:
+                similarity = similarity *0.8
 
             song_quiz: SongQuiz = SongQuiz.create(id=song.id, similarity=similarity)
 

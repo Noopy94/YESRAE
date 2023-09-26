@@ -11,11 +11,12 @@ spotify API 에서 제공하는 음악에 대한 특징값 이용해서 가중�
 그룹 4) 힙합
 """
 
+
 # 1-1) 산들 (복면 가왕) - 응급실
 test1_1 = {
     "danceability": 0.395,
     "energy": 0.348,
-    "key": 3,
+    "tune": 3,
     "loudness": -6.611,
     "mode": 1,
     "speechiness": 0.0286,
@@ -37,7 +38,7 @@ test1_1 = {
 test1_2 = {
     "danceability": 0.579,
     "energy": 0.374,
-    "key": 3,
+    "tune": 3,
     "loudness": -6.64,
     "mode": 1,
     "speechiness": 0.0272,
@@ -59,7 +60,7 @@ test1_2 = {
 test1_3 = {
     "danceability": 0.387,
     "energy": 0.515,
-    "key": 2,
+    "tune": 2,
     "loudness": -5.529,
     "mode": 1,
     "speechiness": 0.0338,
@@ -81,7 +82,7 @@ test1_3 = {
 test2_1 = {
     "danceability": 0.298,
     "energy": 0.987,
-    "key": 1,
+    "tune": 1,
     "loudness": -0.77,
     "mode": 1,
     "speechiness": 0.0623,
@@ -103,7 +104,7 @@ test2_1 = {
 test2_2 = {
     "danceability": 0.368,
     "energy": 0.977,
-    "key": 5,
+    "tune": 5,
     "loudness": -0.493,
     "mode": 1,
     "speechiness": 0.105,
@@ -124,7 +125,7 @@ test2_2 = {
 test2_3 = {
     "danceability": 0.442,
     "energy": 0.943,
-    "key": 3,
+    "tune": 3,
     "loudness": -3.205,
     "mode": 1,
     "speechiness": 0.0602,
@@ -146,7 +147,7 @@ test2_3 = {
 test3_1 = {
     "danceability": 0.879,
     "energy": 0.784,
-    "key": 10,
+    "tune": 10,
     "loudness": -3.944,
     "mode": 0,
     "speechiness": 0.081,
@@ -167,7 +168,7 @@ test3_1 = {
 test3_2 = {
     "danceability": 0.795,
     "energy": 0.875,
-    "key": 4,
+    "tune": 4,
     "loudness": -4.079,
     "mode": 0,
     "speechiness": 0.0525,
@@ -186,32 +187,54 @@ test3_2 = {
 }
 
 # 3-3) 에스파 - blackmamba
+# test3_3 = {
+#     "danceability": 0.612,
+#     "energy": 0.912,
+#     "tune": 2,
+#     "loudness": -2.853,
+#     "mode": 1,
+#     "speechiness": 0.0796,
+#     "acousticness": 0.064,
+#     "instrumentalness": 0.000799,
+#     "liveness": 0.0843,
+#     "valence": 0.472,
+#     "tempo": 90.006,
+#     "type": "audio_features",
+#     "id": "7v1X2PGU3uZXu7tzFTTsSh",
+#     "uri": "spotify:track:7v1X2PGU3uZXu7tzFTTsSh",
+#     "track_href": "https://api.spotify.com/v1/tracks/7v1X2PGU3uZXu7tzFTTsSh",
+#     "analysis_url": "https://api.spotify.com/v1/audio-analysis/7v1X2PGU3uZXu7tzFTTsSh",
+#     "duration_ms": 174933,
+#     "time_signature": 4
+# }
+
+# 아브라카다브라
 test3_3 = {
-    "danceability": 0.612,
-    "energy": 0.912,
-    "key": 2,
-    "loudness": -2.853,
-    "mode": 1,
-    "speechiness": 0.0796,
-    "acousticness": 0.064,
-    "instrumentalness": 0.000799,
-    "liveness": 0.0843,
-    "valence": 0.472,
-    "tempo": 90.006,
-    "type": "audio_features",
-    "id": "7v1X2PGU3uZXu7tzFTTsSh",
-    "uri": "spotify:track:7v1X2PGU3uZXu7tzFTTsSh",
-    "track_href": "https://api.spotify.com/v1/tracks/7v1X2PGU3uZXu7tzFTTsSh",
-    "analysis_url": "https://api.spotify.com/v1/audio-analysis/7v1X2PGU3uZXu7tzFTTsSh",
-    "duration_ms": 174933,
-    "time_signature": 4
+     "acousticness": 0.0224,
+      "analysis_url": "https://api.spotify.com/v1/audio-analysis/33bXkEzVYbyp1nCTx4KNwc",
+      "danceability": 0.803,
+      "duration_ms": 182308,
+      "energy": 0.973,
+      "id": "33bXkEzVYbyp1nCTx4KNwc",
+      "instrumentalness": 0.0000867,
+      "tune": 5,
+      "liveness": 0.0846,
+      "loudness": -2.343,
+      "mode": 1,
+      "speechiness": 0.0953,
+      "tempo": 128.022,
+      "time_signature": 4,
+      "track_href": "https://api.spotify.com/v1/tracks/33bXkEzVYbyp1nCTx4KNwc",
+      "type": "audio_features",
+      "uri": "spotify:track:33bXkEzVYbyp1nCTx4KNwc",
+      "valence": 0.794
 }
 
 # 4-1) grey - 하기나해
 test4_1 = {
     "danceability": 0.794,
     "energy": 0.62,
-    "key": 0,
+    "tune": 0,
     "loudness": -4.557,
     "mode": 1,
     "speechiness": 0.164,
@@ -232,7 +255,7 @@ test4_1 = {
 test4_2 = {
     "danceability": 0.72,
     "energy": 0.846,
-    "key": 7,
+    "tune": 7,
     "loudness": -4.018,
     "mode": 0,
     "speechiness": 0.0456,
@@ -250,42 +273,67 @@ test4_2 = {
     "time_signature": 4
 }
 # 4-3) 박재범 - all i wanna do
+# test4_3 = {
+#     "danceability": 0.403,
+#     "energy": 0.724,
+#     "tune": 8,
+#     "loudness": -6.064,
+#     "mode": 1,
+#     "speechiness": 0.246,
+#     "acousticness": 0.377,
+#     "instrumentalness": 0,
+#     "liveness": 0.0927,
+#     "valence": 0.428,
+#     "tempo": 97.133,
+#     "type": "audio_features",
+#     "id": "2FWquqPNxte8iqZ3ATQG0p",
+#     "uri": "spotify:track:2FWquqPNxte8iqZ3ATQG0p",
+#     "track_href": "https://api.spotify.com/v1/tracks/2FWquqPNxte8iqZ3ATQG0p",
+#     "analysis_url": "https://api.spotify.com/v1/audio-analysis/2FWquqPNxte8iqZ3ATQG0p",
+#     "duration_ms": 216786,
+#     "time_signature": 4
+# }
+
+# 보고 싶다
 test4_3 = {
-    "danceability": 0.403,
-    "energy": 0.724,
-    "key": 8,
-    "loudness": -6.064,
-    "mode": 1,
-    "speechiness": 0.246,
-    "acousticness": 0.377,
-    "instrumentalness": 0,
-    "liveness": 0.0927,
-    "valence": 0.428,
-    "tempo": 97.133,
-    "type": "audio_features",
-    "id": "2FWquqPNxte8iqZ3ATQG0p",
-    "uri": "spotify:track:2FWquqPNxte8iqZ3ATQG0p",
-    "track_href": "https://api.spotify.com/v1/tracks/2FWquqPNxte8iqZ3ATQG0p",
-    "analysis_url": "https://api.spotify.com/v1/audio-analysis/2FWquqPNxte8iqZ3ATQG0p",
-    "duration_ms": 216786,
-    "time_signature": 4
+
+        "acousticness": 0.806,
+      "analysis_url": "https://api.spotify.com/v1/audio-analysis/4i39vkBJzBnYvBMua65Rwi",
+      "danceability": 0.514,
+      "duration_ms": 244128,
+      "energy": 0.311,
+      "id": "4i39vkBJzBnYvBMua65Rwi",
+      "instrumentalness": 0,
+      "tune": 5,
+      "liveness": 0.0674,
+      "loudness": -8.027,
+      "mode": 1,
+      "speechiness": 0.0286,
+      "tempo": 127.948,
+      "time_signature": 4,
+      "track_href": "https://api.spotify.com/v1/tracks/4i39vkBJzBnYvBMua65Rwi",
+      "type": "audio_features",
+      "uri": "spotify:track:4i39vkBJzBnYvBMua65Rwi",
+      "valence": 0.177
 }
+
+
 
 """
 가중치 정보
 """
 weight = {
-    "acousticness": 0.1,
-    "danceability": 0.1,
-    "energy": 0.3,
-    "instrumentalness": 0.02,
-    "tune": 0.05,
+    "acousticness": 0.25,
+    "danceability": 0.05, 
+    "energy": 0.1,
+    "instrumentalness": 0.0,
+    "tune": 0.1,
     "liveness": 0.05,
-    "loudness": 0.05,
+    "loudness": 0.15,
     "mode": 0.0,
     "speechiness": 0.1,
-    "valence": 0.3,
-    "tempo": 0.5,
+    "valence": 0.1,
+    "tempo": 0.1,
     "time_signature": 0.0
 }
 
@@ -295,8 +343,15 @@ weight = {
 0 ~ 1 반환값 맞추기 위해 사용
 :x
 """
+# def sigmoid(x):
+#     return 1 / (1 + np.exp(-x))
+
 def sigmoid(x):
-    return 1 / (1 + np.exp(-x))
+    scale = 100 
+    return scale / (1 + np.exp(-x))
+
+def sigmoid_scaled(x, scale=100):
+    return scale / (1 + np.exp(-x))
 
 
 """
@@ -377,7 +432,8 @@ class CalculateUtil:
 
                 difference = difference + weight[name] * abs((value - target_song.get_value(name)))
 
-        return sigmoid(-1 * difference) * 100 * 1.577
+        return sigmoid(-1 * difference) * 1.83
+        #return sigmoid_scaled(-1 * difference)
 
 
 """
@@ -386,7 +442,7 @@ TEST 용
 """
 calculate_util = CalculateUtil()
 
-"""
+
 for target_idx in range(1, 5):
     for item in range(1, 4):
         target = "test" + str(target_idx) + "_" + str(item)
@@ -418,4 +474,4 @@ for target_idx in range(1, 5):
 
                         similarity = calculate_util.calculate(target_song, const_song)
                         print("similarity {} & {} = {:.2f}".format(target, const, similarity))
-"""
+
