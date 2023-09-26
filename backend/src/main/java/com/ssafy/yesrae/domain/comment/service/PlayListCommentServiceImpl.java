@@ -80,7 +80,7 @@ public class PlayListCommentServiceImpl implements PlayListCommentService {
 
         List<PlayListCommentFindRes> res = playListCommentRepository.findByPlayListId(PlayListId)
             .stream().map(m -> PlayListCommentFindRes.builder()
-                .commentId(m.getId())
+                .id(m.getId())
                 .playListId(m.getPlayList().getId())
                 .userId(m.getUser().getId())
                 .content(m.getContent())
@@ -102,7 +102,7 @@ public class PlayListCommentServiceImpl implements PlayListCommentService {
         log.info("PlayListCommentService_deletePlayListComment_start: ");
 
         PlayListComment playListComment = playListCommentRepository.findById(
-                playListCommentDeletePutReq.getPlayListCommentId())
+                playListCommentDeletePutReq.getId())
             .orElseThrow(
                 NoDataException::new);
         if (playListComment.getUser().getId().equals(playListCommentDeletePutReq.getUserId())) {

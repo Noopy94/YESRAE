@@ -1,6 +1,6 @@
-package com.ssafy.yesrae.domain.comment.repository;
+package com.ssafy.yesrae.domain.notification.repository;
 
-import com.ssafy.yesrae.domain.comment.entity.PlayListCommentNotification;
+import com.ssafy.yesrae.domain.notification.entity.PlayListCommentNotification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PlayListCommentNotificationRespository extends

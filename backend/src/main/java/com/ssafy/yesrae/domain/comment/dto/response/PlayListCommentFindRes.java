@@ -8,7 +8,7 @@ import lombok.Data;
 @Builder
 public class PlayListCommentFindRes {
 
-    private Long commentId;
+    private Long id;
 
     private Long playListId;
 

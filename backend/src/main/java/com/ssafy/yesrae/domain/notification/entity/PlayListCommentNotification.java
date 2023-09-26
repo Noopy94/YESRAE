@@ -1,6 +1,7 @@
-package com.ssafy.yesrae.domain.comment.entity;
+package com.ssafy.yesrae.domain.notification.entity;
 
 import com.ssafy.yesrae.common.model.BaseEntity;
+import com.ssafy.yesrae.domain.comment.entity.PlayListComment;
 import com.ssafy.yesrae.domain.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,7 +25,7 @@ import org.hibernate.annotations.DynamicInsert;
 @SuperBuilder
 @DynamicInsert
 @Entity
-public class ArticleCommentNotification extends BaseEntity {
+public class PlayListCommentNotification extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")   // DB table에 적용될 FK column 이름
@@ -32,11 +33,12 @@ public class ArticleCommentNotification extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id")   // DB table에 적용될 FK column 이름
-    private ArticleComment comment;
+    private PlayListComment comment;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @Column(nullable = false, columnDefinition = "DEFAULT FALSE")
     private Boolean isViewed;
+
 }
