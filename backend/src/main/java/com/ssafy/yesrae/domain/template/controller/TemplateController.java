@@ -46,11 +46,11 @@ public class TemplateController {
     public CommonResponse<?> registTemplate(
         @RequestBody TemplateRegistPostReq templateRegistPostReq) {
 
-        log.info("TemplateController_regist_start: " + templateRegistPostReq.toString());
+        log.info("TemplateController_registTemplate_start: " + templateRegistPostReq.toString());
 
         templateService.registTemplate(templateRegistPostReq);
 
-        log.info("TemplateController_regist_end: success");
+        log.info("TemplateController_registTemplate_end: success");
         return CommonResponse.success(SUCCESS);
     }
 
@@ -60,13 +60,13 @@ public class TemplateController {
     @GetMapping
     public CommonResponse<?> findAllTemplate() {
 
-        log.info("TemplateController_findAll_start: ");
+        log.info("TemplateController_findAllTemplate_start: ");
 
         // 검색 결과 없을 경우 어떻게 할지 보완 필요 (현재 null 이 아니라 빈 리스트라서 exception 발동 안 함)
         Optional<List<TemplateFindRes>> findRes = Optional.ofNullable(
             templateService.findAllTemplate());
 
-        log.info("TemplateController_findAll_end: " + findRes);
+        log.info("TemplateController_findAllTemplate_end: " + findRes);
         return CommonResponse.success(findRes.orElseThrow(TemplateNoResultException::new));
     }
 
@@ -77,14 +77,14 @@ public class TemplateController {
     public CommonResponse<?> findByConditionTemplate(
         TemplateFindByConditionGetReq templateFindByConditionGetReq) {
 
-        log.info("TemplateController_findByCondition_start: "
+        log.info("TemplateController_findByConditionTemplate_start: "
             + templateFindByConditionGetReq.toString());
 
         // 검색 결과 없을 경우 어떻게 할지 보완 필요 (현재 null 이 아니라 빈 리스트라서 exception 발동 안 함)ㄴ
         Optional<List<TemplateFindRes>> findRes = Optional.ofNullable(
             templateService.findByConditionTemplate(templateFindByConditionGetReq));
 
-        log.info("TemplateController_findByCondition_end: " + findRes);
+        log.info("TemplateController_findByConditionTemplate_end: " + findRes);
         return CommonResponse.success(findRes.orElseThrow(TemplateNoResultException::new));
     }
 
@@ -94,12 +94,12 @@ public class TemplateController {
     @PutMapping("/delete/{articleId}")
     public CommonResponse<?> deleteTemplate(@PathVariable Long articleId) {
 
-        log.info("TemplateController_delete_start: " + articleId);
+        log.info("TemplateController_deleteTemplate_start: " + articleId);
 
         boolean isDeleted = templateService.deleteTemplate(articleId);
 
         if (isDeleted) {    // 삭제 성공하면 success
-            log.info("TemplateController_delete_end: success");
+            log.info("TemplateController_deleteTemplate_end: success");
             return CommonResponse.success(SUCCESS);
         } else {    // 삭제 실패하면 Exception
             throw new TemplatePossessionFailException();
