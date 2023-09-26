@@ -72,17 +72,19 @@ export default function HeaderNav() {
   };
 
   return (
-    <div className="fixed h-full w-64 bg-black">
-      <img src={Logo} alt="YESRAE LOGO" className="p-4" />
-      <div className="border-t-2 border-gray-900 p-3">
-        {user.name ? (
+    <div className="fixed w-64 h-full bg-black border-r border-gray-900">
+      <Link to="/">
+        <img src={Logo} alt="YESRAE LOGO" className="p-4" />
+      </Link>
+      <div className="p-3 border-t-2 border-gray-900">
+        {user.nickName ? (
           <div>
             <img
               src={user.imgUrl}
-              alt={user.name}
+              alt={user.nickName}
               className="w-12 h-12 rounded-full"
             />
-            <div>{user.name}님 안녕하세요.</div>
+            <div>{user.nickName}님 안녕하세요.</div>
           </div>
         ) : (
           <div>
@@ -101,10 +103,10 @@ export default function HeaderNav() {
           type="text"
         />
       </div>
-      <ul className="text-white px-8 border-b-2 py-3 border-gray-900">
+      <ul className="px-8 py-3 text-white border-b-2 border-gray-900">
         {currentPage.pageName === 'Home' ? (
           <li
-            className="text-xl pt-1 flex items-center hover:text-yesrae-200 text-yesrae-0 "
+            className="flex items-center pt-1 text-xl hover:text-yesrae-200 text-yesrae-0 "
             onClick={navigateToBoard}
           >
             <ClipboardIcon className="w-8 h-8" />
@@ -112,7 +114,7 @@ export default function HeaderNav() {
           </li>
         ) : (
           <li
-            className="text-xl pt-1 flex items-center hover:text-white text-gray-400"
+            className="flex items-center pt-1 text-xl text-gray-400 hover:text-white"
             onClick={navigateToBoard}
           >
             <ClipboardIcon className="w-8 h-8" />
@@ -121,7 +123,7 @@ export default function HeaderNav() {
         )}
         {currentPage.pageName === 'PlayList' ? (
           <li
-            className="text-xl pt-3 flex items-center hover:text-yesrae-200 text-yesrae-0"
+            className="flex items-center pt-3 text-xl hover:text-yesrae-200 text-yesrae-0"
             onClick={navigateToPlayList}
           >
             <MusicalNoteIcon className="w-8 h-8" />
@@ -129,7 +131,7 @@ export default function HeaderNav() {
           </li>
         ) : (
           <li
-            className="text-xl pt-3 flex items-center hover:text-white text-gray-400"
+            className="flex items-center pt-3 text-xl text-gray-400 hover:text-white"
             onClick={navigateToPlayList}
           >
             <MusicalNoteIcon className="w-8 h-8" />
@@ -138,7 +140,7 @@ export default function HeaderNav() {
         )}
         {currentPage.pageName === 'Cup' ? (
           <li
-            className="text-xl pt-3 flex items-center hover:text-yesrae-200 text-yesrae-0"
+            className="flex items-center pt-3 text-xl hover:text-yesrae-200 text-yesrae-0"
             onClick={navigateToCup}
           >
             <HeartIcon className="w-8 h-8" />
@@ -146,7 +148,7 @@ export default function HeaderNav() {
           </li>
         ) : (
           <li
-            className="text-xl pt-3 flex items-center hover:text-white text-gray-400"
+            className="flex items-center pt-3 text-xl text-gray-400 hover:text-white"
             onClick={navigateToCup}
           >
             <HeartIcon className="w-8 h-8" />
@@ -155,7 +157,7 @@ export default function HeaderNav() {
         )}
         {currentPage.pageName === 'DailyQuiz' ? (
           <li
-            className="text-xl pt-3 flex items-center hover:text-yesrae-200 text-yesrae-0"
+            className="flex items-center pt-3 text-xl hover:text-yesrae-200 text-yesrae-0"
             onClick={navigateToDailyQuiz}
           >
             <LightBulbIcon className="w-8 h-8" />
@@ -163,7 +165,7 @@ export default function HeaderNav() {
           </li>
         ) : (
           <li
-            className="text-xl pt-3 flex items-center hover:text-white text-gray-400"
+            className="flex items-center pt-3 text-xl text-gray-400 hover:text-white"
             onClick={navigateToDailyQuiz}
           >
             <LightBulbIcon className="w-8 h-8" />
@@ -172,7 +174,7 @@ export default function HeaderNav() {
         )}
         {currentPage.pageName === 'MyPage' ? (
           <li
-            className="text-xl pt-3 flex items-center hover:text-yesrae-200 text-yesrae-0"
+            className="flex items-center pt-3 text-xl hover:text-yesrae-200 text-yesrae-0"
             onClick={navigateToMyPage}
           >
             <UserIcon className="w-8 h-8" />
@@ -180,7 +182,7 @@ export default function HeaderNav() {
           </li>
         ) : (
           <li
-            className="text-xl pt-3 flex items-center hover:text-white text-gray-400"
+            className="flex items-center pt-3 text-xl text-gray-400 hover:text-white"
             onClick={navigateToMyPage}
           >
             <UserIcon className="w-8 h-8" />
@@ -189,7 +191,7 @@ export default function HeaderNav() {
         )}
         {currentPage.pageName === 'MyPage' ? (
           <li
-            className="text-xl pt-3 flex items-center hover:text-yesrae-200 text-yesrae-0"
+            className="flex items-center pt-3 text-xl hover:text-yesrae-200 text-yesrae-0"
             onClick={navigateToAiVoice}
           >
             <Cog8ToothIcon className="w-8 h-8" />
@@ -197,7 +199,7 @@ export default function HeaderNav() {
           </li>
         ) : (
           <li
-            className="text-xl pt-3 flex items-center hover:text-white text-gray-400"
+            className="flex items-center pt-3 text-xl text-gray-400 hover:text-white"
             onClick={navigateToAiVoice}
           >
             <Cog8ToothIcon className="w-8 h-8" />
@@ -207,7 +209,7 @@ export default function HeaderNav() {
       </ul>
       {currentPage.pageName === 'MyPage' ? (
         <div
-          className="text-xl pt-3 px-8 flex items-center hover:text-yesrae-200 text-yesrae-0"
+          className="flex items-center px-8 pt-3 text-xl hover:text-yesrae-200 text-yesrae-0"
           onClick={navigateToServiceInfo}
         >
           <SparklesIcon className="w-8 h-8" />
@@ -215,7 +217,7 @@ export default function HeaderNav() {
         </div>
       ) : (
         <div
-          className="text-xl pt-3 px-8 flex items-center hover:text-white text-gray-400"
+          className="flex items-center px-8 pt-3 text-xl text-gray-400 hover:text-white"
           onClick={navigateToServiceInfo}
         >
           <SparklesIcon className="w-8 h-8" />

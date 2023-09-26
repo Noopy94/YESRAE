@@ -4,6 +4,9 @@ export default withMT({
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      spacing: {
+        '280' : '70rem'
+      },
       colors: {
         yesrae: {
           0: '#94E1FF',
