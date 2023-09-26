@@ -42,7 +42,7 @@ public class QTournamentResultRepositoryImpl implements QTournamentResultReposit
                 tournament.date.as("date"),
                 tournamentSong.title.as("songTitle"),
                 tournamentSong.singer.as("songSinger"),
-                tournamentResult.rank.as("rank")))
+                tournamentResult.ranking.as("ranking")))
             .from(tournamentResult)
             .innerJoin(tournamentResult.tournamentSong, tournamentSong)
             .innerJoin(tournamentResult.tournament, tournament)
