@@ -74,7 +74,7 @@ public class ArticleCommentController {
         @RequestBody ArticleCommentDeletePutReq articleCommentDeletePutReq) {
 
         log.info("ArticleCommentController_delete_start: "
-            + articleCommentDeletePutReq.getArticleCommentId());
+            + articleCommentDeletePutReq.getId());
 
         boolean isDeleted = articleCommentService.deleteArticleComment(articleCommentDeletePutReq);
 
