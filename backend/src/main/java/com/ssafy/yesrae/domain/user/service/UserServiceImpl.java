@@ -12,6 +12,7 @@ import com.ssafy.yesrae.domain.user.dto.request.UserFollowPostReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserRegistPostReq;
 import com.ssafy.yesrae.domain.user.dto.response.UserFindRes;
 import com.ssafy.yesrae.domain.user.dto.response.UserFollowFindRes;
+import com.ssafy.yesrae.domain.user.dto.response.UserNicknameFindRes;
 import com.ssafy.yesrae.domain.user.entity.User;
 import com.ssafy.yesrae.domain.user.entity.UserFollow;
 import com.ssafy.yesrae.domain.user.entity.UserFollowId;
@@ -162,5 +163,21 @@ public class UserServiceImpl implements UserService {
         log.info("UserService_checkFollow_end: success");
 
         return isFollowed;
+    }
+
+    @Override
+    public UserNicknameFindRes findNickname(Long userId) {
+
+        log.info("UserService_findNickname_start: userId - " + userId);
+
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+        UserNicknameFindRes userNicknameFindRes = UserNicknameFindRes.builder()
+            .nickname(user.getNickname())
+            .build();
+
+        log.info("UserService_findNickname_end: success");
+
+        return userNicknameFindRes;
     }
 }

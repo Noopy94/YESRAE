@@ -7,6 +7,7 @@ import com.ssafy.yesrae.domain.user.dto.request.UserRegistPostReq;
 import com.ssafy.yesrae.domain.user.dto.response.UserFindRes;
 import com.ssafy.yesrae.domain.user.dto.response.UserFollowCheckRes;
 import com.ssafy.yesrae.domain.user.dto.response.UserFollowFindRes;
+import com.ssafy.yesrae.domain.user.dto.response.UserNicknameFindRes;
 import com.ssafy.yesrae.domain.user.service.UserService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -86,5 +87,17 @@ public class UserController {
         log.info("UserController_checkFollow_end: success");
 
         return CommonResponse.success(userFollowCheckRes);
+    }
+
+    @GetMapping("/nickname/{userId}")
+    public CommonResponse<?> findNickname(@PathVariable Long userId) {
+
+        log.info("UserController_findNickname_start: userId - " + userId);
+
+        UserNicknameFindRes userNicknameFindRes = userService.findNickname(userId);
+
+        log.info("UserController_findNickname_end: success");
+
+        return CommonResponse.success(userNicknameFindRes);
     }
 }
