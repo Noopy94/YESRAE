@@ -11,14 +11,19 @@ import com.ssafy.yesrae.domain.article.dto.request.ArticleRegistPostReq;
 import com.ssafy.yesrae.domain.article.dto.response.ArticleFindRes;
 import com.ssafy.yesrae.domain.article.entity.Article;
 import com.ssafy.yesrae.domain.article.service.ArticleService;
+import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -38,11 +43,12 @@ public class ArticleController {
      * Article 등록을 위한 API
      */
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public CommonResponse<?> insertArticle(@RequestPart ArticleRegistPostReq articleRegistPostReq, @RequestPart(value = "files", required = false) List<MultipartFile> files) {
+    public CommonResponse<?> registArticle(@RequestPart ArticleRegistPostReq articleRegistPostReq,
+        @RequestPart(value = "files", required = false) List<MultipartFile> files) {
 
         if (files != null) { // 게시물에 파일 있으면
             log.info("ArticleController_regist_start: " + articleRegistPostReq.toString() + ", "
-                    + files);
+                + files);
         } else {
             log.info("ArticleController_regist_start: " + articleRegistPostReq.toString());
         }
@@ -62,7 +68,7 @@ public class ArticleController {
      * @param articleDeletePutReq : 게시글 삭제
      */
     @PutMapping("/delete")
-    public CommonResponse<?> delete(@PathVariable ArticleDeletePutReq articleDeletePutReq) {
+    public CommonResponse<?> deleteArticle(@PathVariable ArticleDeletePutReq articleDeletePutReq) {
 
         log.info("ArticleController_delete_start: " + articleDeletePutReq);
 
@@ -97,11 +103,11 @@ public class ArticleController {
     }
 
     @PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public CommonResponse<?> modify(@RequestPart ArticleModifyPutReq articleModifyPutReq,
-                                    @RequestPart(value = "files", required = false) List<MultipartFile> files) {
+    public CommonResponse<?> modifyArticle(@RequestPart ArticleModifyPutReq articleModifyPutReq,
+        @RequestPart(value = "files", required = false) List<MultipartFile> files) {
         if (files != null) {
             log.info("ArticleController_modify_start: " + articleModifyPutReq.toString() + ", "
-                    + files);
+                + files);
         } else {
             log.info("ArticleController_modify_start: " + articleModifyPutReq.toString());
         }
@@ -114,6 +120,7 @@ public class ArticleController {
             throw new TemplatePossessionFailException();
         }
     }
+
     /**
      * Article List 조회
      *
@@ -122,10 +129,8 @@ public class ArticleController {
     @GetMapping()
     public CommonResponse<List<ArticleFindRes>> findAllArticle() {
         log.info("ArticleController_findAllArticle_start: ");
-        int[][] com = new int[2][3];
-        System.out.println(com[0].length);
         Optional<List<ArticleFindRes>> findRes = Optional.ofNullable(
-                articleService.findAllArticle());
+            articleService.findAllArticle());
 
         log.info("ArticleController_findAllArticle_end: " + findRes);
         return CommonResponse.success(findRes.orElseThrow(TemplateNoResultException::new));
