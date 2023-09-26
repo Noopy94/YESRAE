@@ -79,7 +79,7 @@ public class ArticleCommentServiceImpl implements ArticleCommentService {
 
         List<ArticleCommentFindRes> res = articleCommentRepository.findByArticleId(ArticleId)
             .stream().map(m -> ArticleCommentFindRes.builder()
-                .commentId(m.getId())
+                .id(m.getId())
                 .articleId(m.getArticle().getId())
                 .userId(m.getUser().getId())
                 .content(m.getContent())
@@ -101,7 +101,7 @@ public class ArticleCommentServiceImpl implements ArticleCommentService {
         log.info("ArticleCommentService_deleteArticleComment_start: ");
 
         ArticleComment articleComment = articleCommentRepository.findById(
-                articleCommentDeletePutReq.getArticleCommentId())
+                articleCommentDeletePutReq.getId())
             .orElseThrow(
                 NoDataException::new);
         if (articleComment.getUser().getId().equals(articleCommentDeletePutReq.getUserId())) {
@@ -109,7 +109,7 @@ public class ArticleCommentServiceImpl implements ArticleCommentService {
         } else {
             return false;
         }
-        
+
         log.info("ArticleCommentService_deleteArticleComment_end: true ");
         return true;
     }

@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class PlayListCommentDeletePutReq {
 
-    private Long playListCommentId;
+    private Long id;
 
     private Long userId;
 }

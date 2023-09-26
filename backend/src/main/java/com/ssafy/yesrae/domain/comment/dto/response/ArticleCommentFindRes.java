@@ -8,8 +8,8 @@ import lombok.Data;
 @Builder
 public class ArticleCommentFindRes {
 
-    private Long commentId;
-    
+    private Long id;
+
     private Long articleId;
 
     private Long userId;
