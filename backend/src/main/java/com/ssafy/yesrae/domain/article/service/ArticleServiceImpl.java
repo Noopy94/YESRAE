@@ -4,6 +4,7 @@ import com.ssafy.yesrae.common.exception.NoDataException;
 import com.ssafy.yesrae.common.exception.NotFoundException;
 import com.ssafy.yesrae.common.model.FileDto;
 import com.ssafy.yesrae.common.util.FileUploader;
+import com.ssafy.yesrae.domain.article.dto.request.ArticleDeletePutReq;
 import com.ssafy.yesrae.domain.article.dto.request.ArticleModifyPutReq;
 import com.ssafy.yesrae.domain.article.dto.request.ArticleRegistPostReq;
 import com.ssafy.yesrae.domain.article.dto.response.ArticleFindRes;
@@ -96,13 +97,13 @@ public class ArticleServiceImpl implements ArticleService{
     /**
      * 게시글 삭제 API
      *
-     * @param Id : 게시판의 Id
+     * @param articleDeletePutReq : 게시판의 Id, userId
      */
     @Override
-    public Boolean deleteArticle(Long Id) {
-        Article article = articleRepository.findById(Id)
+    public Boolean deleteArticle(ArticleDeletePutReq articleDeletePutReq) {
+        Article article = articleRepository.findById(articleDeletePutReq.getArticleId())
                 .orElseThrow(NotFoundException::new);
-        if (article.getUser().getId().equals(Id)) {
+        if (article.getUser().getId().equals(articleDeletePutReq.getUserId())) {
             log.info("ArticleService_deleteArticle_start: ");
 
             article.deleteArticle();

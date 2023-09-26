@@ -5,6 +5,7 @@ import com.ssafy.yesrae.common.exception.NotFoundException;
 import com.ssafy.yesrae.common.exception.Template.TemplateNoResultException;
 import com.ssafy.yesrae.common.exception.Template.TemplatePossessionFailException;
 import com.ssafy.yesrae.common.model.CommonResponse;
+import com.ssafy.yesrae.domain.article.dto.request.ArticleDeletePutReq;
 import com.ssafy.yesrae.domain.article.dto.request.ArticleModifyPutReq;
 import com.ssafy.yesrae.domain.article.dto.request.ArticleRegistPostReq;
 import com.ssafy.yesrae.domain.article.dto.response.ArticleFindRes;
@@ -57,13 +58,15 @@ public class ArticleController {
 
     /**
      * 게시글 삭제하기 위한 API
+     *
+     * @param articleDeletePutReq : 게시글 삭제
      */
-    @PutMapping("/delete/{Id}")
-    public CommonResponse<?> delete(@PathVariable Long Id) {
+    @PutMapping("/delete")
+    public CommonResponse<?> delete(@PathVariable ArticleDeletePutReq articleDeletePutReq) {
 
-        log.info("ArticleController_delete_start: " + Id);
+        log.info("ArticleController_delete_start: " + articleDeletePutReq);
 
-        boolean isDeleted = articleService.deleteArticle(Id);
+        boolean isDeleted = articleService.deleteArticle(articleDeletePutReq);
 
         if (isDeleted) {    // 삭제 성공하면 success
             log.info("ArticleController_delete_end: success");
