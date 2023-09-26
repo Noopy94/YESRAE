@@ -73,6 +73,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
 
         return UserFindRes.builder()
+            .id(user.getId())
             .email(user.getEmail())
             .nickname(user.getNickname())
             .imageUrl(user.getImageUrl())

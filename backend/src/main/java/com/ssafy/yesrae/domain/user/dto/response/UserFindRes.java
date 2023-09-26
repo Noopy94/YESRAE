@@ -6,6 +6,8 @@ import lombok.Data;
 @Data
 @Builder
 public class UserFindRes {
+
+    private Long id;
     private String email;
     private String nickname;
     private String imageUrl;
