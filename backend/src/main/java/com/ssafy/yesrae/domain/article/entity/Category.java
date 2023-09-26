@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @Table(name = "tag")
 @Where(clause = "deleted_at is null")
 @Entity
-public class TagEntity extends BaseEntity {
+public class Category extends BaseEntity {
     @Column(name = "tag_name",nullable = false, columnDefinition = "VARCHAR(20)")
     private String tagName;
 

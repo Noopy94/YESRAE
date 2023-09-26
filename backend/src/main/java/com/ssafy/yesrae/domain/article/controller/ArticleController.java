@@ -5,12 +5,14 @@ import com.ssafy.yesrae.common.exception.NotFoundException;
 import com.ssafy.yesrae.common.exception.Template.TemplateNoResultException;
 import com.ssafy.yesrae.common.exception.Template.TemplatePossessionFailException;
 import com.ssafy.yesrae.common.model.CommonResponse;
+import com.ssafy.yesrae.domain.article.dto.request.ArticleDeletePutReq;
 import com.ssafy.yesrae.domain.article.dto.request.ArticleModifyPutReq;
 import com.ssafy.yesrae.domain.article.dto.request.ArticleRegistPostReq;
 import com.ssafy.yesrae.domain.article.dto.response.ArticleFindRes;
-import com.ssafy.yesrae.domain.article.entity.ArticleEntity;
+import com.ssafy.yesrae.domain.article.entity.Article;
 import com.ssafy.yesrae.domain.article.service.ArticleService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,7 +29,7 @@ public class ArticleController {
 
     private final ArticleService articleService;
 
-
+    @Autowired
     public ArticleController(ArticleService articleService) {
         this.articleService = articleService;
     }
@@ -36,7 +38,7 @@ public class ArticleController {
      * Article 등록을 위한 API
      */
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public CommonResponse<?> insertArticle(@RequestPart ArticleRegistPostReq articleRegistPostReq, @RequestPart(value = "files", required = false) MultipartFile files) {
+    public CommonResponse<?> insertArticle(@RequestPart ArticleRegistPostReq articleRegistPostReq, @RequestPart(value = "files", required = false) List<MultipartFile> files) {
 
         if (files != null) { // 게시물에 파일 있으면
             log.info("ArticleController_regist_start: " + articleRegistPostReq.toString() + ", "
@@ -45,8 +47,8 @@ public class ArticleController {
             log.info("ArticleController_regist_start: " + articleRegistPostReq.toString());
         }
 
-        ArticleEntity articleEntity = articleService.registArticle(articleRegistPostReq, files);
-        if (articleEntity != null) {  // regist 성공하면 success
+        Article article = articleService.registArticle(articleRegistPostReq, files);
+        if (article != null) {  // regist 성공하면 success
             log.info("ArticleController_regist_end: success");
             return CommonResponse.success(SUCCESS);
         } else {    // 실패하면 Exception
@@ -56,13 +58,15 @@ public class ArticleController {
 
     /**
      * 게시글 삭제하기 위한 API
+     *
+     * @param articleDeletePutReq : 게시글 삭제
      */
-    @PutMapping("/delete/{Id}")
-    public CommonResponse<?> delete(@PathVariable Long Id) {
+    @PutMapping("/delete")
+    public CommonResponse<?> delete(@PathVariable ArticleDeletePutReq articleDeletePutReq) {
 
-        log.info("ArticleController_delete_start: " + Id);
+        log.info("ArticleController_delete_start: " + articleDeletePutReq);
 
-        boolean isDeleted = articleService.deleteArticle(Id);
+        boolean isDeleted = articleService.deleteArticle(articleDeletePutReq);
 
         if (isDeleted) {    // 삭제 성공하면 success
             log.info("ArticleController_delete_end: success");
@@ -94,7 +98,7 @@ public class ArticleController {
 
     @PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public CommonResponse<?> modify(@RequestPart ArticleModifyPutReq articleModifyPutReq,
-                                    @RequestPart(value = "files", required = false) MultipartFile files) {
+                                    @RequestPart(value = "files", required = false) List<MultipartFile> files) {
         if (files != null) {
             log.info("ArticleController_modify_start: " + articleModifyPutReq.toString() + ", "
                     + files);
