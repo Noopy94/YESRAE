@@ -5,6 +5,7 @@ import com.ssafy.yesrae.domain.user.dto.request.UserFollowCheckGetReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserFollowPostReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserRegistPostReq;
 import com.ssafy.yesrae.domain.user.dto.response.UserFindRes;
+import com.ssafy.yesrae.domain.user.dto.response.UserFollowCheckRes;
 import com.ssafy.yesrae.domain.user.dto.response.UserFollowFindRes;
 import com.ssafy.yesrae.domain.user.service.UserService;
 import java.util.List;
@@ -74,15 +75,16 @@ public class UserController {
     }
 
     @GetMapping("/follow/check")
-    public CommonResponse<?> checkFollow(
-        UserFollowCheckGetReq userFollowCheckGetReq) {
+    public CommonResponse<?> checkFollow(UserFollowCheckGetReq userFollowCheckGetReq) {
 
         log.info("UserController_checkFollow_start: " + userFollowCheckGetReq.toString());
 
-        boolean isFollowed = userService.checkFollow(userFollowCheckGetReq);
+        UserFollowCheckRes userFollowCheckRes = UserFollowCheckRes.builder()
+            .isFollowed(userService.checkFollow(userFollowCheckGetReq))
+            .build();
 
         log.info("UserController_checkFollow_end: success");
 
-        return CommonResponse.success(isFollowed);
+        return CommonResponse.success(userFollowCheckRes);
     }
 }
