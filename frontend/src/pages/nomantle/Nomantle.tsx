@@ -4,53 +4,51 @@ import { useEffect, useState } from "react";
 import Category from "../../components/nomantle/Category";
 import SongInfo from '../../components/nomantle/SongInfo';
 import { searchSong, getSongResult } from '../../api/nomantle';
+import { json } from 'react-router-dom';
+import Song from '../../components/nomantle/Song';
 
 interface Title{
   title : string;
 }
 
 interface SongInfo{
-  id : string,
-	title : string,
-	similarity : number,
-	rank: number,
-	album_img : string,
-	answer : boolean
+  index : number;
+  id : string;
+	title : string;
+	similarity : number;
+	rank: number;
+	album_img : string;
+	answer : boolean;
 }
 
 export default function Nomantle(){
 
   // input -> 연관된 노래들 input 태그 밑에 보여주기
   const [inputValue, setInputValue] = useState('');
+
   // 해당 노래와 연관된 제목의 노래 input 밑에 연관 검색어로 보여주기
   const [titleList, setTitleList] = useState<Title[]>([]);
+
   // hover 시 노맨틀 페이지에 대한 설명 보여주기 
   const [isHovered, setisHovered] = useState(false);
-
-  // TODO : 추측하기 클릭시 유사도 결과 받기
-  const [songInfoGuess, setSongInfoGuess] = useState<SongInfo[]>([]);
-
-  const [recentGuess, setRecentGuess] = useState<SongInfo | null>(null);
 
   // 입력이 존재하지 않을 경우
   const [errorMsg, setErrorMsg] = useState('');
 
-  
+
   // TODO : 정답일 경우 모달 보여주기 및 순위 보기 버튼으로 변경
   //const [isAnswer, setAnswer] = useState(false);
 
   // TODO : 포기하기 모달 -> 버튼 위치 변경되는 문제
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // 유사도 정보 보여줄때 가장 최근이 위로 오기 ->OK
 
-  
-  // TODO : 그 밑에는 지금까지 정보 유사도 높은 순으로 정렬되어서 쌓기 & 이미 검색 내역 있는 경우 배제
-  // TODO : 안녕 입력 후 클릭했을 때 errorMsg 가 뜨는 문제
+  // TODO : 안녕 입력 후 클릭했을 때 errorMsg 가 뜨는 문제!! reponse 제대로 받았는데 없다고 뜨는 문제!!!!!!
+  const [songInfoLocalStorage, setSongInfoLocalStorage] = useState<SongInfo[]>([]);
 
 
-  let index = 1;
-
+  // input 입력시 목록 관련
+  // input 에 해당하는 검색이 없을 경우 errorMsg 보여주기
   useEffect(() => {
     
     if(inputValue){
@@ -60,6 +58,7 @@ export default function Nomantle(){
     }
   }, [inputValue, errorMsg]);
 
+  // input 에 입력 변경
   const onChangeSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
@@ -77,12 +76,14 @@ export default function Nomantle(){
     
   };
 
+  // enter 입력
   const onHandleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       handleInput(inputValue);
     }
   };
 
+  // list 에 해당하는 item 클릭
   const handleListItemClick = async (song_name : string) => {
     setErrorMsg('');
     setInputValue(song_name);
@@ -110,24 +111,30 @@ export default function Nomantle(){
           const maxSimilarityItem = data.reduce((maxItem, currentItem) => {
             return currentItem.similarity > maxItem.similarity ? currentItem : maxItem;
           });
+          
+          // localStorage 에서 꺼내오기
+          const storedData = localStorage.getItem('song');
+          let localStorageData : SongInfo[]= storedData ? JSON.parse(storedData) : [];
 
-          // 이미 songInfoGuess에 있는지 여부를 확인하는 함수
-          const isDuplicate = (maxSimilarityItem : SongInfo) => {
-            return songInfoGuess.some((existingItem) => existingItem.id === maxSimilarityItem.id);
-          };
-
-          // 최근 추측이 중복되지 않고, songInfoGuess에 없다면 저장
-          if (recentGuess !== null && !isDuplicate(recentGuess)) {
-            setSongInfoGuess((prevSongInfoGuess) => [...prevSongInfoGuess, recentGuess]);
+          // 예전에 검색한 건지 확인하기
+          const existingItemIndex = localStorageData.findIndex(
+            (item) => item.id === maxSimilarityItem.id
+          )
+          // 로컬스토리지에 저장되어 있지 않은 경우
+          if(existingItemIndex !== -1){
+            const existingItem = localStorageData[existingItemIndex];
+            localStorageData.splice(existingItemIndex, 1);
+            localStorageData.unshift(existingItem)
+          }else{
+            // 최신이어서 가장 앞에 추가
+            localStorageData.unshift(maxSimilarityItem);
           }
+          // 로컬 스토리지 저장
+        localStorage.setItem('song', JSON.stringify(localStorageData));
 
-        // 정렬
-        songInfoGuess.sort((a, b) => b.similarity - a.similarity);
-  
-        // 가장 최근 추측
-        // TODO: 이미 있다면 가장 최근에 넣으면 X
-        setRecentGuess(maxSimilarityItem);
+        setSongInfoLocalStorage(localStorageData);
 
+        // input 목록 지우기
         setTitleList([]);
 
         setErrorMsg('');
@@ -162,6 +169,28 @@ export default function Nomantle(){
     setIsModalOpen(false);
   };
 
+  // TODO localStorage 에 검색 목록 , 정답 여부 저장
+  
+
+    useEffect(() => {
+      // localstorage 에 저장되어 있는 데이터 가져오기
+      const storedData = localStorage.getItem('song'); 
+
+      if (storedData) {
+        const data :SongInfo[] = JSON.parse(storedData);
+
+          data.sort((a, b) => {
+            if(a === data[0]) return -1;
+            if(b === data[0]) return 1;
+            return b.similarity - a.similarity;
+          })
+ 
+        setSongInfoLocalStorage(data);
+      }else{
+
+        setSongInfoLocalStorage([]);
+      }
+    }, []);
 
 
   const category = ["#", "앨범 아트", "추측한 노래", "유사도", "유사도 순위"];
@@ -218,36 +247,7 @@ export default function Nomantle(){
               <hr/>
             </div>
             <div className="mt-8">
-              {
-                recentGuess && 
-                <div className="flex items-center justify-center mb-10">
-                  <div className="flex items-center justify-center w-1/6 mx-16">#{index++}</div>
-                  <img src={recentGuess.album_img} alt="앨범 아트" className="w-1/6 mx-8 " />
-                  <div className="flex items-center justify-center w-1/6 mx-16">{recentGuess.title}</div>
-                  {recentGuess.rank == 1 ? (
-                      <div className="flex items-center justify-center w-1/6 mx-16">{Math.floor(recentGuess.similarity)} %</div>
-                    ): (
-                      <div className="flex items-center justify-center w-1/6 mx-16">{recentGuess.similarity.toFixed(2)} %</div>
-                    )}
-                  
-                  {recentGuess.answer === true? (
-                    <div className="flex items-center justify-center w-1/6 mx-16">
-                      <span>정답 !</span>
-                    </div>
-                  ) : (
-                    <div className="flex w-1/6 mx-16">
-                      <div className="flex items-center justify-center mb-2 text-center">{recentGuess.rank !== null ? recentGuess.rank : "순위밖"}</div>
-                      <div className="h-full bg-white">
-                        <div
-                          className="h-5 bg-gradient-to-r from-yesrae-0 to-yesrae-100"
-                          style={{ width: `${recentGuess.similarity}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              }
-              <SongInfo songinfo = {songInfoGuess} />
+              {songInfoLocalStorage.length > 0 && <SongInfo song = {songInfoLocalStorage} />}
             </div>
           </div>
           <div>
@@ -255,17 +255,17 @@ export default function Nomantle(){
                     포기하기
               </button>
               {isModalOpen && (
-                      <div className="modal">
-                        <div className="modal-content">
-                          <span className="close" onClick={closeModal}>&times;</span>
-                          <div>
-                            <p>순위를 보시겠습니까? </p>
-                            <button type="button" className="flex items-center justify-center w-24 h-12 my-28 rounded-xl bg-yesrae-900 hover:bg-gray-800" >
-                                  순위보기 
-                            </button>
-                          </div>
-                        </div>
-                      </div>
+                <div className="modal">
+                  <div className="modal-content">
+                    <span className="close" onClick={closeModal}>&times;</span>
+                    <div>
+                      <p>순위를 보시겠습니까? </p>
+                      <button type="button" className="flex items-center justify-center w-24 h-12 my-28 rounded-xl bg-yesrae-900 hover:bg-gray-800" >
+                            순위보기 
+                      </button>
+                    </div>
+                  </div>
+                </div>
               )}
           </div>
         </div>
