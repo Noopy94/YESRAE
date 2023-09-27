@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 public class UserLoginPostReq {
 
-    String email;
-    String password;
+    private String email;
+    private String password;
 }
