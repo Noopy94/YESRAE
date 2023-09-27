@@ -2,13 +2,7 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
-
-interface Song {
-  id: string;
-  imageUrl: string;
-  title: string;
-  artistName: string;
-}
+import { Song } from '../../recoil/defaultdata/data';
 
 interface SongCarouselProps {
   songs: Song[];
@@ -61,18 +55,18 @@ const SongCarousel: React.FC<SongCarouselProps> = ({ songs }) => {
         {leftButton}
         <div className="flex items-center w-full">
           {songs.slice(startIndex, endIndex).map((song) => (
-            <div key={song.id} className="relative px-3 carousel-slide">
-              <Link to={`/song/${song.id}`}>
+            <div key={song.songId} className="relative px-3 carousel-slide">
+              <Link to={`/song/${song.songId}`}>
                 <img
-                  src={song.imageUrl}
-                  alt={song.title}
+                  src={song.songImgUrl}
+                  alt={song.songTitle}
                   className="w-64 h-64"
                 />
               </Link>
               <h2 className="w-64 overflow-hidden text-lg font-semibold overflow-ellipsis whitespace-nowrap">
-                {song.title}
+                {song.songTitle}
               </h2>
-              <p className="text-gray-600">{song.artistName}</p>
+              <p className="text-gray-400">{song.songArtist}</p>
             </div>
           ))}
         </div>

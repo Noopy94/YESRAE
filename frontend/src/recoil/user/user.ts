@@ -5,7 +5,7 @@ export const userState = atom({
   key: 'userState', // 고유한 키
   default: {
     id: 0,
-    nickName: '',
-    imgUrl: '',
+    nickname: '',
+    imageUrl: '',
   },
 });

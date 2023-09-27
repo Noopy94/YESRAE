@@ -21,6 +21,7 @@ import { currentPageState } from '../../recoil/currentpage/currentPage';
 
 export default function HeaderNav() {
   const user = useRecoilValue(userState); // 유저 로그인 상태 전역 변수로 확인
+  const [User, setUser] = useRecoilState(userState);
   const currentPage = useRecoilValue(currentPageState); // currentPage.pageName 상태에 따라서 headerNav 색이 변함
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
@@ -52,7 +53,7 @@ export default function HeaderNav() {
   };
 
   const navigateToCup = () => {
-    navigate('/Cup');
+    navigate('/cup');
   };
 
   const navigateToDailyQuiz = () => {
@@ -68,29 +69,29 @@ export default function HeaderNav() {
   };
 
   const navigateToServiceInfo = () => {
-    navigate('/serviceInfo');
+    navigate('/serviceinfo');
   };
 
   return (
     <div className="fixed w-64 h-full bg-black border-r border-gray-900">
       <Link to="/">
-        <img src={Logo} alt="YESRAE LOGO" className="p-4" />
+        <img src={Logo} alt="YESRAE LOGO" className="py-4 px-7" />
       </Link>
       <div className="p-3 border-t-2 border-gray-900">
-        {user.nickName ? (
+        {user.nickname ? (
           <div>
             <img
-              src={user.imgUrl}
-              alt={user.nickName}
+              src={user.imageUrl}
+              alt={user.nickname}
               className="w-12 h-12 rounded-full"
             />
-            <div>{user.nickName}님 안녕하세요.</div>
+            <div>{user.nickname}님 안녕하세요.</div>
           </div>
         ) : (
           <div>
             <div className="pb-2 pl-5"> 로그인하고 추천 노래 확인하기 </div>
             <Link to="/user/login">
-              <ButtonComponent type="ismiddle">로그인</ButtonComponent>
+              <ButtonComponent type="isMiddle">로그인</ButtonComponent>
             </Link>
           </div>
         )}

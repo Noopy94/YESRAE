@@ -8,7 +8,7 @@ interface playListProps {
   playLists: PlayList[];
 }
 
-const PlayListCarousel: React.FC<playListProps> = ({ playLists }) => {
+const MyPlayListCarousel: React.FC<playListProps> = ({ playLists }) => {
   const [currentGroup, setCurrentGroup] = useState(0);
 
   const slidesPerGroup = 4;
@@ -57,19 +57,20 @@ const PlayListCarousel: React.FC<playListProps> = ({ playLists }) => {
           {playLists.slice(startIndex, endIndex).map((playList) => (
             <div
               key={playList.playListId}
-              className="relative px-3 carousel-slide"
+              className="relative px-4 carousel-slide"
             >
-              <Link to={`/playlist/${playList.playListId}`}>
-                <img
-                  src={playList.playListImageUrl}
-                  alt={playList.playListTitle}
-                  className="w-64 h-64"
-                />
+              <Link to={`/playlistdetail/${playList.playListId}`}>
+                <div className="relative flex items-center justify-center w-64 h-64 group">
+                  <img
+                    src={playList.playListImageUrl}
+                    alt={playList.playListTitle}
+                    className="w-48 h-48 transition-opacity duration-200 rounded-3xl group-hover:opacity-40"
+                  />
+                  <div className="absolute z-20 flex items-center justify-center text-lg transition-opacity duration-200 opacity-0 inset-6 group-hover:opacity-100">
+                    {playList.playListTitle}
+                  </div>
+                </div>
               </Link>
-              <h2 className="w-64 overflow-hidden text-lg font-semibold overflow-ellipsis whitespace-nowrap">
-                {playList.playListTitle}
-              </h2>
-              <p className="text-gray-400">{playList.playListUserNickName}</p>
             </div>
           ))}
         </div>
@@ -79,4 +80,4 @@ const PlayListCarousel: React.FC<playListProps> = ({ playLists }) => {
   );
 };
 
-export default PlayListCarousel;
+export default MyPlayListCarousel;
