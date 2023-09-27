@@ -3,6 +3,7 @@ package com.ssafy.yesrae.domain.user.controller;
 import com.ssafy.yesrae.common.model.CommonResponse;
 import com.ssafy.yesrae.domain.user.dto.request.UserFollowCheckGetReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserFollowPostReq;
+import com.ssafy.yesrae.domain.user.dto.request.UserLoginPostReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserRegistPostReq;
 import com.ssafy.yesrae.domain.user.dto.response.UserFindRes;
 import com.ssafy.yesrae.domain.user.dto.response.UserFollowCheckRes;
@@ -47,6 +48,16 @@ public class UserController {
         return CommonResponse.success(SUCCESS);
     }
 
+    @PostMapping("/login")
+    public CommonResponse<?> login(@RequestBody UserLoginPostReq userLoginPostReq) {
+
+        log.info("UserController_oauthLogin_start: " + userLoginPostReq);
+
+        UserFindRes userFindRes = userService.login(userLoginPostReq);
+
+        return CommonResponse.success(userFindRes);
+    }
+
     @PostMapping("/oauth2/login")
     public CommonResponse<?> oauthLogin(@RequestHeader("Authorization") String accessToken) {
 
@@ -55,7 +66,7 @@ public class UserController {
         UserFindRes userFindRes = userService.oauthLogin(accessToken);
 
         log.info("UserController_oauthLogin_end: " + userFindRes.toString());
-        
+
         return CommonResponse.success(userFindRes);
     }
 
