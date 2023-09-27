@@ -11,8 +11,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PlayListLikeId implements Serializable {
+public class PlaylistSongId implements Serializable {
 
-    private Long user;
-    private Long playList;
+    private Long song;
+    private Long playlist;
 }

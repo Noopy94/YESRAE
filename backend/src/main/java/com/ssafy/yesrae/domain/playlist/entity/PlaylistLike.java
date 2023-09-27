@@ -1,11 +1,14 @@
 package com.ssafy.yesrae.domain.playlist.entity;
 
-import com.ssafy.yesrae.common.model.BaseEntity;
+import com.ssafy.yesrae.domain.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -13,9 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.Where;
 
 /*
     Spring Data JPA Entity를 위한 Template 코드
@@ -27,21 +28,29 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor // 모든 변수를 파라미터로 받는 생성자
 @SuperBuilder   // Builder를 보완한 Annotation. 상속 받은 필드도 build 해줌, but experimental
 @DynamicInsert  // INSERT 구문에서 null이 아닌 컬럼들만 실제로 insert
-@Where(clause = "deleted_at is null")   // 일괄적으로 적용할 where 조건. 현재 clause는 soft delete를 위함
+@IdClass(PlaylistLikeId.class)
 @Entity
-public class PlayListTag extends BaseEntity {
+public class PlaylistLike implements Serializable {
 
+    @Id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "playList_id")
-    private PlayList playList;
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @Column(nullable = false, length = 40)
-    private String tagName;
+    @Id
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "playlist_id")
+    private Playlist playlist;
 
     @Column // 기본값 null
     private LocalDateTime deletedAt;
 
-    public void deletePlayListTag() {
+    public void setDeletedAt() {
+        this.deletedAt = null;
+    }
+
+    public void deletePlaylistLike() {
         this.deletedAt = LocalDateTime.now();
     }
+
 }

@@ -3,9 +3,9 @@ package com.ssafy.yesrae.domain.comment.dto.request;
 import lombok.Data;
 
 @Data
-public class PlayListCommentRegistPostReq {
+public class PlaylistCommentRegistPostReq {
 
-    private Long playListId;
+    private Long playlistId;
 
     private Long userId;
 

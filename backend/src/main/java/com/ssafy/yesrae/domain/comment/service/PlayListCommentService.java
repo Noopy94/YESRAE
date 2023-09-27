@@ -1,18 +1,18 @@
 package com.ssafy.yesrae.domain.comment.service;
 
-import com.ssafy.yesrae.domain.comment.dto.request.PlayListCommentDeletePutReq;
-import com.ssafy.yesrae.domain.comment.dto.request.PlayListCommentRegistPostReq;
-import com.ssafy.yesrae.domain.comment.dto.response.PlayListCommentFindRes;
-import com.ssafy.yesrae.domain.comment.entity.PlayListComment;
+import com.ssafy.yesrae.domain.comment.dto.request.PlaylistCommentDeletePutReq;
+import com.ssafy.yesrae.domain.comment.dto.request.PlaylistCommentRegistPostReq;
+import com.ssafy.yesrae.domain.comment.dto.response.PlaylistCommentFindRes;
+import com.ssafy.yesrae.domain.comment.entity.PlaylistComment;
 import java.util.List;
 
-public interface PlayListCommentService {
+public interface PlaylistCommentService {
 
-    PlayListComment registPlayListComment(
-        PlayListCommentRegistPostReq playListCommentRegistPostReq);
+    PlaylistComment registPlaylistComment(
+        PlaylistCommentRegistPostReq playlistCommentRegistPostReq);
 
-    List<PlayListCommentFindRes> findPlayListComment(Long PlayListId);
+    List<PlaylistCommentFindRes> findPlaylistComment(Long playlistId);
 
-    boolean deletePlayListComment(PlayListCommentDeletePutReq playListCommentDeletePutReq);
+    boolean deletePlaylistComment(PlaylistCommentDeletePutReq playlistCommentDeletePutReq);
 
 }

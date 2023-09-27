@@ -1,41 +1,36 @@
 package com.ssafy.yesrae.domain.playlist.service;
 
 
-import com.amazonaws.services.s3.transfer.Upload;
-import com.ssafy.yesrae.common.exception.playList.PlayListLikeNotFoundException;
-import com.ssafy.yesrae.common.exception.playList.PlayListNotFoundException;
-import com.ssafy.yesrae.common.exception.playList.PlayListTagNotFoundException;
+import com.ssafy.yesrae.common.exception.playlist.PlaylistNotFoundException;
+import com.ssafy.yesrae.common.exception.playlist.PlaylistTagNotFoundException;
 import com.ssafy.yesrae.common.exception.user.UserNotFoundException;
 import com.ssafy.yesrae.common.util.S3Uploader;
-import com.ssafy.yesrae.domain.playlist.dto.request.PlayListDeletePutReq;
-import com.ssafy.yesrae.domain.playlist.dto.request.PlayListImgModifyPutReq;
-import com.ssafy.yesrae.domain.playlist.dto.request.PlayListLikeDeletePutReq;
-import com.ssafy.yesrae.domain.playlist.dto.request.PlayListLikeRegistPostReq;
-import com.ssafy.yesrae.domain.playlist.dto.request.PlayListModifyPutReq;
-import com.ssafy.yesrae.domain.playlist.dto.request.PlayListRegistPostReq;
-import com.ssafy.yesrae.domain.playlist.dto.request.PlayListSongDeletePutReq;
-import com.ssafy.yesrae.domain.playlist.dto.request.PlayListSongRegistPostReq;
-import com.ssafy.yesrae.domain.playlist.dto.request.PlayListTagDeletePutReq;
-import com.ssafy.yesrae.domain.playlist.dto.request.PlayListTagRegistPostReq;
-import com.ssafy.yesrae.domain.playlist.dto.response.PlayListGetResponse;
-import com.ssafy.yesrae.domain.playlist.entity.PlayList;
-import com.ssafy.yesrae.domain.playlist.entity.PlayListLike;
-import com.ssafy.yesrae.domain.playlist.entity.PlayListSong;
-import com.ssafy.yesrae.domain.playlist.entity.PlayListTag;
-import com.ssafy.yesrae.domain.playlist.repository.PlayListLikeRepository;
-import com.ssafy.yesrae.domain.playlist.repository.PlayListRepository;
-import com.ssafy.yesrae.domain.playlist.repository.PlayListSongRepository;
-import com.ssafy.yesrae.domain.playlist.repository.PlayListTagRepository;
+import com.ssafy.yesrae.domain.playlist.dto.request.PlaylistDeletePutReq;
+import com.ssafy.yesrae.domain.playlist.dto.request.PlaylistImgModifyPutReq;
+import com.ssafy.yesrae.domain.playlist.dto.request.PlaylistLikeDeletePutReq;
+import com.ssafy.yesrae.domain.playlist.dto.request.PlaylistLikeRegistPostReq;
+import com.ssafy.yesrae.domain.playlist.dto.request.PlaylistModifyPutReq;
+import com.ssafy.yesrae.domain.playlist.dto.request.PlaylistRegistPostReq;
+import com.ssafy.yesrae.domain.playlist.dto.request.PlaylistSongDeletePutReq;
+import com.ssafy.yesrae.domain.playlist.dto.request.PlaylistSongRegistPostReq;
+import com.ssafy.yesrae.domain.playlist.dto.request.PlaylistTagDeletePutReq;
+import com.ssafy.yesrae.domain.playlist.dto.request.PlaylistTagRegistPostReq;
+import com.ssafy.yesrae.domain.playlist.dto.response.PlaylistGetResponse;
+import com.ssafy.yesrae.domain.playlist.entity.Playlist;
+import com.ssafy.yesrae.domain.playlist.entity.PlaylistLike;
+import com.ssafy.yesrae.domain.playlist.entity.PlaylistSong;
+import com.ssafy.yesrae.domain.playlist.entity.PlaylistTag;
+import com.ssafy.yesrae.domain.playlist.repository.PlaylistLikeRepository;
+import com.ssafy.yesrae.domain.playlist.repository.PlaylistRepository;
+import com.ssafy.yesrae.domain.playlist.repository.PlaylistSongRepository;
+import com.ssafy.yesrae.domain.playlist.repository.PlaylistTagRepository;
 import com.ssafy.yesrae.domain.song.entity.Song;
 import com.ssafy.yesrae.domain.user.entity.User;
 import com.ssafy.yesrae.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -46,43 +41,43 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @Transactional
 @Service
-public class PlayListServiceImpl implements PlayListService{
+public class PlaylistServiceImpl implements PlaylistService {
 
-    private final PlayListLikeRepository playListLikeRepository;
-    private final PlayListRepository playListRepository;
-    private final PlayListSongRepository playListSongRepository;
-    private final PlayListTagRepository playListTagRepository;
+    private final PlaylistLikeRepository playlistLikeRepository;
+    private final PlaylistRepository playlistRepository;
+    private final PlaylistSongRepository playlistSongRepository;
+    private final PlaylistTagRepository playlistTagRepository;
     private final UserRepository userRepository;
     private final S3Uploader s3Uploader;
 
     @Autowired
-    public PlayListServiceImpl(PlayListLikeRepository playListLikeRepository,
-        PlayListRepository playListRepository, PlayListSongRepository playListSongRepository,
-        PlayListTagRepository playListTagRepository, UserRepository userRepository,
+    public PlaylistServiceImpl(PlaylistLikeRepository playlistLikeRepository,
+        PlaylistRepository playlistRepository, PlaylistSongRepository playlistSongRepository,
+        PlaylistTagRepository playlistTagRepository, UserRepository userRepository,
         S3Uploader s3Uploader) {
-        this.playListLikeRepository = playListLikeRepository;
-        this.playListRepository = playListRepository;
-        this.playListSongRepository = playListSongRepository;
-        this.playListTagRepository = playListTagRepository;
+        this.playlistLikeRepository = playlistLikeRepository;
+        this.playlistRepository = playlistRepository;
+        this.playlistSongRepository = playlistSongRepository;
+        this.playlistTagRepository = playlistTagRepository;
         this.userRepository = userRepository;
         this.s3Uploader = s3Uploader;
     }
 
     // playList 등록
     @Override
-    public PlayList registPlayList(PlayListRegistPostReq registInfo, MultipartFile img)
+    public Playlist registPlaylist(PlaylistRegistPostReq registInfo, MultipartFile img)
         throws IOException {
 
-        log.info("PlayListService_PlayListRegist_start : " + registInfo.toString());
+        log.info("PlaylistService_PlaylistRegist_start : " + registInfo.toString());
 
         User user = userRepository.findById(registInfo.getUserId())
             .orElseThrow(UserNotFoundException::new);
 
-        String title =registInfo.getTitle();
-        String description =registInfo.getDescription();
+        String title = registInfo.getTitle();
+        String description = registInfo.getDescription();
         Integer isPublic = registInfo.getIsPublic();
 
-        PlayList playList = PlayList.builder()
+        Playlist playlist = Playlist.builder()
             .user(user)
             .isPublic(isPublic)
             .title(title)
@@ -90,295 +85,296 @@ public class PlayListServiceImpl implements PlayListService{
             .build();
 
         if (img != null) {
-            String imgUrl = s3Uploader.upload(img, "playListId"+playList.getId());
-            playList.setImgUrl(imgUrl);
+            String imgUrl = s3Uploader.upload(img, "playListId" + playlist.getId());
+            playlist.setImgUrl(imgUrl);
         }
 
-        playListRepository.save(playList);
-        log.info("PlayListService_PlayListRegist_end : " + playList.toString());
-        return playList;
+        playlistRepository.save(playlist);
+        log.info("PlaylistService_PlaylistRegist_end : " + playlist.toString());
+        return playlist;
 
     }
 
     //PlayList만 수정
     @Override
-    public void modifyPlayList(PlayListModifyPutReq modifyInfo) {
+    public void modifyPlaylist(PlaylistModifyPutReq modifyInfo) {
 
-        log.info("PlayListService_PlayListModify_start : " + modifyInfo.toString());
+        log.info("PlaylistService_PlaylistModify_start : " + modifyInfo.toString());
 
-        PlayList playList = playListRepository.findById(modifyInfo.getPlayListId())
-            .orElseThrow(PlayListNotFoundException::new);
-        playList.modifyPlayList(modifyInfo);
+        Playlist playlist = playlistRepository.findById(modifyInfo.getPlaylistId())
+            .orElseThrow(PlaylistNotFoundException::new);
+        playlist.modifyPlaylist(modifyInfo);
 
-        log.info("PlayListService_PlayListModify_end : " + playList.toString());
+        log.info("PlaylistService_PlaylistModify_end : " + playlist.toString());
     }
 
     @Override
-    public void modifyPlayListImg(PlayListImgModifyPutReq modifyInfo) throws IOException {
+    public void modifyPlaylistImg(PlaylistImgModifyPutReq modifyInfo) throws IOException {
         //이미지 변경 로직, 이미지 저장 하면서, 새로운 url 제공
 
-        log.info("PlayListService_PlayListImgModify_start : " + modifyInfo.toString());
+        log.info("PlaylistService_PlaylistImgModify_start : " + modifyInfo.toString());
 
-        PlayList playList = playListRepository.findById(modifyInfo.getPlayListId())
-            .orElseThrow(PlayListNotFoundException::new);
+        Playlist playlist = playlistRepository.findById(modifyInfo.getPlaylistId())
+            .orElseThrow(PlaylistNotFoundException::new);
         MultipartFile img = modifyInfo.getImg();
 
         if (img != null) {
-            String imgUrl = s3Uploader.upload(img, "playListId"+modifyInfo.getPlayListId());
-            playList.setImgUrl(imgUrl);
+            String imgUrl = s3Uploader.upload(img, "playlistId" + modifyInfo.getPlaylistId());
+            playlist.setImgUrl(imgUrl);
         }
-        log.info("PlayListService_PlayListImgModify_end : " + playList.toString());
+        log.info("PlaylistService_PlaylistImgModify_end : " + playlist.toString());
 
     }
 
     @Override
-    public void deletePlayList(PlayListDeletePutReq deleteInfo) {
+    public void deletePlaylist(PlaylistDeletePutReq deleteInfo) {
 
-        log.info("PlayListService_PlayListDelete_start : " + deleteInfo.toString());
+        log.info("PlaylistService_PlaylistDelete_start : " + deleteInfo.toString());
 
-        PlayList playList = playListRepository.findById(deleteInfo.getPlayListId())
-            .orElseThrow(PlayListNotFoundException::new);
-        playList.deletePlayList();
+        Playlist playlist = playlistRepository.findById(deleteInfo.getPlaylistId())
+            .orElseThrow(PlaylistNotFoundException::new);
+        playlist.deletePlaylist();
 
-        log.info("PlayListService_PlayListDelete_end : " + playList.toString());
+        log.info("PlaylistService_PlaylistDelete_end : " + playlist.toString());
 
     }
 
     @Override
-    public PlayListTag registPlayListTag(PlayListTagRegistPostReq registInfo) {
+    public PlaylistTag registPlaylistTag(PlaylistTagRegistPostReq registInfo) {
 
-        log.info("PlayListService_PlayListTagSongRegist_start : " + registInfo.toString());
+        log.info("PlaylistService_PlaylistTagSongRegist_start : " + registInfo.toString());
 
-        PlayList playList = playListRepository.findById(registInfo.getPlayListId())
-            .orElseThrow(PlayListNotFoundException::new);
+        Playlist playlist = playlistRepository.findById(registInfo.getPlaylistId())
+            .orElseThrow(PlaylistNotFoundException::new);
         String tagName = registInfo.getTagName();
 
-        PlayListTag playListTag = PlayListTag.builder()
-            .playList(playList)
+        PlaylistTag playlistTag = PlaylistTag.builder()
+            .playlist(playlist)
             .tagName(tagName)
             .build();
 
-        playListTagRepository.save(playListTag);
+        playlistTagRepository.save(playlistTag);
 
-        log.info("PlayListService_PlayListTagSongRegist_end : " + playListTag.toString());
+        log.info("PlaylistService_PlaylistTagSongRegist_end : " + playlistTag.toString());
 
-        return playListTag;
+        return playlistTag;
     }
 
     @Override
-    public void deletePlayListTag(PlayListTagDeletePutReq deleteInfo) {
+    public void deletePlaylistTag(PlaylistTagDeletePutReq deleteInfo) {
 
-        log.info("PlayListService_PlayListTagSongDelete_start : " + deleteInfo.toString());
+        log.info("PlaylistService_PlaylistTagSongDelete_start : " + deleteInfo.toString());
 
-        PlayListTag playListTag = playListTagRepository.findById(deleteInfo.getPlayListTagId())
-            .orElseThrow(PlayListTagNotFoundException::new);
-        playListTag.deletePlayListTag();
+        PlaylistTag playlistTag = playlistTagRepository.findById(deleteInfo.getPlaylistTagId())
+            .orElseThrow(PlaylistTagNotFoundException::new);
+        playlistTag.deletePlaylistTag();
 
-        log.info("PlayListService_PlayListTagSongDelete_end : " + deleteInfo.toString());
+        log.info("PlaylistService_PlaylistTagSongDelete_end : " + deleteInfo.toString());
     }
 
     @Override
-    public PlayListSong registSongInPlayList(PlayListSongRegistPostReq registInfo) {
+    public PlaylistSong registSongInPlaylist(PlaylistSongRegistPostReq registInfo) {
 
-        log.info("PlayListService_PlayListSongRegist_start : " + registInfo.toString());
+        log.info("PlaylistService_PlaylistSongRegist_start : " + registInfo.toString());
 
 //        Song song = songRepository.findById(registInfo.getSongId())
 //            .orElseThrow(SongNotFoundException::new);
 
-        PlayList playList = playListRepository.findById(registInfo.getPlayListId())
-            .orElseThrow(PlayListNotFoundException::new);
+        Playlist playlist = playlistRepository.findById(registInfo.getPlaylistId())
+            .orElseThrow(PlaylistNotFoundException::new);
 
-//        PlayListSong playListSong = PlayListSong.builder()
-//            .playlist(playList)
+//        PlaylistSong playlistSong = PlaylistSong.builder()
+//            .playlist(playlist)
 //            .song(song)
 //            .build();
 
-//        PlayListSong playListSong = playListSongRepository.findBySongAndPlayList(song, playList);
-//        if (playListSong==null){
-//            playListSongRepository.save(playListSong);
+//        PlaylistSong playlistSong = playlistSongRepository.findBySongAndPlaylist(song, playlist);
+//        if (playlistSong==null){
+//            playlistSongRepository.save(playlistSong);
 //        } else {
-//            if (playListSong.getDeletedAt() != null) playListSong.setDeletedAt();
-//            playListSongRepository.save(playListSong);
+//            if (playlistSong.getDeletedAt() != null) playlistSong.setDeletedAt();
+//            playlistSongRepository.save(playlistSong);
 //        }
-//        playListSongRepository.save(playListSong);
-//        return playListSong;
+//        playlistSongRepository.save(playlistSong);
+//        return playlistSong;
 
-//        log.info("PlayListService_PlayListSongRegist_end : " + playListSong.toString());
+//        log.info("PlaylistService_PlaylistSongRegist_end : " + playlistSong.toString());
 
         return null;
     }
 
     @Override
-    public void deletePlayListSong(PlayListSongDeletePutReq deleteInfo) {
+    public void deletePlaylistSong(PlaylistSongDeletePutReq deleteInfo) {
 
-        log.info("PlayListService_PlayListSongDelete_start : " + deleteInfo.toString());
+        log.info("PlaylistService_PlaylistSongDelete_start : " + deleteInfo.toString());
 
 //        Song song = songRepository.findById(deleteInfo.getSongId())
 //            .orElseThrow(SongNotFoundException::new);
 //
-//        PlayList playList = playListRepository.findById(deleteInfo.getPlayListId())
-//            .orElseThrow(PlayListNotFoundException::new);
+//        Playlist playlist = playlistRepository.findById(deleteInfo.getPlaylistId())
+//            .orElseThrow(PlaylistNotFoundException::new);
 //
-//        PlayListSong playListSong = playListSongRepository.findBySongAndPlayList(song, playList)
-//            .orElseThrow(PlayListSongNotFoundException::new);
+//        PlaylistSong playlistSong = playlistSongRepository.findBySongAndPlaylist(song, playlist)
+//            .orElseThrow(PlaylistSongNotFoundException::new);
 //
-//        if(playListSong.getDeletedAt()==null){
-//            playListSong.deletePlayListSong();
+//        if(playlistSong.getDeletedAt()==null){
+//            playlistSong.deletePlaylistSong();
 //        }
 
-        log.info("PlayListService_PlayListSongDelete_end");
+        log.info("PlaylistService_PlaylistSongDelete_end");
     }
 
     @Override
-    public void registPlayListLike(PlayListLikeRegistPostReq registInfo) {
+    public void registPlaylistLike(PlaylistLikeRegistPostReq registInfo) {
 
-        log.info("PlayListService_PlayListLikeRegist_start : " + registInfo.toString());
+        log.info("PlaylistService_PlaylistLikeRegist_start : " + registInfo.toString());
 
         User user = userRepository.findById(registInfo.getUserId())
             .orElseThrow(UserNotFoundException::new);
 
-        PlayList playList = playListRepository.findById(registInfo.getPlayListId())
-            .orElseThrow(PlayListNotFoundException::new);
+        Playlist playlist = playlistRepository.findById(registInfo.getPlaylistId())
+            .orElseThrow(PlaylistNotFoundException::new);
 
-        PlayListLike playListLike = playListLikeRepository.findByUserAndPlayList(user, playList);
+        PlaylistLike playlistLike = playlistLikeRepository.findByUserAndPlaylist(user, playlist);
 
-        if (playListLike==null) {
-            playListLike = PlayListLike.builder()
+        if (playlistLike == null) {
+            playlistLike = PlaylistLike.builder()
                 .user(user)
-                .playList(playList)
+                .playlist(playlist)
                 .build();
-            playListLikeRepository.save(playListLike);
-            playList.incrementLikeCount();
+            playlistLikeRepository.save(playlistLike);
+            playlist.incrementLikeCount();
         } else {
-            playListLike.setDeletedAt();
-            playList.incrementLikeCount();
+            playlistLike.setDeletedAt();
+            playlist.incrementLikeCount();
         }
 
-        log.info("PlayListService_PlayListLikeRegist_end");
+        log.info("PlaylistService_PlaylistLikeRegist_end");
     }
 
     @Override
-    public void deletePlayListLike(PlayListLikeDeletePutReq deleteInfo) {
+    public void deletePlaylistLike(PlaylistLikeDeletePutReq deleteInfo) {
 
-        log.info("PlayListService_PlayListLikeDelete_start : " + deleteInfo.toString());
+        log.info("PlaylistService_PlaylistLikeDelete_start : " + deleteInfo.toString());
 
         User user = userRepository.findById(deleteInfo.getUserId())
             .orElseThrow(UserNotFoundException::new);
 
-        PlayList playList = playListRepository.findById(deleteInfo.getPlayListId())
-            .orElseThrow(PlayListNotFoundException::new);
+        Playlist playlist = playlistRepository.findById(deleteInfo.getPlaylistId())
+            .orElseThrow(PlaylistNotFoundException::new);
 
-        PlayListLike playListLike = playListLikeRepository.findByUserAndPlayList(user, playList);
+        PlaylistLike playlistLike = playlistLikeRepository.findByUserAndPlaylist(user, playlist);
 
-        if (playListLike.getDeletedAt()==null){
-            playListLike.deletePlayListLike();
-            playList.decrementLikeCount();
+        if (playlistLike.getDeletedAt() == null) {
+            playlistLike.deletePlaylistLike();
+            playlist.decrementLikeCount();
         }
 
-        log.info("PlayListService_PlayListLikeDelete_end"  );
+        log.info("PlaylistService_PlaylistLikeDelete_end");
     }
 
     @Override
-    public List<Song> getPlayListSong(Long playListId) {
+    public List<Song> getPlaylistSong(Long playlistId) {
 
-        log.info("PlayListService_getPlayListSong_start : " + playListId);
+        log.info("PlaylistService_getPlaylistSong_start : " + playlistId);
 
-        PlayList playList = playListRepository.findById(playListId)
-            .orElseThrow(PlayListNotFoundException::new);
+        Playlist playlist = playlistRepository.findById(playlistId)
+            .orElseThrow(PlaylistNotFoundException::new);
 
-        List<PlayListSong> playListSongs = playListSongRepository.findByPlayList(playList);
+        List<PlaylistSong> playlistSongs = playlistSongRepository.findByPlaylist(playlist);
 
-        // playListSongs 배열을 받아서 SongId 확인해서 다시 Song들을 반환할거임;
+        // playlistSongs 배열을 받아서 SongId 확인해서 다시 Song들을 반환할거임;
         //
 
-        log.info("PlayListService_getPlayListSong_end");
+        log.info("PlaylistService_getPlaylistSong_end");
 
         return null;
     }
 
     // 비로그인시 홈화면 투데이 추천 플레이리스트 7가지만 가져오기
     @Override
-    public List<PlayList> getHomeRecommendPlayList() {
+    public List<Playlist> getHomeRecommendPlaylist() {
 
-        log.info("PlayListService_getHomeRecommendPlayList_start");
+        log.info("PlaylistService_getHomeRecommendPlaylist_start");
 
         // 추천 로직 아직 모름 패스
 
-        log.info("PlayListService_getHomeRecommendPlayList_end");
+        log.info("PlaylistService_getHomeRecommendPlaylist_end");
 
         return null;
     }
 
     // 로그인시 홈화면 투데이 추천 플레이리스트 7가지만 가져오기
     @Override
-    public List<PlayList> getHomeRecommendPlayList(Long userId) {
+    public List<Playlist> getHomeRecommendPlaylist(Long userId) {
         return null;
     }
 
     @Override
-    public List<PlayList> getFollowerPlayList(Long userId) {
+    public List<Playlist> getFollowerPlaylist(Long userId) {
 
-        log.info("PlayListService_getFollowerPlayList_start: " + userId);
+        log.info("PlaylistService_getFollowerPlaylist_start: " + userId);
 
         // follow랑 user 필요
-//   user Id에 해당하는 List<User> 팔로우 유저들 리스트 가져와서 다시 findByUser로 List<playList>가져오기
+//   user Id에 해당하는 List<User> 팔로우 유저들 리스트 가져와서 다시 findByUser로 List<playlist>가져오기
         List<User> followingUsers = new ArrayList<>();
 
-        log.info("PlayListService_getFollowerPlayList_end: " + followingUsers.toString());
+        log.info("PlaylistService_getFollowerPlaylist_end: " + followingUsers.toString());
         return null;
     }
 
     @Override
-    public List<PlayList> getUserPlayList(Long userId) {
+    public List<Playlist> getUserPlaylist(Long userId) {
 
-        log.info("PlayListService_getUserPlayList_start: " + userId);
+        log.info("PlaylistService_getUserPlaylist_start: " + userId);
 
         User user = userRepository.findById(userId)
             .orElseThrow(UserNotFoundException::new);
 
-        List<PlayList> myPlayLists = playListRepository.findByUser(user);
+        List<Playlist> myPlaylists = playlistRepository.findByUser(user);
 
-        log.info("PlayListService_getUserPlayList_start: " + myPlayLists.toString());
+        log.info("PlaylistService_getUserPlaylist_start: " + myPlaylists.toString());
 
-        return myPlayLists;
+        return myPlaylists;
     }
 
     @Override
-    public Page<PlayListGetResponse> searchByTitlePlayList(String keyword, Pageable pageable) {
+    public Page<PlaylistGetResponse> searchByTitlePlaylist(String keyword, Pageable pageable) {
 
-        log.info("PlayListService_searchByTitlePlayList_start: " + keyword + ", "
+        log.info("PlaylistService_searchByTitlePlaylist_start: " + keyword + ", "
             + pageable.toString());
 
-        Page<PlayListGetResponse> playListGetResponses = playListRepository.findByTitleContainingAndIsPublic(keyword, 1, pageable)
-                .map(m -> PlayListGetResponse.builder()
-                    .id(m.getId())
-                    .user_id(m.getUser().getId())
-                    .title(m.getTitle())
-                    .description(m.getDescription())
-                    .viewCount(m.getViewCount())
-                    .likeCount(m.getLikeCount())
-                    .imgUrl(m.getImgUrl())
-                    .created_data(m.getCreatedAt())
-                    .build()
-                );
+        Page<PlaylistGetResponse> playlistGetResponses = playlistRepository.findByTitleContainingAndIsPublic(
+                keyword, 1, pageable)
+            .map(m -> PlaylistGetResponse.builder()
+                .id(m.getId())
+                .userId(m.getUser().getId())
+                .title(m.getTitle())
+                .description(m.getDescription())
+                .viewCount(m.getViewCount())
+                .likeCount(m.getLikeCount())
+                .imgUrl(m.getImgUrl())
+                .createdAt(m.getCreatedAt())
+                .build()
+            );
 
-        log.info("PlayListService_searchByTitlePlayList_end");
-        return playListGetResponses;
+        log.info("PlaylistService_searchByTitlePlaylist_end");
+        return playlistGetResponses;
     }
 
     @Override
-    public Page<PlayListGetResponse> searchByTagPlayList(String keyword, Pageable pageable) {
+    public Page<PlaylistGetResponse> searchByTagPlaylist(String keyword, Pageable pageable) {
         return null;
     }
 
 //    @Override
-//    public Page<PlayListGetResponse> searchByTagPlayList(String keyword, Pageable pageable){
+//    public Page<PlaylistGetResponse> searchByTagPlaylist(String keyword, Pageable pageable){
 //
-//        log.info("PlayListService_searchByTagPlayList_start: " + keyword + ", "
+//        log.info("PlaylistService_searchByTagPlaylist_start: " + keyword + ", "
 //            + pageable.toString());
 //
-//        Page<PlayListGetResponse> playListGetResponses = playListRepository.findByTagName_PlayLisTagAndIsPublic(keyword, 1, pageable)
-//                .map(m -> PlayListGetResponse.builder()
+//        Page<PlaylistGetResponse> playlistGetResponses = playlistRepository.findByTagName_PlayLisTagAndIsPublic(keyword, 1, pageable)
+//                .map(m -> PlaylistGetResponse.builder()
 //                    .id(m.getId())
 //                    .user_id(m.getUser().getId())
 //                    .title(m.getTitle())
@@ -390,18 +386,18 @@ public class PlayListServiceImpl implements PlayListService{
 //                    .build()
 //                );
 //
-//        log.info("PlayListService_searchByTagPlayList_end");
-//        return playListGetResponses;
+//        log.info("PlaylistService_searchByTagPlaylist_end");
+//        return playlistGetResponses;
 //    }
 
     @Override
-    public Long countPlayListLike(Long playListId)  {
+    public Long countPlaylistLike(Long playlistId) {
 
-        log.info("PlayListService_CountPlayListLike_start : " + playListId);
+        log.info("PlaylistService_CountPlaylistLike_start : " + playlistId);
 
-        Long result = playListLikeRepository.countByPlayListIdAndDeletedAtIsNull(playListId);
+        Long result = playlistLikeRepository.countByPlaylistIdAndDeletedAtIsNull(playlistId);
 
-        log.info("PlayListService_CountPlayListLike_end : " + result);
+        log.info("PlaylistService_CountPlaylistLike_end : " + result);
         return result;
     }
 

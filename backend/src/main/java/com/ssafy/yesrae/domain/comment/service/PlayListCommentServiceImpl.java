@@ -1,15 +1,15 @@
 package com.ssafy.yesrae.domain.comment.service;
 
 import com.ssafy.yesrae.common.exception.NoDataException;
-import com.ssafy.yesrae.common.exception.playList.PlayListNotFoundException;
+import com.ssafy.yesrae.common.exception.playlist.PlaylistNotFoundException;
 import com.ssafy.yesrae.common.exception.user.UserNotFoundException;
-import com.ssafy.yesrae.domain.comment.dto.request.PlayListCommentDeletePutReq;
-import com.ssafy.yesrae.domain.comment.dto.request.PlayListCommentRegistPostReq;
-import com.ssafy.yesrae.domain.comment.dto.response.PlayListCommentFindRes;
-import com.ssafy.yesrae.domain.comment.entity.PlayListComment;
-import com.ssafy.yesrae.domain.comment.repository.PlayListCommentRepository;
-import com.ssafy.yesrae.domain.playlist.entity.PlayList;
-import com.ssafy.yesrae.domain.playlist.repository.PlayListRepository;
+import com.ssafy.yesrae.domain.comment.dto.request.PlaylistCommentDeletePutReq;
+import com.ssafy.yesrae.domain.comment.dto.request.PlaylistCommentRegistPostReq;
+import com.ssafy.yesrae.domain.comment.dto.response.PlaylistCommentFindRes;
+import com.ssafy.yesrae.domain.comment.entity.PlaylistComment;
+import com.ssafy.yesrae.domain.comment.repository.PlaylistCommentRepository;
+import com.ssafy.yesrae.domain.playlist.entity.Playlist;
+import com.ssafy.yesrae.domain.playlist.repository.PlaylistRepository;
 import com.ssafy.yesrae.domain.user.entity.User;
 import com.ssafy.yesrae.domain.user.repository.UserRepository;
 import java.util.List;
@@ -22,51 +22,51 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Transactional
 @Service
-public class PlayListCommentServiceImpl implements PlayListCommentService {
+public class PlaylistCommentServiceImpl implements PlaylistCommentService {
 
-    private final PlayListCommentRepository playListCommentRepository;
+    private final PlaylistCommentRepository playlistCommentRepository;
     private final UserRepository userRepository;
-    private final PlayListRepository playListRepository;
+    private final PlaylistRepository playlistRepository;
 
     @Autowired
-    public PlayListCommentServiceImpl(PlayListCommentRepository playListCommentRepository,
-        UserRepository userRepository, PlayListRepository playListRepository) {
-        this.playListCommentRepository = playListCommentRepository;
+    public PlaylistCommentServiceImpl(PlaylistCommentRepository playlistCommentRepository,
+        UserRepository userRepository, PlaylistRepository playlistRepository) {
+        this.playlistCommentRepository = playlistCommentRepository;
         this.userRepository = userRepository;
-        this.playListRepository = playListRepository;
+        this.playlistRepository = playlistRepository;
     }
 
     /**
      * 재생목록 댓글 Regist API 에 대한 서비스
      *
-     * @param playListCommentRegistPostReq : 게시글 댓글 등록할 때 입력한 정보
+     * @param playlistCommentRegistPostReq : 게시글 댓글 등록할 때 입력한 정보
      */
 
     @Override
-    public PlayListComment registPlayListComment(
-        PlayListCommentRegistPostReq playListCommentRegistPostReq) {
+    public PlaylistComment registPlaylistComment(
+        PlaylistCommentRegistPostReq playlistCommentRegistPostReq) {
 
-        log.info("PlayListCommentService_registPlayListComment_start: "
-            + playListCommentRegistPostReq.toString());
+        log.info("playlistCommentService_registplaylistComment_start: "
+            + playlistCommentRegistPostReq.toString());
 
-        String content = playListCommentRegistPostReq.getContent();
+        String content = playlistCommentRegistPostReq.getContent();
 
-        User user = userRepository.findById(playListCommentRegistPostReq.getUserId())
+        User user = userRepository.findById(playlistCommentRegistPostReq.getUserId())
             .orElseThrow(UserNotFoundException::new);
 
-        PlayList playList = playListRepository.findById(
-                playListCommentRegistPostReq.getPlayListId())
-            .orElseThrow(PlayListNotFoundException::new);
+        Playlist playlist = playlistRepository.findById(
+                playlistCommentRegistPostReq.getPlaylistId())
+            .orElseThrow(PlaylistNotFoundException::new);
 
-        PlayListComment playListComment = PlayListComment.builder()
+        PlaylistComment playlistComment = PlaylistComment.builder()
             .user(user)
-            .playList(playList)
+            .playlist(playlist)
             .content(content)
             .build();
 
-        playListCommentRepository.save(playListComment);
-        log.info("PlayListCommentService_registPlayListComment_end : success");
-        return playListComment;
+        playlistCommentRepository.save(playlistComment);
+        log.info("playlistCommentService_registplaylistComment_end : success");
+        return playlistComment;
 
     }
 
@@ -74,21 +74,21 @@ public class PlayListCommentServiceImpl implements PlayListCommentService {
      * 특정 재생목록의 댓글 전체 조회 API에 대한 서비스
      */
     @Override
-    public List<PlayListCommentFindRes> findPlayListComment(Long PlayListId) {
+    public List<PlaylistCommentFindRes> findPlaylistComment(Long playlistId) {
 
-        log.info("PlayListCommentService_findPlayListComment_start: ");
+        log.info("playlistCommentService_findplaylistComment_start: ");
 
-        List<PlayListCommentFindRes> res = playListCommentRepository.findByPlayListId(PlayListId)
-            .stream().map(m -> PlayListCommentFindRes.builder()
+        List<PlaylistCommentFindRes> res = playlistCommentRepository.findByPlaylistId(playlistId)
+            .stream().map(m -> PlaylistCommentFindRes.builder()
                 .id(m.getId())
-                .playListId(m.getPlayList().getId())
+                .playlistId(m.getPlaylist().getId())
                 .userId(m.getUser().getId())
                 .content(m.getContent())
                 .creaetedAt(m.getCreatedAt())
                 .build()
             ).collect(Collectors.toList());
 
-        log.info("PlayListCommentService_findPlayListComment_end: success ");
+        log.info("playlistCommentService_findplaylistComment_end: success ");
 
         return res;
     }
@@ -97,21 +97,21 @@ public class PlayListCommentServiceImpl implements PlayListCommentService {
      * 재생목록 댓글 삭제 (Soft Delete) API 에 대한 서비스
      */
     @Override
-    public boolean deletePlayListComment(PlayListCommentDeletePutReq playListCommentDeletePutReq) {
+    public boolean deletePlaylistComment(PlaylistCommentDeletePutReq playlistCommentDeletePutReq) {
 
-        log.info("PlayListCommentService_deletePlayListComment_start: ");
+        log.info("playlistCommentService_deleteplaylistComment_start: ");
 
-        PlayListComment playListComment = playListCommentRepository.findById(
-                playListCommentDeletePutReq.getId())
+        PlaylistComment playlistComment = playlistCommentRepository.findById(
+                playlistCommentDeletePutReq.getId())
             .orElseThrow(
                 NoDataException::new);
-        if (playListComment.getUser().getId().equals(playListCommentDeletePutReq.getUserId())) {
-            playListComment.deletedPlayListComment();
+        if (playlistComment.getUser().getId().equals(playlistCommentDeletePutReq.getUserId())) {
+            playlistComment.deletePlaylistComment();
         } else {
             return false;
         }
 
-        log.info("PlayListCommentService_deletePlayListComment_end: true ");
+        log.info("playlistCommentService_deleteplaylistComment_end: true ");
         return true;
     }
 }

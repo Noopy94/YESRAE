@@ -3,9 +3,9 @@ package com.ssafy.yesrae.domain.playlist.dto.request;
 import lombok.Data;
 
 @Data
-public class PlayListSongRegistPostReq {
+public class PlaylistSongRegistPostReq {
 
-    private Long playListId;
+    private Long playlistId;
     private String songId;
 
 }
