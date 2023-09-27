@@ -33,6 +33,10 @@ const Login = () => {
     }
   };
 
+  const handleRegist = () => {
+    navigate('/user/regist');
+  };
+
   const handleKakaoLogin = () => {
     window.location.href = BASE_URL + 'oauth2/authorization/kakao';
   };
@@ -73,14 +77,14 @@ const Login = () => {
             />
           </div>
           <Button
-            className="mt-6 text-sm font-[pretendard]"
+            className="mt-6 text-sm font-[pretendard] hover:shadow-gray-800 hover:shadow-md"
             size="sm"
             fullWidth
             onClick={handleLogin}
           >
             로그인
           </Button>
-          <div className="flex items-center mt-2">
+          <div className="flex items-center my-2">
             <hr className="flex-auto h-px bg-white border-none"></hr>
             <span className="p-3 text-white">OR</span>
             <hr className="flex-auto h-px bg-white border-none"></hr>
@@ -103,11 +107,14 @@ const Login = () => {
               </IconButton>
             </div>
           </div>
-          <Typography className="mt-4 font-normal text-center text-gray-500 font-[pretendard]">
+          <Typography className="mt-6 font-normal text-center text-gray-500 font-[pretendard]">
             계정이 없으신가요?{' '}
-            <a href="#" className="font-medium text-white">
+            <span
+              className="font-medium text-white cursor-pointer hover:text-gray-300"
+              onClick={handleRegist}
+            >
               회원가입
-            </a>
+            </span>
           </Typography>
         </form>
       </Card>

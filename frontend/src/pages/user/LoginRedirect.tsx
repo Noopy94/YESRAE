@@ -11,7 +11,6 @@ const LoginRedirect = () => {
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const accessToken = searchParams.get('accessToken') ?? '';
-    // const refreshToken = searchParams.get('refreshToken');
 
     const getUser = async (accessToken: string) => {
       const user = await oauthLogin(accessToken);
