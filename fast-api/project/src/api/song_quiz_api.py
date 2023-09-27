@@ -36,7 +36,7 @@ scheduler = BackgroundScheduler()
 
 # 스케줄러 실행되는 것 확인 완료
 # 시간 설정
-scheduler.add_job(song_quiz_update, "cron", hour= 16, minute = 29)
+scheduler.add_job(song_quiz_update, "cron", hour= 9, minute = 31)
 
 scheduler.start()
 
@@ -46,7 +46,7 @@ song name 으로 조회 -> song id 로 -> similiarity 순위 조회
 SearchSongQuizRequest : name (추측하는 노래 이름)
 List[SongQuizSchema] : 노래 ID, 제목, 유사도, 순위, 앨범 이미지, 정답 여부 
 """
-@router.post("/quiz", status_code=200, response_model= List[SongQuizSchema])
+@router.post("/quiz", status_code=200, response_model= SongQuizSchema)
 async def song_guess(
         search_request : SearchSongQuizRequest,
     ):
@@ -56,7 +56,7 @@ async def song_guess(
     logging.info("추측하는 song_name %s", song_name)
 
     # 동일한 제목의 곡들이 여러개 있을 수 있다
-    song_quiz_result : List[SongQuizSchema] = song_quiz_service.get_song_result(song_name)
+    song_quiz_result : SongQuizSchema = song_quiz_service.get_song_result(song_name)
 
     return song_quiz_result
 

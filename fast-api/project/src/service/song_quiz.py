@@ -69,6 +69,9 @@ class SongQuizService:
 
         return today_song
 
+    """
+    TODO : 검색할때 일치하는 곡이 많아서 오래 걸리는 문제 -> DB 유사도 테이블에 
+    """
 
     """
     노맨틀 정답곡과 DB 에 있는 나머지 곡들과 의 유사도 계산해서 song_quiz 테이블에 저장
@@ -152,13 +155,12 @@ class SongQuizService:
     def get_song_result(
             self,
             song_name : str,
-    ) -> List[SongQuizSchema]:
+    ) -> SongQuizSchema:
         
         # 검색한 곡과 이름이 같은 곡들 조회
         # 같은 제목의 곡이 여러 개 존재 가능
         search_songs : List[Song] = self.song_repository.get_song_by_name(song_name)
 
-        
 
         search_result = []
         # 검색한 곡 정보 없을 수 있다
@@ -196,7 +198,17 @@ class SongQuizService:
         else:
             logging.info("검색한 곡이 존재하지 않습니다.")
 
-        return search_result
+        # TODO : 유사도 높은 1개 반환
+        if search_result:
+
+            max_similarity_song = max(search_result, key= lambda x : x.similarity)
+
+            return max_similarity_song
+        
+        else:
+
+            return []
+
     
 
     """

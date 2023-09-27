@@ -442,7 +442,7 @@ TEST 용
 """
 calculate_util = CalculateUtil()
 
-
+"""
 for target_idx in range(1, 5):
     for item in range(1, 4):
         target = "test" + str(target_idx) + "_" + str(item)
@@ -475,3 +475,4 @@ for target_idx in range(1, 5):
                         similarity = calculate_util.calculate(target_song, const_song)
                         print("similarity {} & {} = {:.2f}".format(target, const, similarity))
 
+"""
