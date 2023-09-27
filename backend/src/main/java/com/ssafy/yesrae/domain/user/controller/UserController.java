@@ -5,6 +5,7 @@ import com.ssafy.yesrae.domain.user.dto.request.UserFollowCheckGetReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserFollowPostReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserLoginPostReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserRegistPostReq;
+import com.ssafy.yesrae.domain.user.dto.response.UserCheckEmailRes;
 import com.ssafy.yesrae.domain.user.dto.response.UserFindRes;
 import com.ssafy.yesrae.domain.user.dto.response.UserFollowCheckRes;
 import com.ssafy.yesrae.domain.user.dto.response.UserFollowFindRes;
@@ -46,6 +47,17 @@ public class UserController {
         log.info("UserController_registUser_end: success");
 
         return CommonResponse.success(SUCCESS);
+    }
+
+    @GetMapping("/email/{email}")
+    public CommonResponse<?> checkEmail(@PathVariable String email) {
+        log.info("UserController_checkEmail_start: email - " + email);
+
+        UserCheckEmailRes userCheckEmailRes = userService.checkEmail(email);
+
+        log.info("UserController_checkEmail_end: success");
+
+        return CommonResponse.success(userCheckEmailRes);
     }
 
     @PostMapping("/login")

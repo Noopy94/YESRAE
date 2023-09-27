@@ -4,6 +4,7 @@ import com.ssafy.yesrae.domain.user.dto.request.UserFollowCheckGetReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserFollowPostReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserLoginPostReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserRegistPostReq;
+import com.ssafy.yesrae.domain.user.dto.response.UserCheckEmailRes;
 import com.ssafy.yesrae.domain.user.dto.response.UserFindRes;
 import com.ssafy.yesrae.domain.user.dto.response.UserFollowFindRes;
 import com.ssafy.yesrae.domain.user.dto.response.UserNicknameFindRes;
@@ -24,4 +25,6 @@ public interface UserService {
     public UserNicknameFindRes findNickname(Long userId);
 
     public UserFindRes login(UserLoginPostReq userLoginPostReq);
+
+    public UserCheckEmailRes checkEmail(String email);
 }

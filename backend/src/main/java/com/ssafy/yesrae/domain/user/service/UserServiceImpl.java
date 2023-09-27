@@ -13,6 +13,7 @@ import com.ssafy.yesrae.domain.user.dto.request.UserFollowCheckGetReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserFollowPostReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserLoginPostReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserRegistPostReq;
+import com.ssafy.yesrae.domain.user.dto.response.UserCheckEmailRes;
 import com.ssafy.yesrae.domain.user.dto.response.UserFindRes;
 import com.ssafy.yesrae.domain.user.dto.response.UserFollowFindRes;
 import com.ssafy.yesrae.domain.user.dto.response.UserNicknameFindRes;
@@ -70,6 +71,25 @@ public class UserServiceImpl implements UserService {
 
         user.passwordEncode(passwordEncoder);
         userRepository.save(user);
+    }
+
+    @Override
+    public UserCheckEmailRes checkEmail(String email) {
+        log.info("UserService_checkEmail_start: email - " + email);
+
+        User user = userRepository.findByEmail(email).orElse(null);
+
+        if (user == null) {
+            log.info("UserService_checkEmail_end: success");
+            return UserCheckEmailRes.builder()
+                .flag(true)
+                .build();
+        }
+
+        log.info("UserService_checkEmail_end: Duplicated email");
+        return UserCheckEmailRes.builder()
+            .flag(false)
+            .build();
     }
 
     @Override
