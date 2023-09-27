@@ -12,7 +12,7 @@ public interface UserService {
 
     public void regist(UserRegistPostReq userRegistPostReq);
 
-    public UserFindRes login(String accessToken);
+    public UserFindRes oauthLogin(String accessToken);
 
     public void follow(UserFollowPostReq userFollowPostReq);
 

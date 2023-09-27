@@ -47,11 +47,15 @@ public class UserController {
         return CommonResponse.success(SUCCESS);
     }
 
-    @PostMapping("/login")
-    public CommonResponse<?> login(@RequestHeader("Authorization") String accessToken) {
+    @PostMapping("/oauth2/login")
+    public CommonResponse<?> oauthLogin(@RequestHeader("Authorization") String accessToken) {
 
-        UserFindRes userFindRes = userService.login(accessToken);
+        log.info("UserController_oauthLogin_start: accessToken - " + accessToken);
 
+        UserFindRes userFindRes = userService.oauthLogin(accessToken);
+
+        log.info("UserController_oauthLogin_end: " + userFindRes.toString());
+        
         return CommonResponse.success(userFindRes);
     }
 

@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserFindRes login(String accessToken) {
+    public UserFindRes oauthLogin(String accessToken) {
 
         String alteredToken = Optional.of(accessToken)
             .filter(token -> token.startsWith("Bearer "))
