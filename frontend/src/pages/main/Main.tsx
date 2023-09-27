@@ -17,17 +17,17 @@ export default function Main() {
   }, [userState]);
 
   function UserRecommend() {
-    if (User.nickName) {
+    if (User.nickname) {
       return (
         <div>
           <div className="mt-10 mb-3 text-2xl font-bold">
-            {User.nickName}님 맞춤 추천 노래 😍
+            {User.nickname}님 맞춤 추천 노래 😍
           </div>
           <div className="flex">
             <SongCarousel songs={defaultsongs} />
           </div>
           <div className="mt-10 mb-3 text-2xl font-bold">
-            {User.nickName}님 맞춤 추천 플레이 리스트 🎤
+            {User.nickname}님 맞춤 추천 플레이 리스트 🎤
           </div>
           <div className="flex">
             <PlayListCarousel playLists={defaultplayLists} />
