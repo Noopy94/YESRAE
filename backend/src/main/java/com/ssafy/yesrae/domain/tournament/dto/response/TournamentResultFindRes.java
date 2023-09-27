@@ -15,16 +15,16 @@ public class TournamentResultFindRes {
 
     private String songSinger;
 
-    private Integer rank;
+    private Integer ranking;
 
     //Querydsl을 위한 생성자
     public TournamentResultFindRes() {
     }
 
-    public TournamentResultFindRes(LocalDateTime date, String songTitle, String songSinger, Integer rank) {
+    public TournamentResultFindRes(LocalDateTime date, String songTitle, String songSinger, Integer ranking) {
         this.date = date.toString();
         this.songTitle = songTitle;
         this.songSinger = songSinger;
-        this.rank = rank;
+        this.ranking = ranking;
     }
 }
