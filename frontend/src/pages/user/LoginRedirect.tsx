@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userState } from '../../recoil/user/user';
 import { useSetRecoilState } from 'recoil';
-import { login } from '../../api/userApi';
+import { oauthLogin } from '../../api/userApi';
 
 const LoginRedirect = () => {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const LoginRedirect = () => {
     // const refreshToken = searchParams.get('refreshToken');
 
     const getUser = async (accessToken: string) => {
-      const user = await login(accessToken);
+      const user = await oauthLogin(accessToken);
 
       setUser({ ...user });
 
