@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -38,7 +38,7 @@ public class ArticleCommentController {
      */
     @PostMapping
     public CommonResponse<?> registArticleComment(
-        @RequestPart ArticleCommentRegistPostReq articleCommentRegistPostReq) {
+        @RequestBody ArticleCommentRegistPostReq articleCommentRegistPostReq) {
 
         log.info(
             "ArticleCommentController_regist_start: " + articleCommentRegistPostReq.toString());
@@ -71,7 +71,7 @@ public class ArticleCommentController {
      */
     @PutMapping("/delete")
     public CommonResponse<?> deleteArticleComment(
-        @RequestPart ArticleCommentDeletePutReq articleCommentDeletePutReq) {
+        @RequestBody ArticleCommentDeletePutReq articleCommentDeletePutReq) {
 
         log.info("ArticleCommentController_delete_start: "
             + articleCommentDeletePutReq.getId());
