@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -38,7 +38,7 @@ public class PlaylistCommentController {
      */
     @PostMapping
     public CommonResponse<?> registPlaylistComment(
-        @RequestPart PlaylistCommentRegistPostReq playlistCommentRegistPostReq) {
+        @RequestBody PlaylistCommentRegistPostReq playlistCommentRegistPostReq) {
 
         log.info(
             "playlistCommentController_regist_start: " + playlistCommentRegistPostReq.toString());
@@ -71,7 +71,7 @@ public class PlaylistCommentController {
      */
     @PutMapping("/delete")
     public CommonResponse<?> deletePlaylistComment(
-        @RequestPart PlaylistCommentDeletePutReq playlistCommentDeletePutReq) {
+        @RequestBody PlaylistCommentDeletePutReq playlistCommentDeletePutReq) {
 
         log.info("PlaylistCommentController_delete_start: "
             + playlistCommentDeletePutReq.getId());
