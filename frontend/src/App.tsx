@@ -4,6 +4,8 @@ import Regist from '../src/pages/user/Regist';
 import Main from '../src/pages/main/Main';
 import PlayList from './pages/playlist/PlayList';
 import PlayListDetail from './pages/playlist/PlayListDetail';
+import LoginRedirect from './pages/user/LoginRedirect';
+
 
 function App() {
   return (
@@ -12,6 +14,7 @@ function App() {
         <Route path="/" element={<Main />} />
         <Route path="/user/login" element={<Login />} />
         <Route path="/user/regist" element={<Regist />} />
+        <Route path="/oauth2" element={<LoginRedirect />} />
         <Route path="/playlist" element={<PlayList />} />
         <Route path="/playlist/:userId" element={<PlayList />} />
         <Route
