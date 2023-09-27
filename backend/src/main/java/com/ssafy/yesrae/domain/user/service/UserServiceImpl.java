@@ -5,11 +5,16 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.ssafy.yesrae.common.exception.DuplicateEmailException;
 import com.ssafy.yesrae.common.exception.DuplicateNicknameException;
 import com.ssafy.yesrae.common.exception.NotFoundException;
+import com.ssafy.yesrae.common.exception.user.InvalidPasswordException;
 import com.ssafy.yesrae.common.exception.user.UserNotFoundException;
+import com.ssafy.yesrae.config.jwt.service.JwtService;
 import com.ssafy.yesrae.domain.user.Role;
 import com.ssafy.yesrae.domain.user.dto.request.UserFollowCheckGetReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserFollowPostReq;
+import com.ssafy.yesrae.domain.user.dto.request.UserLoginPostReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserRegistPostReq;
+import com.ssafy.yesrae.domain.user.dto.response.UserCheckEmailRes;
+import com.ssafy.yesrae.domain.user.dto.response.UserCheckNicknameRes;
 import com.ssafy.yesrae.domain.user.dto.response.UserFindRes;
 import com.ssafy.yesrae.domain.user.dto.response.UserFollowFindRes;
 import com.ssafy.yesrae.domain.user.dto.response.UserNicknameFindRes;
@@ -36,6 +41,8 @@ public class UserServiceImpl implements UserService {
 
     @Value("${jwt.secretKey}")
     private String secretKey;
+
+    private final JwtService jwtService;
 
     private final UserRepository userRepository;
     private final UserFollowRepository userFollowRepository;
@@ -68,7 +75,77 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserFindRes login(String accessToken) {
+    public UserCheckEmailRes checkEmail(String email) {
+        log.info("UserService_checkEmail_start: email - " + email);
+
+        User user = userRepository.findByEmail(email).orElse(null);
+
+        if (user == null) {
+            log.info("UserService_checkEmail_end: success");
+            return UserCheckEmailRes.builder()
+                .flag(true)
+                .build();
+        }
+
+        log.info("UserService_checkEmail_end: Duplicated email");
+        return UserCheckEmailRes.builder()
+            .flag(false)
+            .build();
+    }
+
+    @Override
+    public UserCheckNicknameRes checkNickname(String nickname) {
+        log.info("UserService_checkNickname_start: nickname - " + nickname);
+
+        User user = userRepository.findByNickname(nickname).orElse(null);
+
+        if (user == null) {
+            log.info("UserService_checkNickname_end: success");
+            return UserCheckNicknameRes.builder()
+                .flag(true)
+                .build();
+        }
+
+        log.info("UserService_checkNickname_end: Duplicated nickname");
+        return UserCheckNicknameRes.builder()
+            .flag(false)
+            .build();
+    }
+
+    @Override
+    public UserFindRes login(UserLoginPostReq userLoginPostReq) {
+
+        log.info("UserService_login_start: " + userLoginPostReq.toString());
+
+        User user = userRepository.findByEmail(userLoginPostReq.getEmail())
+            .orElseThrow(UserNotFoundException::new);
+
+        if (!passwordEncoder.matches(userLoginPostReq.getPassword(), user.getPassword())) {
+            log.info("UserService_login_end: Invalid Password");
+            throw new InvalidPasswordException();
+        }
+
+        String refreshToken = jwtService.createRefreshToken();
+
+        user.updateRefreshToken(refreshToken);
+
+        UserFindRes userFindRes = UserFindRes.builder()
+            .id(user.getId())
+            .email(user.getEmail())
+            .nickname(user.getNickname())
+            .imageUrl(user.getImageUrl())
+            .age(user.getAge())
+            .accessToken(jwtService.createAccessToken(userLoginPostReq.getEmail()))
+            .refreshToken(refreshToken)
+            .build();
+
+        log.info("UserService_login_end: success");
+
+        return userFindRes;
+    }
+
+    @Override
+    public UserFindRes oauthLogin(String accessToken) {
 
         String alteredToken = Optional.of(accessToken)
             .filter(token -> token.startsWith("Bearer "))
