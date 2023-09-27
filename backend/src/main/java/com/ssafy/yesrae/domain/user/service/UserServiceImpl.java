@@ -14,6 +14,7 @@ import com.ssafy.yesrae.domain.user.dto.request.UserFollowPostReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserLoginPostReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserRegistPostReq;
 import com.ssafy.yesrae.domain.user.dto.response.UserCheckEmailRes;
+import com.ssafy.yesrae.domain.user.dto.response.UserCheckNicknameRes;
 import com.ssafy.yesrae.domain.user.dto.response.UserFindRes;
 import com.ssafy.yesrae.domain.user.dto.response.UserFollowFindRes;
 import com.ssafy.yesrae.domain.user.dto.response.UserNicknameFindRes;
@@ -88,6 +89,25 @@ public class UserServiceImpl implements UserService {
 
         log.info("UserService_checkEmail_end: Duplicated email");
         return UserCheckEmailRes.builder()
+            .flag(false)
+            .build();
+    }
+
+    @Override
+    public UserCheckNicknameRes checkNickname(String nickname) {
+        log.info("UserService_checkNickname_start: nickname - " + nickname);
+
+        User user = userRepository.findByNickname(nickname).orElse(null);
+
+        if (user == null) {
+            log.info("UserService_checkNickname_end: success");
+            return UserCheckNicknameRes.builder()
+                .flag(true)
+                .build();
+        }
+
+        log.info("UserService_checkNickname_end: Duplicated nickname");
+        return UserCheckNicknameRes.builder()
             .flag(false)
             .build();
     }

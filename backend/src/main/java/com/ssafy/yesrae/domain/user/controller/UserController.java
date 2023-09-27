@@ -6,6 +6,7 @@ import com.ssafy.yesrae.domain.user.dto.request.UserFollowPostReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserLoginPostReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserRegistPostReq;
 import com.ssafy.yesrae.domain.user.dto.response.UserCheckEmailRes;
+import com.ssafy.yesrae.domain.user.dto.response.UserCheckNicknameRes;
 import com.ssafy.yesrae.domain.user.dto.response.UserFindRes;
 import com.ssafy.yesrae.domain.user.dto.response.UserFollowCheckRes;
 import com.ssafy.yesrae.domain.user.dto.response.UserFollowFindRes;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -49,8 +51,8 @@ public class UserController {
         return CommonResponse.success(SUCCESS);
     }
 
-    @GetMapping("/email/{email}")
-    public CommonResponse<?> checkEmail(@PathVariable String email) {
+    @GetMapping("/email")
+    public CommonResponse<?> checkEmail(@RequestParam String email) {
         log.info("UserController_checkEmail_start: email - " + email);
 
         UserCheckEmailRes userCheckEmailRes = userService.checkEmail(email);
@@ -58,6 +60,17 @@ public class UserController {
         log.info("UserController_checkEmail_end: success");
 
         return CommonResponse.success(userCheckEmailRes);
+    }
+
+    @GetMapping("/nickname")
+    public CommonResponse<?> checkNickname(@RequestParam String nickname) {
+        log.info("UserController_checkEmail_start: nickname - " + nickname);
+
+        UserCheckNicknameRes userCheckNicknameRes = userService.checkNickname(nickname);
+
+        log.info("UserController_checkEmail_end: success");
+
+        return CommonResponse.success(userCheckNicknameRes);
     }
 
     @PostMapping("/login")
