@@ -6,15 +6,15 @@ import lombok.Data;
 
 @Data
 @Builder
-public class PlayListGetResponse {
+public class PlaylistGetResponse {
 
     private Long id;
-    private Long user_id;
+    private Long userId;
     private String title;
     private String description;
     private Long viewCount;
     private Long likeCount;
     private String imgUrl; // S3에 저장된 이미지 url
-    private LocalDateTime created_data;
+    private LocalDateTime createdAt;
 
 }

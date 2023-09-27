@@ -48,8 +48,9 @@ public class ArticleCommentServiceImpl implements ArticleCommentService {
 
         log.info("ArticleCommentService_registArticleComment_start: "
             + articleCommentRegistPostReq.toString());
-
+        
         String content = articleCommentRegistPostReq.getContent();
+        ;
 
         User user = userRepository.findById(articleCommentRegistPostReq.getUserId())
             .orElseThrow(UserNotFoundException::new);

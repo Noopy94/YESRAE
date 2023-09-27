@@ -1,11 +1,11 @@
-package com.ssafy.yesrae.common.exception.playList;
+package com.ssafy.yesrae.common.exception.playlist;
 
 import com.ssafy.yesrae.common.exception.ErrorCode;
 import com.ssafy.yesrae.common.model.BaseException;
 
-public class PlayListTagNotFoundException extends BaseException {
+public class PlaylistTagNotFoundException extends BaseException {
 
-    public PlayListTagNotFoundException() {
-        super(ErrorCode.PlayListTag_NOT_FOUND);
+    public PlaylistTagNotFoundException() {
+        super(ErrorCode.PlaylistTag_NOT_FOUND);
     }
 }

@@ -17,7 +17,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -41,7 +40,7 @@ public class SecurityConfig {
     private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
     private final CustomOAuth2UserService customOAuth2UserService;
     private static final String[] WHITE_LIST = {
-        "/api/auth/**", "/template/**", "/tournament/auth/**", "/user/**", "/oauth2/**"
+        "/api/auth/**", "/template/**", "/tournament/auth/**", "/user/**", "/oauth2/**", "/**"
     };
 
     @Bean

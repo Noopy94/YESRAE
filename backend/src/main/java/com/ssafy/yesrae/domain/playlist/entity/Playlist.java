@@ -1,13 +1,11 @@
 package com.ssafy.yesrae.domain.playlist.entity;
 
 import com.ssafy.yesrae.common.model.BaseEntity;
-import com.ssafy.yesrae.domain.playlist.dto.request.PlayListImgModifyPutReq;
-import com.ssafy.yesrae.domain.playlist.dto.request.PlayListModifyPutReq;
+import com.ssafy.yesrae.domain.playlist.dto.request.PlaylistModifyPutReq;
 import com.ssafy.yesrae.domain.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
@@ -29,7 +27,7 @@ import org.hibernate.annotations.Where;
 @DynamicInsert  // INSERT 구문에서 null이 아닌 컬럼들만 실제로 insert
 @Where(clause = "deleted_at is null")   // 일괄적으로 적용할 where 조건. 현재 clause는 soft delete를 위함
 @Entity
-public class PlayList extends BaseEntity {
+public class Playlist extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -60,18 +58,18 @@ public class PlayList extends BaseEntity {
     private Long likeCount;
 
 
-    public  void modifyPlayListImg(String imgUrl){
+    public void modifyPlaylistImg(String imgUrl) {
         this.imgUrl = imgUrl;
     }
 
-    public void modifyPlayList(PlayListModifyPutReq modifyInfo){
+    public void modifyPlaylist(PlaylistModifyPutReq modifyInfo) {
         this.isPublic = modifyInfo.getIsPublic();
         this.title = modifyInfo.getTitle();
         this.description = modifyInfo.getDescription();
-        this.createdAt =LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
     }
 
-    public void deletePlayList() {
+    public void deletePlaylist() {
         this.deletedAt = LocalDateTime.now();
     }
 
@@ -79,12 +77,16 @@ public class PlayList extends BaseEntity {
         this.likeCount++;
     }
 
-    public void decrementLikeCount() {this.likeCount--;}
+    public void decrementLikeCount() {
+        this.likeCount--;
+    }
 
     public void incrementViewCount() {
         this.viewCount++;
     }
 
-    public void setImgUrl(String imgUrl){this.imgUrl = imgUrl;}
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
 
 }

@@ -2,10 +2,10 @@ package com.ssafy.yesrae.domain.comment.controller;
 
 import com.ssafy.yesrae.common.exception.comment.CommentPossessionFailException;
 import com.ssafy.yesrae.common.model.CommonResponse;
-import com.ssafy.yesrae.domain.comment.dto.request.PlayListCommentDeletePutReq;
-import com.ssafy.yesrae.domain.comment.dto.request.PlayListCommentRegistPostReq;
-import com.ssafy.yesrae.domain.comment.dto.response.PlayListCommentFindRes;
-import com.ssafy.yesrae.domain.comment.service.PlayListCommentService;
+import com.ssafy.yesrae.domain.comment.dto.request.PlaylistCommentDeletePutReq;
+import com.ssafy.yesrae.domain.comment.dto.request.PlaylistCommentRegistPostReq;
+import com.ssafy.yesrae.domain.comment.dto.response.PlaylistCommentFindRes;
+import com.ssafy.yesrae.domain.comment.service.PlaylistCommentService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,53 +13,53 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/playListComment")
-public class PlayListCommentController {
+@RequestMapping("/playlistComment")
+public class PlaylistCommentController {
 
     private static final String SUCCESS = "success";
 
-    private final PlayListCommentService playListCommentService;
+    private final PlaylistCommentService playlistCommentService;
 
     @Autowired
-    public PlayListCommentController(PlayListCommentService playListCommentService) {
-        this.playListCommentService = playListCommentService;
+    public PlaylistCommentController(PlaylistCommentService playlistCommentService) {
+        this.playlistCommentService = playlistCommentService;
     }
 
     /**
      * 재생목록 댓글 작성 API
      *
-     * @Param PlayListCommentRegistPostReq : 댓글 작성할 때 입력한 정보
+     * @Param playlistCommentRegistPostReq : 댓글 작성할 때 입력한 정보
      */
     @PostMapping
-    public CommonResponse<?> registPlayListComment(
-        @RequestBody PlayListCommentRegistPostReq playListCommentRegistPostReq) {
+    public CommonResponse<?> registPlaylistComment(
+        @RequestPart PlaylistCommentRegistPostReq playlistCommentRegistPostReq) {
 
         log.info(
-            "PLayListCommentController_regist_start: " + playListCommentRegistPostReq.toString());
+            "playlistCommentController_regist_start: " + playlistCommentRegistPostReq.toString());
 
-        playListCommentService.registPlayListComment(playListCommentRegistPostReq);
+        playlistCommentService.registPlaylistComment(playlistCommentRegistPostReq);
 
-        log.info("PlayListCommentController_regist_end: success ");
+        log.info("playlistCommentController_regist_end: success ");
         return CommonResponse.success(SUCCESS);
     }
 
     /**
      * 재생목록 댓글 조회 API
      */
-    @GetMapping("/{playListId}")
-    public CommonResponse<?> findPlayListComment(@PathVariable Long playListId) {
+    @GetMapping("/{playlistId}")
+    public CommonResponse<?> findPlaylistComment(@PathVariable Long playlistId) {
 
-        log.info("PlayListCommentController_find_start: " + playListId);
+        log.info("playlistCommentController_find_start: " + playlistId);
 
-        List<PlayListCommentFindRes> res = playListCommentService.findPlayListComment(playListId);
+        List<PlaylistCommentFindRes> res = playlistCommentService.findPlaylistComment(playlistId);
 
-        log.info("PlayListCommentController_find_end: " + res.toString());
+        log.info("playlistCommentController_find_end: " + res.toString());
 
         return CommonResponse.success(res);
     }
@@ -67,20 +67,20 @@ public class PlayListCommentController {
     /**
      * 재생목록 댓글 삭제 API
      *
-     * @Param PlayListCommentDeletePutReq : 댓글 Id 와 사용자 Id
+     * @Param playlistCommentDeletePutReq : 댓글 Id 와 사용자 Id
      */
     @PutMapping("/delete")
-    public CommonResponse<?> deletePlayListComment(
-        @RequestBody PlayListCommentDeletePutReq playListCommentDeletePutReq) {
+    public CommonResponse<?> deletePlaylistComment(
+        @RequestPart PlaylistCommentDeletePutReq playlistCommentDeletePutReq) {
 
-        log.info("PlayListCommentController_delete_start: "
-            + playListCommentDeletePutReq.getId());
+        log.info("PlaylistCommentController_delete_start: "
+            + playlistCommentDeletePutReq.getId());
 
-        boolean isDeleted = playListCommentService.deletePlayListComment(
-            playListCommentDeletePutReq);
+        boolean isDeleted = playlistCommentService.deletePlaylistComment(
+            playlistCommentDeletePutReq);
 
         if (isDeleted) {
-            log.info("PlayListCommentController_delete_end: success");
+            log.info("playlistCommentController_delete_end: success");
             return CommonResponse.success(SUCCESS);
         } else {
             throw new CommentPossessionFailException();

@@ -3,9 +3,9 @@ package com.ssafy.yesrae.domain.playlist.dto.request;
 import lombok.Data;
 
 @Data
-public class PlayListLikeRegistPostReq {
+public class PlaylistLikeDeletePutReq {
 
     private Long userId;
-    private Long playListId;
+    private Long playlistId;
 
 }

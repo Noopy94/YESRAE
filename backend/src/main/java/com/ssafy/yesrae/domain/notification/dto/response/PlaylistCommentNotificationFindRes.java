@@ -6,16 +6,16 @@ import lombok.Data;
 
 @Data
 @Builder
-public class PlayListCommentNotificationFindRes {
+public class PlaylistCommentNotificationFindRes {
 
     private Long id;
 
     private Long userId;
 
-    private Long playListId;
+    private Long playlistId;
 
     private LocalDateTime createdAt;
 
     private Boolean isViewed;
-    
+
 }

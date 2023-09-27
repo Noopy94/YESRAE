@@ -1,7 +1,7 @@
 package com.ssafy.yesrae.domain.comment.entity;
 
 import com.ssafy.yesrae.common.model.BaseEntity;
-import com.ssafy.yesrae.domain.playlist.entity.PlayList;
+import com.ssafy.yesrae.domain.playlist.entity.Playlist;
 import com.ssafy.yesrae.domain.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,15 +27,15 @@ import org.hibernate.annotations.Where;
 @DynamicInsert
 @Where(clause = "deleted_at is null")
 @Entity
-public class PlayListComment extends BaseEntity {
+public class PlaylistComment extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")   // DB table에 적용될 FK column 이름
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "playList_id")   // DB table에 적용될 FK column 이름
-    private PlayList playList;
+    @JoinColumn(name = "playlist_id")   // DB table에 적용될 FK column 이름
+    private Playlist playlist;
 
     @Column(nullable = false)
     private String content;
@@ -46,6 +46,8 @@ public class PlayListComment extends BaseEntity {
     @Column
     private LocalDateTime deletedAt;
 
-    public void deletedPlayListComment() {this.deletedAt = LocalDateTime.now(); }
+    public void deletePlaylistComment() {
+        this.deletedAt = LocalDateTime.now();
+    }
 
 }

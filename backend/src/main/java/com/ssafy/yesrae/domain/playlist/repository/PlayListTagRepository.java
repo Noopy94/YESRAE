@@ -1,7 +1,7 @@
 package com.ssafy.yesrae.domain.playlist.repository;
 
-import com.ssafy.yesrae.domain.playlist.entity.PlayList;
-import com.ssafy.yesrae.domain.playlist.entity.PlayListTag;
+import com.ssafy.yesrae.domain.playlist.entity.Playlist;
+import com.ssafy.yesrae.domain.playlist.entity.PlaylistTag;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -10,11 +10,11 @@ import org.springframework.stereotype.Repository;
     TemplateArticle Entity를 위한 Spring Data JPA Repository
  */
 @Repository
-public interface PlayListTagRepository extends JpaRepository<PlayListTag, Long> {
+public interface PlaylistTagRepository extends JpaRepository<PlaylistTag, Long> {
 
-    // PlayList에 있는 태그들 가져오기
-    List<PlayListTag> findByPlayList(PlayList playList);
+    // Playlist에 있는 태그들 가져오기
+    List<PlaylistTag> findByPlaylist(Playlist playlist);
 
-    List<PlayListTag> findByTagName(String tagName);
+    List<PlaylistTag> findByTagName(String tagName);
 
 }

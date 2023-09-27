@@ -1,6 +1,5 @@
 package com.ssafy.yesrae.domain.playlist.entity;
 
-import jakarta.persistence.IdClass;
 import java.io.Serializable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,8 +11,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PlayListSongId implements Serializable {
+public class PlaylistLikeId implements Serializable {
 
-    private Long song;
-    private Long playList;
+    private Long user;
+    private Long playlist;
 }

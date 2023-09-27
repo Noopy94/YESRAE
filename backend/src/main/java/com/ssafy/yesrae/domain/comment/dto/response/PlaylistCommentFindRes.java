@@ -6,11 +6,11 @@ import lombok.Data;
 
 @Data
 @Builder
-public class PlayListCommentFindRes {
+public class PlaylistCommentFindRes {
 
     private Long id;
 
-    private Long playListId;
+    private Long playlistId;
 
     private Long userId;
 
