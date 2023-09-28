@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from database.orm import Song, SongQuiz, SongQuizRank
 from database.repository import SongRepository, SongQuizRepository, SongQuizRankRepository
 import random
@@ -9,6 +9,8 @@ import datetime
 import json
 
 from config.log_config  import logging
+import time
+
 
 logger = logging.getLogger(__name__)
 
@@ -120,7 +122,9 @@ class SongQuizService:
     ):
         count = 1000
 
-        similarity_datas = self.song_quiz_repository.get_all_song_similarity()
+        new_day = datetime.date.today() + datetime.timedelta(days=1)
+
+        similarity_datas = self.song_quiz_repository.get_all_song_similarity(new_day)
 
         # song_quiz 의 모든 정보를 가져와서 순위를 정렬해서 1000곡까지 slice
         sorted_rank_data = sorted(similarity_datas.items(), key = lambda x : float(x[1]), reverse= True)[:1000]
@@ -155,59 +159,95 @@ class SongQuizService:
     def get_song_result(
             self,
             song_name : str,
-    ) -> SongQuizSchema:
+    ) -> Optional[SongQuizSchema]:
         
         # 검색한 곡과 이름이 같은 곡들 조회
         # 같은 제목의 곡이 여러 개 존재 가능
+
+        logging.info(f"해당 제목에 하는 곡들 가져오기")
+        start_time = time.time()
+
         search_songs : List[Song] = self.song_repository.get_song_by_name(song_name)
 
+        end_time = time.time()
+        execution_time = end_time - start_time
+        logging.info(f"해당 제목에 하는 곡 실행 시간: {execution_time} 초")
 
-        search_result = []
-        # 검색한 곡 정보 없을 수 있다
-        if search_songs:
-
-            for search_song in search_songs:
-                
-                today = str(datetime.date.today())
-                today_song_quiz =  today + "_song_quiz"
-                today_song_rank = today + "_song_quiz_rank"
-
-                logging.info(f"today : {today}")
-                logging.info(f"search_song : {search_song.name} , search_song id : {search_song.id}")
-
-                logging.info(f"today_song_quiz {today_song_quiz}")
-
-                # 노래 유사도 조회
-                song_similarity : float = self.song_quiz_repository.get_song_similarity(search_song.id, today_song_quiz, True)
-
-                logging.info(f"song_similarity : {song_similarity}")
-
-                # 노래 순위 반환
-                song_rank : int = self.song_quiz_rank_repository.get_song_rank(search_song.id, today_song_rank)
-
-                logging.info(f"rank : {song_rank}")
-
-                # 해당 노래가 1000위 안에 안들 수 있다 -> None 반환
-                song_quiz = SongQuizSchema(id=search_song.id, title =search_song.name, rank=song_rank, similarity=song_similarity ,album_img= search_song.img_url, answer= False)
-
-                if song_rank == 1:
-                    song_quiz.answer = True
-
-
-                search_result.append(song_quiz)
-        else:
-            logging.info("검색한 곡이 존재하지 않습니다.")
-
-        # TODO : 유사도 높은 1개 반환
-        if search_result:
-
-            max_similarity_song = max(search_result, key= lambda x : x.similarity)
-
-            return max_similarity_song
         
-        else:
-
+        # 검색한 곡 정보 없을 수 있다
+        if not search_songs:
+            logging.info("검색한 곡이 존재하지 않습니다.")
             return []
+        
+        
+        search_result = []
+        # 한번에 순위 정보, 유사도 정보 가져오기
+
+        # 오늘 날짜의 유사도 정보 가져오기
+        today = datetime.date.today()
+
+        logging.info(f"유사도 가져오기")
+        start_time = time.time()
+
+        # 오늘 날짜의 유사도 정보 가져오기
+        similarity_datas = self.song_quiz_repository.get_all_song_similarity(today)
+
+        end_time = time.time()
+        execution_time = end_time - start_time
+        logging.info(f"유사도 실행 시간: {execution_time} 초")
+
+        logging.info(f"랭킹 가져오기")
+        start_time = time.time()
+
+        # 오늘 날짜의 순위 정보 가져오기
+        rank_datas = self.song_quiz_rank_repository.get_all_song_rank(today)
+
+        end_time = time.time()
+        execution_time = end_time - start_time
+        logging.info(f"랭킹 실행 시간: {execution_time} 초")
+
+
+        for search_song in search_songs:
+                
+            today_song_quiz =  str(today) + "_song_quiz"
+            today_song_rank = str(today) + "_song_quiz_rank"
+
+            logging.info(f"today : {today}, search_song : {search_song.name} , search_song id : {search_song.id}, today_song_quiz {today_song_quiz}")
+
+            # 노래 유사도 조회
+            song_id_byte = search_song.id.encode('utf-8')
+            song_similarity = similarity_datas.get(song_id_byte).decode('utf-8')
+
+            logging.info(f"song_similarity : {song_similarity}")
+
+            # 노래 순위 반환
+            song_rank_result = rank_datas.get(song_id_byte)
+
+            # 1000 위 안에 안들었을 수도 있다
+            if song_rank_result is not None:
+
+                song_rank = json.loads(song_rank_result.decode('utf-8')).get("rank")
+        
+                logging.info(f"rank : {song_rank}")
+            else:
+                song_rank = None
+
+            logging.info(f"rank : {song_rank}")
+
+            # 해당 노래가 1000위 안에 안들 수 있다 -> None 반환
+            song_quiz = SongQuizSchema(id=search_song.id, title =search_song.name, rank=song_rank, similarity=song_similarity ,album_img= search_song.img_url, answer= False)
+
+            if song_rank == 1:
+                song_quiz.answer = True
+
+            search_result.append(song_quiz)
+
+        # 유사도 높은 1개 반환
+        max_similarity_song = max(search_result, key= lambda x : x.similarity)
+
+        return [max_similarity_song]
+        
+
 
     
 

@@ -5,7 +5,7 @@ from typing import List, Optional
 
 from config.redis_config import redis_config
 from database.orm import Song
-from database.connection import SessionFactory
+from config.mysql_config import SessionFactory
 from database.orm import SongQuiz, SongQuizRank
 import datetime
 import json
@@ -170,6 +170,26 @@ class SongQuizRepository:
             similarity = similarity_datas.get(song_id).decode('utf-8')
 
         return similarity
+
+
+    """
+    여러 개의 HGET 요청을 일괄 처리하면 네트워크 오버헤드가 감소하고 성능이 향상될 수 있습니다. 
+    예를 들어, HGETALL을 한 번 호출하는 대신, HGET을 여러 번 호출한 다음 PIPELINE을 통해 실행할 수 있습니다.
+    """
+    """
+    def get_song_similarity(self, song_ids: List[str], key: str, check: bool) -> List[Float]:
+        with self.rd.pipeline() as pipe:
+            for song_id in song_ids:
+                if check:
+                    song_id_byte = song_id.encode('utf-8')
+                    pipe.hget(key, song_id_byte)
+                else:
+                    pipe.hget(key, song_id)
+            results = pipe.execute()
+
+        similarities = [result.decode('utf-8') if result else None for result in results]
+        return similarities
+    """
     
     """
     유사도 데이터 60시간 후 삭제
@@ -183,18 +203,37 @@ class SongQuizRepository:
     
 
     """
-    song_quiz 에 있는 모든 정보 조회 (cron 으로 rank 테이블에 데이터 저장할 때 사용)
+    song_quiz 에 있는 모든 정보 조회 (cron 으로 rank 테이블에 데이터 저장할 때 사용 시에는 parameter 에 내일 날짜)
     :return song_quiz 에 저장된 모든 데이터
     """
-    def get_all_song_similarity(self):
+    """
+    def get_all_song_similarity(self, day):
 
-        new_day = datetime.date.today() + datetime.timedelta(days=1)
+        # new_day = datetime.date.today() + datetime.timedelta(days=1)
 
-        key = str(new_day) + "_song_quiz"
+        key = str(day) + "_song_quiz"
         # song_quiz 에 저장한 모든 정보 가져오기
-        rank_datas = self.rd.hgetall(key)
+        similarity_datas = self.rd.hgetall(key)
 
-        return rank_datas
+        return similarity_datas
+    """
+    def get_all_song_similarity(self, day):
+        key = str(day) + "_song_quiz"
+        
+        # Create a pipeline
+        with self.rd.pipeline() as pipe:
+            # Use the pipeline to fetch all data in one go
+            pipe.hgetall(key)
+            
+            # Execute the pipeline and get the results
+            result = pipe.execute()
+        
+        # Extract the data from the result
+        similarity_datas = result[0]  # Assuming the data is the first (and only) result
+    
+        return similarity_datas
+    
+    
 
 
 
