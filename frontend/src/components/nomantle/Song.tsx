@@ -13,10 +13,12 @@ interface SongInfoItemProps{
 }
 
 export default function Song({songInfoItem} : SongInfoItemProps){
+
+
     return(
-        <div key={songInfoItem.index} className="flex items-center mb-10">
+        <div key={songInfoItem.index} className="flex items-center mb-10 text-lg">
         <div className="flex items-center justify-center w-1/5 mx-16">#{songInfoItem.index}</div>
-        <div className='w-1/6 mx-16'>
+        <div className='w-1/5 mx-16'>
             <img src={songInfoItem.album_img} alt="앨범 아트" className="" />
         </div>
         <div className="flex items-center justify-center w-1/5 mx-16">{songInfoItem.title}</div>
@@ -35,7 +37,7 @@ export default function Song({songInfoItem} : SongInfoItemProps){
             <div className="flex items-center justify-center mb-2 text-center">{songInfoItem.rank !== null ? songInfoItem.rank : "순위밖"}</div>
             <div className="h-full bg-white">
               <div
-                className="h-5 bg-gradient-to-r from-yesrae-0 to-yesrae-100"
+                className={`h-5 bg-gradient-to-r from-yesrae-0 to-yesrae-100 w-[${songInfoItem.similarity}]`}
                 style={{ width: `${songInfoItem.similarity}%` }}
               ></div>
             </div>

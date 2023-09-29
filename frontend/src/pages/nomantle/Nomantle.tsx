@@ -4,8 +4,7 @@ import { useEffect, useState } from "react";
 import Category from "../../components/nomantle/Category";
 import SongInfo from '../../components/nomantle/SongInfo';
 import { searchSong, getSongResult } from '../../api/nomantle';
-import { json } from 'react-router-dom';
-import Song from '../../components/nomantle/Song';
+
 
 interface Title{
   title : string;
@@ -36,10 +35,10 @@ export default function Nomantle(){
   const [errorMsg, setErrorMsg] = useState('');
 
 
-  // TODO : 정답일 경우 모달 보여주기 및 순위 보기 버튼으로 변경
-  //const [isAnswer, setAnswer] = useState(false);
+  // 정답일 경우 모달 보여주기 및 순위 보기 버튼으로 변경 -> O
+  const [isAnswer, setAnswer] = useState(false);
 
-  // TODO : 포기하기 모달 -> 버튼 위치 변경되는 문제
+  // 포기하기 모달 -> O
   const [isModalOpen, setIsModalOpen] = useState(false);
 
 
@@ -55,8 +54,9 @@ export default function Nomantle(){
       handleInput(inputValue);
     }else{
       setTitleList([]);
+      setErrorMsg('');
     }
-  }, [inputValue, errorMsg]);
+  }, [inputValue]);
 
   // input 에 입력 변경
   const onChangeSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,7 +69,7 @@ export default function Nomantle(){
       const data = await searchSong(song_name);
 
       setTitleList(data.song);
-      console.log("제목 : ", titleList);
+      console.log("제목 : ", titleList);  /// (if 초기값 아닐 떄 실행되게) useeffect 가 titlelist 추적 
     }catch(error){
       console.error('API 요청 중 오류 발생:', error);
     }
@@ -100,26 +100,48 @@ export default function Nomantle(){
     setisHovered(false)
   }
 
+
+  
+
   const handleGuess = async (song_name : string) => {
     try {
       const data = await getSongResult(song_name);
 
-      console.log("검색 결과 데이터입니다", data);
+      console.log("검색 결과 데이터입니다", data.song);
 
-      if (Array.isArray(data) && data.length > 0) {
-        // data 중에서 similarity 가 가장 높은 데이터 찾기
-          const maxSimilarityItem = data.reduce((maxItem, currentItem) => {
-            return currentItem.similarity > maxItem.similarity ? currentItem : maxItem;
-          });
+      if (data.song) {
+
+          setErrorMsg('');
+          const result = data.song[0];
           
           // localStorage 에서 꺼내오기
           const storedData = localStorage.getItem('song');
-          let localStorageData : SongInfo[]= storedData ? JSON.parse(storedData) : [];
+          const localStorageData : SongInfo[]= storedData ? JSON.parse(storedData) : [];
+
+          if(result.answer){
+            setAnswer(true);
+          }
 
           // 예전에 검색한 건지 확인하기
           const existingItemIndex = localStorageData.findIndex(
-            (item) => item.id === maxSimilarityItem.id
+            (item) => item.id === result.id
           )
+
+          // 새 데이터에 최대 index를 부여하기 위해 현재 최대 index를 찾음
+          const maxIndex = localStorageData.reduce((max, item) => {
+            return item.index > max ? item.index : max;
+          }, 0);
+
+          const newGuess : SongInfo = {
+            index : maxIndex + 1,
+            id : result.id,
+            title : result.title,
+            rank : result.rank,
+            album_img : result.album_img,
+            answer : result.answer,
+            similarity : result.similarity
+          }
+
           // 로컬스토리지에 저장되어 있지 않은 경우
           if(existingItemIndex !== -1){
             const existingItem = localStorageData[existingItemIndex];
@@ -127,7 +149,7 @@ export default function Nomantle(){
             localStorageData.unshift(existingItem)
           }else{
             // 최신이어서 가장 앞에 추가
-            localStorageData.unshift(maxSimilarityItem);
+            localStorageData.unshift(newGuess);
           }
           // 로컬 스토리지 저장
         localStorage.setItem('song', JSON.stringify(localStorageData));
@@ -137,7 +159,7 @@ export default function Nomantle(){
         // input 목록 지우기
         setTitleList([]);
 
-        setErrorMsg('');
+        //setErrorMsg('');
       } else {
         setErrorMsg(`${song_name}은 존재하지 않는 곡 제목입니다.`);
       }
@@ -169,29 +191,51 @@ export default function Nomantle(){
     setIsModalOpen(false);
   };
 
-  // TODO localStorage 에 검색 목록 , 정답 여부 저장
+  // localStorage 에 검색 목록 , 정답 여부 저장 -> O
   
 
-    useEffect(() => {
-      // localstorage 에 저장되어 있는 데이터 가져오기
-      const storedData = localStorage.getItem('song'); 
+  useEffect(() => {
+    // localstorage 에 저장되어 있는 데이터 가져오기
+    const storedData = localStorage.getItem('song'); 
 
-      if (storedData) {
-        const data :SongInfo[] = JSON.parse(storedData);
+    if (storedData) {
+      const data :SongInfo[] = JSON.parse(storedData);
 
-          data.sort((a, b) => {
-            if(a === data[0]) return -1;
-            if(b === data[0]) return 1;
-            return b.similarity - a.similarity;
-          })
- 
-        setSongInfoLocalStorage(data);
-      }else{
-
-        setSongInfoLocalStorage([]);
+      let maxIndexItem = data[0];
+      
+      for (const item of data) {
+        if (item.index > maxIndexItem.index) {
+          maxIndexItem = item;
+        }
       }
-    }, []);
+  
+      // maxIndexItem을 배열에서 제거
+      const indexToRemove = data.findIndex((item) => item === maxIndexItem);
+      if (indexToRemove !== -1) {
+        data.splice(indexToRemove, 1);
+      }
+  
+      // similarity 내림차순으로 정렬
+      data.sort((a, b) => b.similarity - a.similarity);
+  
+      // maxIndexItem을 배열의 맨 앞에 추가
+      data.unshift(maxIndexItem);
 
+      setSongInfoLocalStorage(data);
+
+      const answer = data.some((item) => item.answer === true);
+      setAnswer(answer);
+  
+      // songInfoLocalStorage 업데이트
+      localStorage.setItem('song', JSON.stringify(data));
+    }else{
+
+      setSongInfoLocalStorage([]);
+      setAnswer(false); // 로컬 스토리지에 데이터가 없을 때 isAnswer를 false로 설정
+    }
+  }, []);
+
+ 
 
   const category = ["#", "앨범 아트", "추측한 노래", "유사도", "유사도 순위"];
 
@@ -215,32 +259,45 @@ export default function Nomantle(){
             )}
           </div>
         </div>
+
           <div className="flex mt-20">
             <div className='flex flex-col items-start'>
-            <input
-                  id = "song_title_input"
-                  type= "text"
-                  className="h-12 text-lg text-white rounded-xl w-96 pl-11 bg-yesrae-900 "
-                  placeholder="추측할 노래 제목을 입력하세요"
-                  onChange={onChangeSearch}
-                  onKeyDown={onHandleKeyDown}
-                  onKeyPress={handleInputKeyPress}
-                  value = {inputValue}
-              />
-              {titleList.length > 0 && (
-                <ul>
-                {titleList.map((song, idx) => (
-                  <li key={idx} className='p-2 border border-gray-300 rounded-sm w-96 hover:bg-gray-800' onClick={() => handleListItemClick(song.title)}>{song.title}</li>                 
-                ))}
-                </ul>
-              )}
-            </div>
-            
+              <input
+                    id = "song_title_input"
+                    type= "text"
+                    className="h-12 text-lg text-white rounded-xl w-96 pl-11 bg-yesrae-900 "
+                    placeholder="추측할 노래 제목을 입력하세요"
+                    onChange={onChangeSearch}
+                    onKeyDown={onHandleKeyDown}
+                    onKeyPress={handleInputKeyPress}
+                    value = {inputValue}
+                />
+                {titleList.length > 0 && (
+                  <ul>
+                  {titleList.map((song, idx) => (
+                    <li key={idx} className='p-2 border border-gray-300 rounded-sm w-96 hover:bg-gray-800' onClick={() => handleListItemClick(song.title)}>{song.title}</li>                 
+                  ))}
+                  </ul>
+                )}
+              </div>
             <button type="button" className="flex items-center justify-center w-24 h-12 mx-28 rounded-xl bg-yesrae-900 hover:bg-gray-800" onClick={handleButtonClick}>
                 추측하기
             </button>
           </div>
-          <div className='w-4/6'>
+                  
+          <div className='w-6/8'>
+            {
+              isAnswer &&
+              <div className="fixed top-0 bottom-0 left-0 right-0 flex items-center justify-center w-1/3 m-auto text-3xl h-1/3 bg-gradient-to-r from-yesrae-0 to-yesrae-100 ">
+                <div className="modal-content ">
+                  <span className="absolute top-0 right-0 p-4 text-lg cursor-pointer close" onClick={closeModal}>&times;</span>
+                  <div className="flex flex-col items-center h-full">
+                    <p className="mt-4">정답입니다!</p>
+                  </div>
+                </div>
+              </div>
+              
+            }
             {errorMsg && <p className='mt-10 text-center text-yesrae-0'>{errorMsg}</p>}
             <div className="mt-24">
               <Category categories={category}/>
@@ -251,21 +308,33 @@ export default function Nomantle(){
             </div>
           </div>
           <div>
-              <button type="button" className="flex items-center justify-center w-24 h-12 my-28 rounded-xl bg-yesrae-900 hover:bg-gray-800" onClick={openModal}>
-                    포기하기
+            {
+
+              isAnswer? (
+                <button type="button" className="flex items-center justify-center w-24 h-12 text-lg rounded-lg my-28 bg-yesrae-900 hover:bg-gray-800" onClick={openModal}>
+                  순위 보기
+                </button>
+                )
+              :
+              (
+              <button type="button" className="flex items-center justify-center w-24 h-12 text-lg rounded-lg my-28 bg-yesrae-900 hover:bg-gray-800" onClick={openModal}>
+                포기하기
               </button>
+              )
+            }
+              
               {isModalOpen && (
-                <div className="modal">
-                  <div className="modal-content">
-                    <span className="close" onClick={closeModal}>&times;</span>
-                    <div>
-                      <p>순위를 보시겠습니까? </p>
-                      <button type="button" className="flex items-center justify-center w-24 h-12 my-28 rounded-xl bg-yesrae-900 hover:bg-gray-800" >
-                            순위보기 
-                      </button>
-                    </div>
+                <div className="fixed top-0 bottom-0 left-0 right-0 flex flex-col items-center justify-center w-1/3 m-auto bg-gray-900 border border-gray-700 rounded-lg modal h-1/3 ">
+                <div className="modal-content ">
+                  <span className="absolute top-0 right-0 p-4 text-lg cursor-pointer close" onClick={closeModal}>&times;</span>
+                  <div className="flex flex-col items-center h-full">
+                    <p className="mt-4 mb-24 text-xl">순위를 보시겠습니까?</p>
+                    <button type="button" className="flex items-center justify-center w-24 h-12 text-xl rounded-lg bg-yesrae-900 hover:bg-gray-800">
+                      순위보기
+                    </button>
                   </div>
                 </div>
+              </div>
               )}
           </div>
         </div>

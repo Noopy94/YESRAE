@@ -3,6 +3,7 @@ import Login from '../src/pages/user/Login';
 import Regist from '../src/pages/user/Regist';
 import Main from '../src/pages/main/Main';
 import Nomantle from './pages/nomantle/Nomantle';
+import NomantleRank from './pages/nomantle/NomantleRank';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/user/login" element={<Login />} />
         <Route path="/user/regist" element={<Regist />} />
         <Route path="/quiz" element={<Nomantle/>}/>
+        <Route path="/quiz/rank" element={<NomantleRank/>}/>
       </Routes>
     </Router>
   );
