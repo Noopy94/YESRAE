@@ -148,9 +148,7 @@ def getMelody(y, sr, today_song_file = None, method="mfcc"):
     elif method == "kaldi_mfcc":
         y, sr = torchaudio.load(today_song_file)
         feature = torchaudio.compliance.kaldi.mfcc(y, num_ceps=40, num_mel_bins=40).numpy()
-    elif method == "kaldi_fbank":
-        y, sr = torchaudio.load(today_song_file)
-        feature = torchaudio.compliance.kaldi.fbank(y).numpy()
+    
     else:
     # 피치 정보
         melody, _ = librosa.core.piptrack(y=y, sr=sr)

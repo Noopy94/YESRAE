@@ -36,7 +36,7 @@ scheduler = BackgroundScheduler()
 
 # 스케줄러 실행되는 것 확인 완료
 # 시간 설정
-scheduler.add_job(song_quiz_update, "cron", hour= 1, minute = 4)
+scheduler.add_job(song_quiz_update, "cron", hour= 23, minute = 30)
 
 scheduler.start()
 

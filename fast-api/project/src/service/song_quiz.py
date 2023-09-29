@@ -267,6 +267,7 @@ class SongQuizService:
         if search_songs:
             logging.info("해당 입력으로 시작하는 곡들 존재")
 
+            # for name, id, artist_name in search_songs:
             for song in search_songs:
 
                 song_title = SongTitleSchema(id = song.id, title = song.name, singer = song.artist_name)
@@ -298,11 +299,7 @@ class SongQuizService:
         # rank 전체 조회
         rank_datas = self.song_quiz_rank_repository.get_all_song_rank(today)
 
-        logging.info(f"rank_datas!! {rank_datas}")
-
         rank_info = []
-
-        logging.info("rank data item!!", rank_datas.items())
   
         # 해당 ID 로 유사도 조회
         if rank_datas:
