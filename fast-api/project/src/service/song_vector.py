@@ -6,8 +6,10 @@ from util.song_analyze import getMusic, loadmusic, getMelody, deleteFile
 import os
 
 class SongVector:
-    song_repository = SongRepository()
-    song_vector_repository = SongVectorRepository()
+    def __init__(self):
+        
+        self.song_repository = SongRepository()
+        self.song_vector_repository = SongVectorRepository()
 
     """
     mongo db 에 추출한 벡터값 저장
@@ -33,7 +35,7 @@ class SongVector:
 
                 y, sr = loadmusic(song_file)
 
-                mel_mean_var_concat = getMelody(y, sr)
+                mel_mean_var_concat = getMelody(y, sr, song_file, "kaldi_mfcc")
 
                 print("type : ", type(mel_mean_var_concat))
 
@@ -49,14 +51,6 @@ class SongVector:
 
             except:
                 deleteFile(song_name)
-
-
-    "노래 추천하기"
-    def get_recommend_songs(songs : RecommendSongRequest):
-        # 전체 노래 가져와서 (특성값 list 저장)
-        # RecommendSongRequest 에는 최대 5곡 
-        # 현재 노래와 ANNOY 통해서 한곡 당 최대 10곡 선정
-        pass
 
 
 

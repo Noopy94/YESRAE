@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-from schema.request import RecommendSongRequest
 from service.song_vector import SongVector
 import logging
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -8,7 +7,9 @@ router = APIRouter()
 
 song_vector_service = SongVector()
 
-
+"""
+노래 vector 값 추출 후 저장
+"""
 def save_song_vector(
 ):
     logging.info("노래 특성값 DB 에 저장")
@@ -22,10 +23,3 @@ scheduler = BackgroundScheduler()
 scheduler.add_job(save_song_vector, "cron", hour= 7, minute = 42)
 
 scheduler.start()
-
-
-# 노래 ID 바탕으로 추천할 노래 선정
-async def song_recommend(
-    songs_to_recommend : RecommendSongRequest
-):
-    song_vector_service.recommend_songs(songs_to_recommend)

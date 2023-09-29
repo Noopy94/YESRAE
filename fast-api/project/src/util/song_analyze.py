@@ -42,6 +42,8 @@ import librosa
 import numpy as np
 import wget
 import os
+import torchaudio
+import torch
 
 
 """
@@ -104,6 +106,7 @@ def getTempo(y, sr):
 :sr : 샘플링 주파수, 속도
 :return : 멜 스펙토그램 
 """
+"""
 # 입력 받은 노래의 멜로디 정보 추출
 def getMelody(y, sr):
 
@@ -127,6 +130,48 @@ def getMelody(y, sr):
     mel_mean_var_concat = np.concatenate((mel_freqs_mean, mel_freqs_var), axis = 0)
     print("mel_mean_var_concat : ",  mel_mean_var_concat.shape)
     return mel_mean_var_concat
+"""
+
+"""
+피치 추적, 멜 스펙토그램 정보 추출
+:y  : 오디오 시계열 데이터
+:sr : 샘플링 주파수, 속도
+:return : 멜 스펙토그램 
+"""
+# 입력 받은 노래의 멜로디 정보 추출
+def getMelody(y, sr, today_song_file = None, method="mfcc"):
+
+    # 간격 조절
+
+    if method == "librosa_mfcc":
+        feature = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13).transpose(0, 1)
+    elif method == "kaldi_mfcc":
+        y, sr = torchaudio.load(today_song_file)
+        feature = torchaudio.compliance.kaldi.mfcc(y, num_ceps=40, num_mel_bins=40).numpy()
+    elif method == "kaldi_fbank":
+        y, sr = torchaudio.load(today_song_file)
+        feature = torchaudio.compliance.kaldi.fbank(y).numpy()
+    else:
+    # 피치 정보
+        melody, _ = librosa.core.piptrack(y=y, sr=sr)
+    # S : 스펙토그램
+    # mel_freqs = librosa.feature.melspectrogram(S=melody, sr=sr, n_mels=60)
+        feature = librosa.feature.melspectrogram(S=melody, sr=sr)
+    
+    print("mel_freq_shape : ", feature.shape)
+    print("type : ", type(feature[0][0]))
+
+    # 평균
+    mel_freqs_mean = np.mean(feature, axis=1)
+    # 분산
+    mel_freqs_var = np.var(feature, axis=1)
+    print("mel_freq_mean_shape :", mel_freqs_mean.shape)
+    print("mel_freqs_var_shape :", mel_freqs_var.shape)
+
+    mel_mean_var_concat = np.concatenate((mel_freqs_mean, mel_freqs_var), axis = 0)
+    print("mel_mean_var_concat : ",  mel_mean_var_concat.shape)
+    return  
+
 
 
 """

@@ -325,18 +325,25 @@ class SongQuizRankRepository:
 
 class SongVectorRepository():
 
-    # col = mongo_db["song_vector"]
 
-    # def __init__(self) -> None:
-    #     self.col = mongo_db.song_vector
     
     """
-    vector 데이터 저장
+    song_vector collection 에 vector 데이터 저장
     """
     def save_vector(self, song_vector : json):
         song_vector_id = collection.insert_one(song_vector).inserted_id
 
         logging.info(f"song_vector_id : {song_vector_id}")
+
+    
+    """
+    song_vector collection 에 저장되어 있는 vector 데이터 모두 조회
+    """
+    def get_vector_data(self):
+        
+        vector_data = list(collection.find({}))
+        return vector_data
+
 
 
     
