@@ -26,6 +26,9 @@ class SongQuizSchema(BaseModel):
 
 """
 노래 제목 입력 결과
+id : 노래 ID
+title : 노래 제목
+singer : 가수
 """
 class SongTitleSchema(BaseModel):
     id : str
@@ -35,6 +38,11 @@ class SongTitleSchema(BaseModel):
 
 """
 전체 정답곡과 유사도 높은 1000곡 결과
+id : 노래 ID
+title : 노래 제목
+similarity : 정답곡과의 유사도
+singer : 가수
+rank : 순위
 """
 class SongTotalRankSchema(BaseModel):
     id : str

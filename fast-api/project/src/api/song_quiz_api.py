@@ -44,9 +44,10 @@ scheduler.start()
 노래 추측에 대한 결과 
 song name 으로 조회 -> song id 로 -> similiarity 순위 조회
 SearchSongQuizRequest : name (추측하는 노래 이름)
-List[SongQuizSchema] : 노래 ID, 제목, 유사도, 순위, 앨범 이미지, 정답 여부 
+
+return : Optional[SongQuizSchema] : 노래 ID, 제목, 유사도, 순위, 앨범 이미지, 정답 여부 
 """
-@router.post("/quiz", status_code=200)
+@router.post("/quiz", status_code=200, response_model=Dict[str ,Optional[SongQuizSchema]])
 async def song_guess(
         search_request : SearchSongQuizRequest,
     ):
@@ -65,8 +66,8 @@ async def song_guess(
 
 """
 사용자 입력시 해당 글자로 시작하는 곡 5개 반환
-request : 곡 제목
-response : 해당 곡 제목으로 시작하는 유사한 제목의 곡 5곡
+SearchSongQuizRequest : 곡 제목
+return : Dict[str, List[SongTitleSchema]] : 해당 곡 제목으로 시작하는 유사한 제목의 곡 5곡
 """
 @router.post("/quiz/search", status_code=200, response_model=Dict[str, List[SongTitleSchema]])
 async def song_search(
@@ -86,7 +87,8 @@ async def song_search(
     
 
 """
-1000개의 유사도 순위 보기 정보
+노맨틀 1000개의 유사도 순위 보기 정보
+return : Dict[str, List[SongTotalRankSchema]] : 노맨틀 정답곡과 그와 유사한 곡 포함 1000곡
 """
 @router.get("/quiz/result", status_code=200, response_model=Dict[str, List[SongTotalRankSchema]])
 async def song_ranks(

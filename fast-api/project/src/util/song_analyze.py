@@ -1,37 +1,3 @@
-# 노맨틀 계획
-
-"""
-==================초기 계획==================
-1. spotify 30 초 미리 듣기를 다운 받는다 (구현 O) 
-2. 해당 데이터를 wav로 바꾸고 음원 분석 수행 후 지운다 (구현 O)
-3. 음원 파일에서 음원 분석 기준(템포, mel_freq) 추출 (구현 O)
-4. 음원 분석 데이터 DB에 저장 -> 유사도를 구하기 위한 데이터  (템포 컬럼, mel_freqs 컬럼 저장) (FAST API 사용)
-5. 매일 일정한 시간이 되면 정답 곡 한개 선택 (인기도 고려) (1. cron 사용 2. 인기도 높은 곡에서 랜덤 선택 )
-6. 템포, mel_freq 기준으로 두 곡간 유사도 구하는 메소드 (구현 O)
-7. 정답곡을 기준으로 해당 곡과의 전체 곡의 유사도를 계산
-8. DB 에 매일 정답곡 기준으로 유사도 데이터 [노래 id : 유사도] 저장 (유사도 높은 순 정렬) (redis 사용)
-"""
-
-
-"""
-==================변경 사항==================
-문제 : spotify 30초 미리 듣기 없는 경우가 존재 -> 음원 파일에서 템포, 멜로디 (mel_freq) 추출 불가
-대안 : spotify API 에서 제공하는 음악에 대한 특징값 이용해서 가중치로 유사도 구하기 
-        acousticness : 0 ~ 1 
-        danceability : 0 ~ 1 
-        energy : 0 ~ 1 
-        instrumentalness :  0 ~ 1 
-        key: -1 ~ 11
-        liveness ~= 0 ~ 1 
-        loudness = -60 ~ 0
-        mode : 0 ~ 1
-        speechiness : 0 ~ 1
-        tempo : not defined
-        time_signature : 3 ~ 7
-        valence : 0 ~ 1
-
-"""
-
 
 """
 음원 박자, 멜로디 정보 분석 후 유사도 계산
@@ -106,31 +72,7 @@ def getTempo(y, sr):
 :sr : 샘플링 주파수, 속도
 :return : 멜 스펙토그램 
 """
-"""
-# 입력 받은 노래의 멜로디 정보 추출
-def getMelody(y, sr):
 
-    # 간격 조절
-
-    # 피치 정보
-    melody, _ = librosa.core.piptrack(y=y, sr=sr)
-    # S : 스펙토그램
-    # mel_freqs = librosa.feature.melspectrogram(S=melody, sr=sr, n_mels=60)
-    mel_freqs = librosa.feature.melspectrogram(S=melody, sr=sr)
-    print("mel_freq_shape : ", mel_freqs.shape)
-    print("type : ", type(mel_freqs[0][0]))
-
-    # 평균
-    mel_freqs_mean = np.mean(mel_freqs, axis=1)
-    # 분산
-    mel_freqs_var = np.var(mel_freqs, axis=1)
-    print("mel_freq_mean_shape :", mel_freqs_mean.shape)
-    print("mel_freqs_var_shape :", mel_freqs_var.shape)
-
-    mel_mean_var_concat = np.concatenate((mel_freqs_mean, mel_freqs_var), axis = 0)
-    print("mel_mean_var_concat : ",  mel_mean_var_concat.shape)
-    return mel_mean_var_concat
-"""
 
 """
 피치 추적, 멜 스펙토그램 정보 추출

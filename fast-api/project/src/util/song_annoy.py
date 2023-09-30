@@ -57,7 +57,7 @@ def annoy(target_songs):
 
     logging.info(f"노래 추천 시작")
 
-    # 추천받을 노래들의 
+    # 추천받을 노래들의 idx
     for idx in target_idx:
 
         annoy_result = u.get_nns_by_item(idx, 10)

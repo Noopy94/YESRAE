@@ -22,19 +22,9 @@ class SongRecommend:
 
         for song in recommend_song:
 
-            song_info = RecommendSongSchema(song_id=song)
+            song_info = RecommendSongSchema(id=song)
 
             result.append(song_info)
 
         return result
-
-
-        
-        
-        
-
-
-
-        
-
 

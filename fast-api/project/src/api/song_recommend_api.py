@@ -7,13 +7,13 @@ router = APIRouter()
 song_recommend_service = SongRecommend()
 
 """
-노래 ID 바탕으로 추천할 노래 선정
+노래 ID 바탕으로 추천 노래 반환
 """
 @router.post("/recommend", status_code=200)
 async def song_recommend(
     songs_recommend_request : RecommendSongRequest
 ):
-    logging.info(f"요청 들어옴")
+
     song_name = songs_recommend_request.songs
     
     song_list = []

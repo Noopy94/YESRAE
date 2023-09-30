@@ -71,10 +71,7 @@ class SongQuizService:
 
         return today_song
 
-    """
-    TODO : 검색할때 일치하는 곡이 많아서 오래 걸리는 문제 -> DB 유사도 테이블에 
-    """
-
+ 
     """
     노맨틀 정답곡과 DB 에 있는 나머지 곡들과 의 유사도 계산해서 song_quiz 테이블에 저장
     """
@@ -102,6 +99,8 @@ class SongQuizService:
 
             if similarity < 100:
                 similarity = similarity *0.8
+            else:
+                similarity = 100
 
             song_quiz: SongQuiz = SongQuiz.create(id=song.id, similarity=similarity)
 
@@ -109,8 +108,6 @@ class SongQuizService:
         
         # 60 시간 후 유사도 데이터 삭제
         self.song_quiz_repository.expire_similarity_data()
-
-
 
 
 
@@ -164,20 +161,13 @@ class SongQuizService:
         # 검색한 곡과 이름이 같은 곡들 조회
         # 같은 제목의 곡이 여러 개 존재 가능
 
-        logging.info(f"해당 제목에 하는 곡들 가져오기")
-        start_time = time.time()
-
         search_songs : List[Song] = self.song_repository.get_song_by_name(song_name)
 
-        end_time = time.time()
-        execution_time = end_time - start_time
-        logging.info(f"해당 제목에 하는 곡 실행 시간: {execution_time} 초")
-
-        
+       
         # 검색한 곡 정보 없을 수 있다
         if not search_songs:
             logging.info("검색한 곡이 존재하지 않습니다.")
-            return []
+            return None
         
         
         search_result = []
@@ -186,25 +176,11 @@ class SongQuizService:
         # 오늘 날짜의 유사도 정보 가져오기
         today = datetime.date.today()
 
-        logging.info(f"유사도 가져오기")
-        start_time = time.time()
-
         # 오늘 날짜의 유사도 정보 가져오기
         similarity_datas = self.song_quiz_repository.get_all_song_similarity(today)
 
-        end_time = time.time()
-        execution_time = end_time - start_time
-        logging.info(f"유사도 실행 시간: {execution_time} 초")
-
-        logging.info(f"랭킹 가져오기")
-        start_time = time.time()
-
         # 오늘 날짜의 순위 정보 가져오기
         rank_datas = self.song_quiz_rank_repository.get_all_song_rank(today)
-
-        end_time = time.time()
-        execution_time = end_time - start_time
-        logging.info(f"랭킹 실행 시간: {execution_time} 초")
 
 
         for search_song in search_songs:
@@ -228,7 +204,6 @@ class SongQuizService:
 
                 song_rank = json.loads(song_rank_result.decode('utf-8')).get("rank")
         
-                logging.info(f"rank : {song_rank}")
             else:
                 song_rank = None
 
@@ -245,11 +220,9 @@ class SongQuizService:
         # 유사도 높은 1개 반환
         max_similarity_song = max(search_result, key= lambda x : x.similarity)
 
-        return [max_similarity_song]
+        return max_similarity_song
         
 
-
-    
 
     """
     사용자 입력시 해당 글자로 시작하는 곡 5개 반환
@@ -325,7 +298,3 @@ class SongQuizService:
         return sorted_rank_info
 
                 
-
-
-        
-
