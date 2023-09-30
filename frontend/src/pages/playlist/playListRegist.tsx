@@ -5,19 +5,24 @@ import PlayListCarousel from '../../components/common/PlayListCarousel';
 import { defaultsongs, defaultplayLists } from '../../recoil/defaultdata/data';
 import { userState } from '../../recoil/user/user';
 import { useRecoilState } from 'recoil';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { isListState } from '../../recoil/currentpage/currentPage';
-import '../../styles.css';
 
-export default function Main() {
+export default function PlayListRegist() {
   // 노래, 플레이 리스트 데이터 샘플, 나중에 api로 가져올 예정
   const [User, setUser] = useRecoilState(userState);
   const [isList, setIsList] = useRecoilState(isListState);
+  const navigate = useNavigate();
 
   useEffect(() => {
     //api 이용해서 userState 바뀔 때만 추천 알고리즘 변경
     // 로그아웃하고 다시 오면 추천 변경 되게
   }, [userState]);
+
+  useEffect(() => {
+    if (User.accessToken === '') navigate('/');
+  }, []);
 
   function UserRecommend() {
     if (User.nickname) {
@@ -47,7 +52,7 @@ export default function Main() {
         <div className="w-2/12">
           <HeaderNav />
         </div>
-        <main className="w-10/12 pt-12 pl-20 scrollbar-hide">
+        <main className="w-10/12 pt-12 pl-20 ">
           <div className="flex justify-center h-64 border-2 border-gray-800 w-280 ">
             대충 노래꼬맨틀 할래요? 광고
           </div>

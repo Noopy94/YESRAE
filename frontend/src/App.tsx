@@ -5,7 +5,7 @@ import Main from '../src/pages/main/Main';
 import PlayList from './pages/playlist/PlayList';
 import PlayListDetail from './pages/playlist/PlayListDetail';
 import LoginRedirect from './pages/user/LoginRedirect';
-
+import PlayListRegist from './pages/playlist/playListRegist';
 
 function App() {
   return (
@@ -17,6 +17,7 @@ function App() {
         <Route path="/oauth2" element={<LoginRedirect />} />
         <Route path="/playlist" element={<PlayList />} />
         <Route path="/playlist/:userId" element={<PlayList />} />
+        <Route path="/registplaylist" element={<PlayListRegist />} />
         <Route
           path="/playlistdetail/:playListId"
           element={<PlayListDetail />}

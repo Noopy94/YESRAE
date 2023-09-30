@@ -10,3 +10,8 @@ export const currentPageState = atom({
   key: 'currentPageState',
   default: initialPageState,
 });
+
+export const isListState = atom({
+  key: 'isListState',
+  default: false,
+});

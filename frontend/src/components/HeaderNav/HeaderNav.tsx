@@ -73,7 +73,7 @@ export default function HeaderNav() {
   };
 
   return (
-    <div className="fixed w-64 h-full bg-black border-r border-gray-900">
+    <div className="fixed z-30 w-64 h-full bg-black border-r border-gray-900">
       <Link to="/">
         <img src={Logo} alt="YESRAE LOGO" className="py-4 px-7" />
       </Link>

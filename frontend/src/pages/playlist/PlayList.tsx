@@ -8,7 +8,10 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { currentPlayListState } from '../../recoil/playlist/currentPlayList';
 import MyPlayListCarousel from '../../components/common/MyPlayListCarousel';
-import { currentPageState } from '../../recoil/currentpage/currentPage';
+import {
+  currentPageState,
+  isListState,
+} from '../../recoil/currentpage/currentPage';
 import { Link } from 'react-router-dom';
 
 export default function PlayList() {
@@ -17,10 +20,13 @@ export default function PlayList() {
   const [User, setUser] = useRecoilState(userState);
   const { userId } = useParams();
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
+  const [isList, setIsList] = useRecoilState(isListState);
 
   useEffect(() => {
     setCurrentPage({ pageName: 'PlayList' });
   }, []);
+
+  window.scrollTo(0, 0);
 
   // useEffect(() => {
   //   axios
@@ -42,18 +48,23 @@ export default function PlayList() {
         <main className="w-10/12 pt-12 pl-20">
           <header className="flex">
             <Link to="/playlist">
-              <div className="text-xl font-semibold text-white hover:text-yesrae-0">
+              <div className="pr-12 text-xl font-semibold text-white hover:text-yesrae-0">
                 플레이 리스트
               </div>
             </Link>
             <Link to="/follower">
-              <div className="px-12 text-xl font-semibold text-gray-700 hover:font-semibold hover:text-white">
+              <div className="pr-12 text-xl font-semibold text-gray-700 hover:font-semibold hover:text-white">
                 팔로우
               </div>
             </Link>
             <Link to="/mypage">
-              <div className="text-xl font-semibold text-gray-700 hover:font-semibold hover:text-white">
+              <div className="pr-12 text-xl font-semibold text-gray-700 hover:font-semibold hover:text-white">
                 회원 정보 수정
+              </div>
+            </Link>
+            <Link to="/registplaylist">
+              <div className="text-xl font-semibold text-gray-700 hover:font-semibold hover:text-white">
+                플레이 리스트 등록
               </div>
             </Link>
           </header>
@@ -95,7 +106,7 @@ export default function PlayList() {
           </div>
         </main>
       </div>
-      <footer className="flex">
+      <footer>
         <MusicPlayer />
       </footer>
     </div>

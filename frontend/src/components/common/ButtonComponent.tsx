@@ -20,7 +20,7 @@ export default function ButtonComponent({
     margin = 'm-1';
   } else if (type === 'isSmall') {
     buttonCss =
-      'rounded w-32 h-10 bg-yesrae-0 hover:bg-yesrae-100 hover:font-semibold';
+      'rounded w-32 h-10 bg-gradient-to-r from-yesrae-0 to-yesrae-100';
   } else if (type === 'istiny') {
     buttonCss =
       'rounded w-32 h-10 bg-gray-700 hover:font-semibold hover:bg-gray-800 ';

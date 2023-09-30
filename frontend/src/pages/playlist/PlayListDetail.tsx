@@ -141,7 +141,7 @@ export default function PlayListDetail() {
           </div>
         </main>
       </div>
-      <footer className="flex">
+      <footer>
         <MusicPlayer />
       </footer>
     </div>

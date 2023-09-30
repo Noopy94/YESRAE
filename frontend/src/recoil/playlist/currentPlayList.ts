@@ -9,7 +9,6 @@ const initialCurrentPlayListState: PlayList = {
   playListTitle: '플레이리스트 제목',
   playListDescription:
     '플레이 리스트 상세 설명 에ㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔㅔ ',
-  playListSongs: [],
   playListImageUrl: '',
 };
 

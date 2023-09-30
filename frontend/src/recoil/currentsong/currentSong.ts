@@ -3,11 +3,13 @@ import { Song } from '../defaultdata/data';
 
 // 플레이 리스트 초기상태
 const initialCurrentSongState = {
-  songId: '',
-  songTitle: '',
-  songUrl: '',
-  songArtist: '',
-  songImgUrl: '',
+  songId: '3cGp1jXxLReLKz7QgVbWZR',
+  songTitle: 'Hello',
+  songUrl:
+    'https://p.scdn.co/mp3-preview/09b71fad1e13164f43c9248ecc8d9ab85abd9ae8?cid=b76e1a72191a49e1bd4cc3b5aaa2511b',
+  songArtist: '조이',
+  songImgUrl:
+    'https://i.scdn.co/image/ab67616d00001e0266ff63bc084fb412aa2dddd3',
 };
 
 const initialCurrentSongListState: Song[] = [
