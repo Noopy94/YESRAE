@@ -1,6 +1,14 @@
 pipeline {
     agent any
 
+    tools {
+        jdk 'openjdk-17-jdk'
+    }
+
+    environment {
+        JAVA_HOME = "tool openjdk-17-jdk"
+    }
+
     stages {
         // Gradle 빌드 스테이지: Spring Boot 프로젝트를 빌드합니다.
         stage('Gradle Build') {
