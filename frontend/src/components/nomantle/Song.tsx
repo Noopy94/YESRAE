@@ -36,17 +36,19 @@ export default function Song({ songInfoItem }: ISongInfoItemProps) {
         </div>
       )}
 
-      <div className="flex items-center justify-center w-1/5 mx-16">
-        <div className="flex mb-2 text-xl text-center">
+      <div className="w-1/5 mx-16">
+        <div className="mb-2 text-xl text-center">
           {songInfoItem.rank !== null
             ? songInfoItem.rank.toString() + '위'
             : '순위밖'}
         </div>
-        <div className="h-full bg-white">
-          <div
-            className="h-5 bg-gradient-to-r from-yesrae-0 to-yesrae-100"
-            style={{ width: `${songInfoItem.similarity}%` }}
-          ></div>
+        <div className="flex justify-center">
+          <div className="flex items-center w-4/6 h-full bg-white">
+            <div
+              className="flex items-center h-5 bg-gradient-to-r from-yesrae-0 to-yesrae-100"
+              style={{ width: `${songInfoItem.similarity}%` }}
+            ></div>
+          </div>
         </div>
       </div>
     </div>

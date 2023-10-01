@@ -306,7 +306,7 @@ export default function Nomantle() {
         </div>
       ) : null}
 
-      <div className="w-6/8">
+      <div className="w-10/12">
         {isAnswer && (
           <div className="fixed top-0 bottom-0 left-0 right-0 flex items-center justify-center w-1/3 m-auto text-3xl h-1/3 bg-gradient-to-r from-yesrae-0 to-yesrae-100 ">
             <div className="modal-content ">
@@ -325,11 +325,11 @@ export default function Nomantle() {
         {errorMsg && (
           <p className="mt-10 text-center text-yesrae-0">{errorMsg}</p>
         )}
-        <div className="mt-24">
+        <div className="flex justify-center mt-24 ">
           <Category categories={category} />
           <hr />
         </div>
-        <div className="mt-8">
+        <div className="flex justify-center mt-8">
           {songInfoLocalStorage.length > 0 && (
             <SongInfo song={songInfoLocalStorage} />
           )}
