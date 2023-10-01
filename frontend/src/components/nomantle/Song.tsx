@@ -43,12 +43,14 @@ export default function Song({ songInfoItem }: ISongInfoItemProps) {
             : '순위밖'}
         </div>
         <div className="flex justify-center">
-          <div className="flex items-center w-4/6 h-full bg-white">
-            <div
-              className="flex items-center h-5 bg-gradient-to-r from-yesrae-0 to-yesrae-100"
-              style={{ width: `${songInfoItem.similarity}%` }}
-            ></div>
-          </div>
+          {songInfoItem.rank !== null ? (
+            <div className="flex items-center w-10/12 h-full bg-white">
+              <div
+                className="flex items-center h-5 bg-gradient-to-r from-yesrae-0 to-yesrae-100"
+                style={{ width: `${100 - songInfoItem.rank}%` }}
+              ></div>
+            </div>
+          ) : null}
         </div>
       </div>
     </div>

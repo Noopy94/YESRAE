@@ -33,21 +33,23 @@ export default function NomantleRank() {
           YESRAE의 오늘의 순위
         </div>
       </div>
-      <div className="mt-20">
-        {data.map((item, index) => (
-          <div key={index} className="flex items-center w-full mt-5 text-xl">
-            <div className="flex justify-center">
-              <div className="flex flex-col items-start">
-                <div className="font-bold">{item.rank}</div>
-              </div>
+      <div className="flex justify-center mt-20">
+        <div className="w-4/6 p-10">
+          {data.map((item, index) => (
+            <div key={index} className="flex items-center w-full mt-5 text-xl">
+              <div className="flex justify-center">
+                <div className="flex flex-col items-start">
+                  <div className="font-bold">{item.rank}</div>
+                </div>
 
-              <div className="flex ml-5 ">
-                <div className="mx-10">{item.title}</div>
-                <div>{item.similarity}</div>
+                <div className="flex ml-5 ">
+                  <div className="mx-10">{item.title}</div>
+                  <div>{item.similarity}</div>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

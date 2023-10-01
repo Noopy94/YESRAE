@@ -39,10 +39,9 @@ export default function Nomantle() {
   // 포기하기 모달 -> O
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // 정답입니다 모달 ->
+  // 정답입니다 모달 -> O
   const [answerModalOpen, setAnswerModalOpen] = useState(false);
 
-  // TODO : 안녕 입력 후 클릭했을 때 errorMsg 가 뜨는 문제!! reponse 제대로 받았는데 없다고 뜨는 문제!!!!!!
   const [songInfoLocalStorage, setSongInfoLocalStorage] = useState<SongInfo[]>(
     [],
   );
@@ -69,7 +68,7 @@ export default function Nomantle() {
       const data = await searchSong(song_name);
 
       setTitleList(data.song);
-      console.log('제목 : ', titleList); /// (if 초기값 아닐 떄 실행되게) useeffect 가 titlelist 추적
+      console.log('제목 : ', titleList);
     } catch (error) {
       console.error('API 요청 중 오류 발생:', error);
     }
@@ -97,6 +96,31 @@ export default function Nomantle() {
   const handleMouseLeave = () => {
     setisHovered(false);
   };
+  // 현재 날짜 가져오기
+  const getCurrentDate = () => {
+    const option: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      timeZone: 'Asia/Seoul',
+    };
+
+    const todayDate = new Intl.DateTimeFormat('en-US', option).format(
+      new Date(),
+    );
+
+    return todayDate;
+  };
+  // localstorage 에 저장된 날짜 가져오기
+  const getLocalStorageDate = () => {
+    return localStorage.getItem('createdDate');
+  };
+
+  // localstorage 에 생성 날짜 저장
+  const setLocalStorageDate = () => {
+    const currentDate = getCurrentDate();
+    localStorage.setItem('createdDate', currentDate);
+  };
 
   const handleGuess = async (song_name: string) => {
     try {
@@ -105,8 +129,17 @@ export default function Nomantle() {
       console.log('검색 결과 데이터입니다', data.song);
 
       if (data.song) {
+        // 검색 결과 받아와져서 에러 메세지 제거
         setErrorMsg('');
         const result = data.song;
+
+        const storedDate = localStorage.getItem('createdDate');
+        const currentDate = getCurrentDate();
+
+        if (storedDate != currentDate) {
+          localStorage.clear();
+          localStorage.setItem('createdDate', currentDate);
+        }
 
         // localStorage 에서 꺼내오기
         const storedData = localStorage.getItem('song');
@@ -205,6 +238,16 @@ export default function Nomantle() {
     if (storedData) {
       const data: SongInfo[] = JSON.parse(storedData);
 
+      const storedDate = localStorage.getItem('createdDate');
+      const currentDate = getCurrentDate();
+
+      console.log(currentDate);
+
+      if (storedDate != currentDate) {
+        localStorage.clear();
+        localStorage.setItem('createdDate', currentDate);
+      }
+
       let maxIndexItem = data[0];
 
       for (const item of data) {
@@ -229,6 +272,7 @@ export default function Nomantle() {
 
       const answer = data.some((item) => item.answer === true);
       setAnswer(answer);
+      setAnswerModalOpen(answer);
 
       // songInfoLocalStorage 업데이트
       localStorage.setItem('song', JSON.stringify(data));
@@ -304,10 +348,14 @@ export default function Nomantle() {
             추측하기
           </button>
         </div>
-      ) : null}
+      ) : (
+        <div className="mt-10 text-3xl font-semibold text-yesrae-0">
+          <div className="animate-bounce">오늘의 YESRAE곡을 맞추셨습니다!</div>
+        </div>
+      )}
 
       <div className="w-10/12">
-        {isAnswer && (
+        {isAnswer && answerModalOpen && (
           <div className="fixed top-0 bottom-0 left-0 right-0 flex items-center justify-center w-1/3 m-auto text-3xl h-1/3 bg-gradient-to-r from-yesrae-0 to-yesrae-100 ">
             <div className="modal-content ">
               <span
@@ -327,8 +375,11 @@ export default function Nomantle() {
         )}
         <div className="flex justify-center mt-24 ">
           <Category categories={category} />
-          <hr />
         </div>
+        <div className="flex justify-center">
+          <hr className="w-10/12" />
+        </div>
+
         <div className="flex justify-center mt-8">
           {songInfoLocalStorage.length > 0 && (
             <SongInfo song={songInfoLocalStorage} />
@@ -353,7 +404,7 @@ export default function Nomantle() {
           </button>
         )}
 
-        {isModalOpen && (
+        {isModalOpen && !isAnswer && (
           <div className="fixed top-0 bottom-0 left-0 right-0 flex flex-col items-center justify-center w-1/3 m-auto bg-gray-900 border border-gray-700 rounded-lg modal h-1/3 ">
             <div className="modal-content ">
               <span
@@ -362,6 +413,7 @@ export default function Nomantle() {
               >
                 &times;
               </span>
+
               <div className="flex flex-col items-center h-full">
                 <p className="mt-4 mb-24 text-xl">순위를 보시겠습니까?</p>
                 <Link to="/quiz/rank">
