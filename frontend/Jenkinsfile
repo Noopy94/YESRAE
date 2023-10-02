@@ -1,0 +1,40 @@
+pipeline {
+	agent any
+
+	tools {
+		nodejs "nodejs"
+	}
+
+	stages {
+		stage('React Build') {
+			steps {
+				dir('frontend') {
+					sh 'npm install'
+					sh 'npm run build'
+				}
+			}
+		}
+
+		stage('Docker Build') {
+			steps {
+				dir('frontend') {
+					sh 'docker build -t yesrae:latest .'
+				}
+			}
+		}
+
+		stage('Deploy') {
+			steps{
+				sh 'docker rm -f front'
+				sh 'docker run -d --name front -p 3126:3126 -u root
+					yesrae:latest'
+				}
+		}
+
+		stage('Finish') {
+			steps{
+				sh 'docker images -qf dangling=true | xargs -I{} docker rmi {}'
+			}
+		}
+	}
+}
