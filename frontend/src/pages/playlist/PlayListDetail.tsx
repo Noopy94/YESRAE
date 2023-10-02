@@ -6,7 +6,10 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { currentPlayListState } from '../../recoil/playlist/currentPlayList';
-import { currentPageState } from '../../recoil/currentpage/currentPage';
+import {
+  currentPageState,
+  isListState,
+} from '../../recoil/currentpage/currentPage';
 import { Link } from 'react-router-dom';
 import ButtonComponent from '../../components/common/ButtonComponent';
 import {
@@ -26,7 +29,7 @@ export default function PlayListDetail() {
   const { playListId } = useParams();
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
   const [currentSong, setCurrentSong] = useRecoilState(currentSongState);
-
+  const [isList, setIsList] = useRecoilState(isListState);
   const [songList, setSongList] = useRecoilState(currentSongListState);
 
   const onChangePlayList = () => {
@@ -137,7 +140,7 @@ export default function PlayListDetail() {
             <PlayListCarousel playLists={defaultplayLists} />
           </div>
           <div>
-            <div className="fixed relative bottom-0 left-0 h-28" />
+            <div className="fixed relative bottom-0 left-0 h-36" />
           </div>
         </main>
       </div>

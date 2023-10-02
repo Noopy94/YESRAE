@@ -8,7 +8,7 @@ import MusicPlayer from '../../components/playercontroller/MusicPlayer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
-export default function PlayListRegist() {
+export default function PlayListUpdate() {
   const [User, setUser] = useRecoilState(userState);
   const [isList, setIsList] = useRecoilState(isListState);
   const navigate = useNavigate();

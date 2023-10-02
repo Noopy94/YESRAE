@@ -6,18 +6,26 @@ import { defaultsongs, defaultplayLists } from '../../recoil/defaultdata/data';
 import { userState } from '../../recoil/user/user';
 import { useRecoilState } from 'recoil';
 import React, { useState, useEffect } from 'react';
-import { isListState } from '../../recoil/currentpage/currentPage';
+import {
+  isListState,
+  currentPageState,
+} from '../../recoil/currentpage/currentPage';
 import '../../styles.css';
 
 export default function Main() {
   // 노래, 플레이 리스트 데이터 샘플, 나중에 api로 가져올 예정
   const [User, setUser] = useRecoilState(userState);
   const [isList, setIsList] = useRecoilState(isListState);
+  const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
 
   useEffect(() => {
     //api 이용해서 userState 바뀔 때만 추천 알고리즘 변경
     // 로그아웃하고 다시 오면 추천 변경 되게
   }, [userState]);
+
+  useEffect(() => {
+    setCurrentPage({ pageName: '' });
+  }, []);
 
   function UserRecommend() {
     if (User.nickname) {

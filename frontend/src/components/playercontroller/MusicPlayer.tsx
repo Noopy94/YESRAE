@@ -88,7 +88,7 @@ const MusicPlayer: React.FC = () => {
   };
 
   useEffect(() => {
-    const intervalId = setInterval(updateCurrentTime, 100);
+    const intervalId = setInterval(updateCurrentTime, 30);
     return () => clearInterval(intervalId);
   }, []);
 
@@ -102,15 +102,15 @@ const MusicPlayer: React.FC = () => {
         <div className="flex items-center justify-center w-full">
           <img src={song.songImgUrl} className="w-[480px] h-[480px]" />
         </div>
-        <div className="py-6 w-96">
-          <div className="pb-4 font-extrabold"> 이어지는 노래</div>
+        <div className="py-6 border-l border-gray-900 w-96">
+          <div className="pb-4 pl-4 font-extrabold"> 이어지는 노래</div>
           <MiniSongListComponent songs={songList} />
         </div>
       </div>
       <div className="fixed z-50 w-full bottom-16">
         <div className="h-1 bg-gray-900 ">
           <div
-            className="h-2 bg-yesrae-0"
+            className="h-1 bg-yesrae-0"
             style={{
               width: `${(currentTime / 30) * 100}%`,
             }}
