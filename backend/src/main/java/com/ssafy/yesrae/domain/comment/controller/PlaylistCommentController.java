@@ -74,7 +74,7 @@ public class PlaylistCommentController {
         @RequestBody PlaylistCommentDeletePutReq playlistCommentDeletePutReq) {
 
         log.info("PlaylistCommentController_delete_start: "
-            + playlistCommentDeletePutReq.getId());
+            + playlistCommentDeletePutReq.toString());
 
         boolean isDeleted = playlistCommentService.deletePlaylistComment(
             playlistCommentDeletePutReq);
