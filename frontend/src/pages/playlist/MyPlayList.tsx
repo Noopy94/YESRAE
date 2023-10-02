@@ -14,7 +14,7 @@ import {
 } from '../../recoil/currentpage/currentPage';
 import { Link } from 'react-router-dom';
 
-export default function PlayList() {
+export default function MyPlayList() {
   // 노래, 플레이 리스트 데이터 샘플, 나중에 api로 가져올 예정
 
   const [User, setUser] = useRecoilState(userState);

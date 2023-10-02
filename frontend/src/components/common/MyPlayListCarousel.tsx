@@ -59,18 +59,19 @@ const MyPlayListCarousel: React.FC<playListProps> = ({ playLists }) => {
               key={playList.playListId}
               className="relative px-4 carousel-slide"
             >
-              <Link to={`/playlistdetail/${playList.playListId}`}>
-                <div className="relative flex items-center justify-center w-64 h-64 group">
+              <div className="relative flex items-center justify-center w-64 h-64 group">
+                <Link to={`/playlistdetail/${playList.playListId}`}>
                   <img
                     src={playList.playListImageUrl}
                     alt={playList.playListTitle}
                     className="w-48 h-48 transition-opacity duration-200 rounded-3xl group-hover:opacity-40"
                   />
+
                   <div className="absolute z-20 flex items-center justify-center text-lg transition-opacity duration-200 opacity-0 inset-6 group-hover:opacity-100">
                     {playList.playListTitle}
                   </div>
-                </div>
-              </Link>
+                </Link>
+              </div>
             </div>
           ))}
         </div>

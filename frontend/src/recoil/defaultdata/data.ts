@@ -12,7 +12,6 @@ export interface PlayList {
   playListUserNickName: string;
   playListTitle: string;
   playListDescription: string | null;
-  playListSongs: Song[] | null;
   playListImageUrl: string;
 }
 
@@ -85,7 +84,6 @@ export const defaultplayLists: PlayList[] = [
     playListTitle: '광란의 댄스파티곡',
     playListUserNickName: '춤신 성호',
     playListDescription: '플레이 리스트 설명',
-    playListSongs: null,
     playListImageUrl:
       'https://i.scdn.co/image/ab67616d00001e02ef2b13eba01eca97c4c3e473',
   },
@@ -95,7 +93,6 @@ export const defaultplayLists: PlayList[] = [
     playListTitle: 'league of legend 캐리곡',
     playListUserNickName: '미드신 리두현',
     playListDescription: '플레이 리스트 설명',
-    playListSongs: null,
     playListImageUrl:
       'https://i.scdn.co/image/ab67616d00001e02f8fa082806184fcb032d8e0a',
   },
@@ -105,7 +102,6 @@ export const defaultplayLists: PlayList[] = [
     playListTitle: '바위는 영어로 Rock(락)!!',
     playListUserNickName: '락황제 김민식',
     playListDescription: '플레이 리스트 설명',
-    playListSongs: null,
     playListImageUrl:
       'https://i.scdn.co/image/ab67616d00001e0281c835e514e951482d7190fe',
   },
@@ -115,7 +111,6 @@ export const defaultplayLists: PlayList[] = [
     playListTitle: '발라드신의 추천픽',
     playListUserNickName: '발라드왕 최주호',
     playListDescription: '플레이 리스트 설명',
-    playListSongs: null,
     playListImageUrl:
       'https://i.scdn.co/image/ab67616d00001e02b7d6ca50bf766ad72226290c',
   },
@@ -125,7 +120,6 @@ export const defaultplayLists: PlayList[] = [
     playListTitle: '발라드신의 추천픽',
     playListUserNickName: '그냥신 박민혁',
     playListDescription: '플레이 리스트 설명',
-    playListSongs: null,
     playListImageUrl:
       'https://i.scdn.co/image/ab67616d00001e02e787cffec20aa2a396a61647',
   },
@@ -135,7 +129,6 @@ export const defaultplayLists: PlayList[] = [
     playListTitle: '절대자의 추천 플레이 리스트',
     playListUserNickName: '싸피의 여왕',
     playListDescription: '플레이 리스트 설명',
-    playListSongs: null,
     playListImageUrl:
       'https://i.scdn.co/image/ab67616d00001e022f1a5b69c2bd76474bca8035',
   },

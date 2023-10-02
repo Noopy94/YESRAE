@@ -31,7 +31,7 @@ const SongCarousel: React.FC<SongCarouselProps> = ({ songs }) => {
     leftButton = (
       <button
         onClick={prevGroup}
-        className="absolute left-0 z-10 text-white transform -translate-y-1/2 bg-gray-900 rounded-full top-1/2"
+        className="absolute left-0 z-10 w-8 h-8 text-white transform -translate-y-1/2 bg-gray-900 rounded-full top-1/2"
       >
         <FontAwesomeIcon icon={faArrowLeft} />
       </button>
@@ -42,7 +42,7 @@ const SongCarousel: React.FC<SongCarouselProps> = ({ songs }) => {
     rightButton = (
       <button
         onClick={nextGroup}
-        className="absolute right-0 z-10 text-white transform -translate-y-1/2 bg-gray-900 rounded-full top-1/2"
+        className="absolute right-0 z-10 w-8 h-8 text-white transform -translate-y-1/2 bg-gray-900 rounded-full top-1/2"
       >
         <FontAwesomeIcon icon={faArrowRight} />
       </button>
