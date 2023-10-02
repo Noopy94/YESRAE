@@ -10,7 +10,9 @@ public interface ArticleCommentService {
 
     ArticleComment registArticleComment(ArticleCommentRegistPostReq articleCommentRegistPostReq);
 
-    List<ArticleCommentFindRes> findArticleComment(Long ArticleId);
+    List<ArticleCommentFindRes> findArticleCommentByArticleId(Long ArticleId);
+
+    ArticleCommentFindRes findArticleComment(Long CommentId);
 
     boolean deleteArticleComment(ArticleCommentDeletePutReq articleCommentDeletePutReq);
 

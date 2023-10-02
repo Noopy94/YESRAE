@@ -63,9 +63,11 @@ public enum ErrorCode {
 
     PlaylistSong_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 플레이 리스트에서 해당 노래를 찾을 수 없습니다."),
 
-    PlaylistLike_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 플레이 리스트 좋아요 이력을 찾을 수 없습니다.");
+    PlaylistLike_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 플레이 리스트 좋아요 이력을 찾을 수 없습니다."),
 
+    Comment_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다."),
 
+    Notification_Not_Found(HttpStatus.NOT_FOUND, "알림을 찾을 수 없습니다.");
     private final HttpStatus httpStatus;
     private final String message;
 

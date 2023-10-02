@@ -2,6 +2,7 @@ package com.ssafy.yesrae.domain.comment.service;
 
 import com.ssafy.yesrae.common.exception.NoDataException;
 import com.ssafy.yesrae.common.exception.article.ArticleNotFoundException;
+import com.ssafy.yesrae.common.exception.comment.CommentNotFoundException;
 import com.ssafy.yesrae.common.exception.user.UserNotFoundException;
 import com.ssafy.yesrae.domain.article.entity.Article;
 import com.ssafy.yesrae.domain.article.repository.ArticleRepository;
@@ -48,9 +49,8 @@ public class ArticleCommentServiceImpl implements ArticleCommentService {
 
         log.info("ArticleCommentService_registArticleComment_start: "
             + articleCommentRegistPostReq.toString());
-        
+
         String content = articleCommentRegistPostReq.getContent();
-        ;
 
         User user = userRepository.findById(articleCommentRegistPostReq.getUserId())
             .orElseThrow(UserNotFoundException::new);
@@ -74,9 +74,8 @@ public class ArticleCommentServiceImpl implements ArticleCommentService {
      * 특정 게시글의 댓글 전체 조회 API에 대한 서비스
      */
     @Override
-    public List<ArticleCommentFindRes> findArticleComment(Long ArticleId) {
-
-        log.info("ArticleCommentService_findArticleComment_start: ");
+    public List<ArticleCommentFindRes> findArticleCommentByArticleId(Long ArticleId) {
+        log.info("ArticleCommentService_findArticleCommentByArticleId_start: " + ArticleId);
 
         List<ArticleCommentFindRes> res = articleCommentRepository.findByArticleId(ArticleId)
             .stream().map(m -> ArticleCommentFindRes.builder()
@@ -88,7 +87,31 @@ public class ArticleCommentServiceImpl implements ArticleCommentService {
                 .build()
             ).collect(Collectors.toList());
 
-        log.info("ArticleCommentService_findArticleComment_end: success ");
+        log.info("ArticleCommentService_findArticleCommentByArticleId_end: success ");
+
+        return res;
+    }
+
+    /**
+     * 특정 댓글 조회 API에 대한 서비스
+     */
+    @Override
+    public ArticleCommentFindRes findArticleComment(Long CommentId) {
+
+        log.info("ArticleCommentService_findArticleComment_start: " + CommentId);
+
+        ArticleComment comment = articleCommentRepository.findById(CommentId)
+            .orElseThrow(CommentNotFoundException::new);
+
+        ArticleCommentFindRes res = ArticleCommentFindRes.builder()
+            .id(comment.getId())
+            .articleId(comment.getArticle().getId())
+            .userId(comment.getUser().getId())
+            .content(comment.getContent())
+            .creaetedAt(comment.getCreatedAt())
+            .build();
+
+        log.info("ArticleCommentService_findArticleComment_end: success");
 
         return res;
     }

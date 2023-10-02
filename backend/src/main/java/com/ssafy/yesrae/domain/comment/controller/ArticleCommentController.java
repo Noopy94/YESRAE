@@ -53,11 +53,12 @@ public class ArticleCommentController {
      * 게시글 댓글 조회 API
      */
     @GetMapping("/{articleId}")
-    public CommonResponse<?> findArticleComment(@PathVariable Long articleId) {
+    public CommonResponse<?> findArticleCommentByArticleId(@PathVariable Long articleId) {
 
         log.info("ArticleCommentController_find_start: " + articleId);
 
-        List<ArticleCommentFindRes> res = articleCommentService.findArticleComment(articleId);
+        List<ArticleCommentFindRes> res = articleCommentService.findArticleCommentByArticleId(
+            articleId);
 
         log.info("ArticleCommentController_find_end: " + res.toString());
 
