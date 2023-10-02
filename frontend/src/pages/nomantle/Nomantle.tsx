@@ -46,6 +46,9 @@ export default function Nomantle() {
     [],
   );
 
+  // 포기하기
+  const [giveUp, setGiveUp] = useState(false);
+
   // input 입력시 목록 관련
   // input 에 해당하는 검색이 없을 경우 errorMsg 보여주기
   useEffect(() => {
@@ -54,6 +57,12 @@ export default function Nomantle() {
     } else {
       setTitleList([]);
       setErrorMsg('');
+    }
+
+    // 포기하기
+    const storedGiveUp = localStorage.getItem('giveUp');
+    if (storedGiveUp === 'true') {
+      setGiveUp(true);
     }
   }, [inputValue]);
 
@@ -89,6 +98,7 @@ export default function Nomantle() {
   };
 
   // ? 호버시 노맨틀 설명 보여주기
+
   const handleMouseEnter = () => {
     setisHovered(true);
   };
@@ -96,6 +106,7 @@ export default function Nomantle() {
   const handleMouseLeave = () => {
     setisHovered(false);
   };
+
   // 현재 날짜 가져오기
   const getCurrentDate = () => {
     const option: Intl.DateTimeFormatOptions = {
@@ -111,16 +122,6 @@ export default function Nomantle() {
 
     return todayDate;
   };
-  // localstorage 에 저장된 날짜 가져오기
-  const getLocalStorageDate = () => {
-    return localStorage.getItem('createdDate');
-  };
-
-  // localstorage 에 생성 날짜 저장
-  const setLocalStorageDate = () => {
-    const currentDate = getCurrentDate();
-    localStorage.setItem('createdDate', currentDate);
-  };
 
   const handleGuess = async (song_name: string) => {
     try {
@@ -133,7 +134,9 @@ export default function Nomantle() {
         setErrorMsg('');
         const result = data.song;
 
+        // localstorage 에 생성 날짜 저장
         const storedDate = localStorage.getItem('createdDate');
+        // 현재 날짜
         const currentDate = getCurrentDate();
 
         if (storedDate != currentDate) {
@@ -216,17 +219,24 @@ export default function Nomantle() {
     }
   };
 
-  // 모달 열기
+  //포기하기 모달 열기
   const openModal = () => {
     setIsModalOpen(true);
   };
-
+  //포기하기 모달 닫기
   const closeModal = () => {
     setIsModalOpen(false);
   };
-
+  // 정답입니다 모달 닫기
   const closeAnswerModal = () => {
     setAnswerModalOpen(false);
+  };
+
+  // 포기하기 버튼 클릭
+  const handleGiveUp = () => {
+    setGiveUp(true); // giveUp 상태를 true로 설정
+    closeModal(); // 모달 닫기
+    localStorage.setItem('giveUp', 'true'); // giveUp 값을 localStorage에 저장
   };
 
   // localStorage 에 검색 목록 , 정답 여부 저장 -> O
@@ -241,41 +251,38 @@ export default function Nomantle() {
       const storedDate = localStorage.getItem('createdDate');
       const currentDate = getCurrentDate();
 
-      console.log(currentDate);
+      if (storedDate === currentDate) {
+        let maxIndexItem = data[0];
 
-      if (storedDate != currentDate) {
-        localStorage.clear();
-        localStorage.setItem('createdDate', currentDate);
-      }
-
-      let maxIndexItem = data[0];
-
-      for (const item of data) {
-        if (item.index > maxIndexItem.index) {
-          maxIndexItem = item;
+        for (const item of data) {
+          if (item.index > maxIndexItem.index) {
+            maxIndexItem = item;
+          }
         }
+
+        // maxIndexItem을 배열에서 제거
+        const indexToRemove = data.findIndex((item) => item === maxIndexItem);
+        if (indexToRemove !== -1) {
+          data.splice(indexToRemove, 1);
+        }
+
+        // similarity 내림차순으로 정렬
+        data.sort((a, b) => b.similarity - a.similarity);
+
+        // maxIndexItem을 배열의 맨 앞에 추가
+        data.unshift(maxIndexItem);
+
+        setSongInfoLocalStorage(data);
+
+        const answer = data.some((item) => item.answer === true);
+        setAnswer(answer);
+        setAnswerModalOpen(answer);
+
+        // songInfoLocalStorage 업데이트
+        localStorage.setItem('song', JSON.stringify(data));
+      } else {
+        localStorage.clear();
       }
-
-      // maxIndexItem을 배열에서 제거
-      const indexToRemove = data.findIndex((item) => item === maxIndexItem);
-      if (indexToRemove !== -1) {
-        data.splice(indexToRemove, 1);
-      }
-
-      // similarity 내림차순으로 정렬
-      data.sort((a, b) => b.similarity - a.similarity);
-
-      // maxIndexItem을 배열의 맨 앞에 추가
-      data.unshift(maxIndexItem);
-
-      setSongInfoLocalStorage(data);
-
-      const answer = data.some((item) => item.answer === true);
-      setAnswer(answer);
-      setAnswerModalOpen(answer);
-
-      // songInfoLocalStorage 업데이트
-      localStorage.setItem('song', JSON.stringify(data));
     } else {
       setSongInfoLocalStorage([]);
       setAnswer(false); // 로컬 스토리지에 데이터가 없을 때 isAnswer를 false로 설정
@@ -303,17 +310,16 @@ export default function Nomantle() {
           {isHovered && (
             <div className="w-1/2 mx-8 ml-4 bg-white rounded-md h-30">
               <p className="m-8 text-center text-black">
-                노맨틀은 오늘의 노래를 맞히는 게임입니다. <br />
-                정답 노래를 추측하면 정답 노래와 얼마나 유사한지 유사도를
-                알려줍니다. <br />
-                정답 노래를 맞혀보세요.
+                노맨틀은 인기곡 100위 이내의 오늘의 노래를 맞히는 게임입니다.{' '}
+                <br />
+                정답을 추측하면 정답 노래와의 유사도를 알려줍니다. <br />
               </p>
             </div>
           )}
         </div>
       </div>
 
-      {!isAnswer ? (
+      {!isAnswer && !giveUp ? (
         <div className="flex mt-20">
           <div className="flex flex-col items-start">
             <input
@@ -327,7 +333,7 @@ export default function Nomantle() {
               value={inputValue}
             />
             {titleList.length > 0 && (
-              <ul>
+              <ul className="absolute mt-12 bg-black border-gray-300 rounded-lg w-96 ">
                 {titleList.map((song, idx) => (
                   <li
                     key={idx}
@@ -342,11 +348,15 @@ export default function Nomantle() {
           </div>
           <button
             type="button"
-            className="flex items-center justify-center w-24 h-12 mx-28 rounded-xl bg-yesrae-900 hover:bg-gray-800"
+            className="flex items-center justify-center w-24 h-12 text-lg mx-28 rounded-xl bg-yesrae-900 hover:bg-gray-800"
             onClick={handleButtonClick}
           >
             추측하기
           </button>
+        </div>
+      ) : !isAnswer && giveUp ? (
+        <div className="mt-10 text-3xl font-semibold text-yesrae-0">
+          <div className="">포기하셨습니다.</div>
         </div>
       ) : (
         <div className="mt-10 text-3xl font-semibold text-yesrae-0">
@@ -365,7 +375,7 @@ export default function Nomantle() {
                 &times;
               </span>
               <div className="flex flex-col items-center h-full">
-                <p className="mt-4">정답입니다!</p>
+                <div className="mt-4 text-3xl font-semibold">정답입니다!</div>
               </div>
             </div>
           </div>
@@ -387,7 +397,7 @@ export default function Nomantle() {
         </div>
       </div>
       <div>
-        {isAnswer ? (
+        {isAnswer || giveUp ? (
           <button
             type="button"
             className="flex items-center justify-center w-24 h-12 text-lg rounded-lg my-28 bg-yesrae-900 hover:bg-gray-800"
@@ -420,6 +430,9 @@ export default function Nomantle() {
                   <button
                     type="button"
                     className="flex items-center justify-center w-24 h-12 text-xl rounded-lg bg-yesrae-900 hover:bg-gray-800"
+                    onClick={() => {
+                      handleGiveUp();
+                    }}
                   >
                     순위보기
                   </button>

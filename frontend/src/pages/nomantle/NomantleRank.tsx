@@ -44,7 +44,7 @@ export default function NomantleRank() {
 
                 <div className="flex ml-5 ">
                   <div className="mx-10">{item.title}</div>
-                  <div>{item.similarity}</div>
+                  <div>{item.similarity.toFixed(2)}</div>
                 </div>
               </div>
             </div>
