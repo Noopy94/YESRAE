@@ -9,8 +9,9 @@ pipeline {
 		stage('React Build') {
 			steps {
 				dir('frontend') {
-					sh 'npm install'
-					sh 'npm run build'
+					sh 'npm install -g pnpm'
+					sh 'pnpm install'
+                    sh 'pnpm run dev'
 				}
 			}
 		}
