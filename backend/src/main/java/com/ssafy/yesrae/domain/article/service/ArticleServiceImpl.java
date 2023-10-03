@@ -5,6 +5,7 @@ import com.ssafy.yesrae.common.exception.user.UserNotFoundException;
 import com.ssafy.yesrae.common.model.FileDto;
 import com.ssafy.yesrae.common.util.FileUploader;
 import com.ssafy.yesrae.domain.article.dto.request.ArticleDeletePutReq;
+import com.ssafy.yesrae.domain.article.dto.request.ArticleFindCondition;
 import com.ssafy.yesrae.domain.article.dto.request.ArticleModifyPutReq;
 import com.ssafy.yesrae.domain.article.dto.request.ArticleRegistPostReq;
 import com.ssafy.yesrae.domain.article.dto.response.ArticleFindRes;
@@ -225,6 +226,27 @@ public class ArticleServiceImpl implements ArticleService{
         return res;
     }
 
+    /**
+     *  게시글 조건검색 API에 대한 서비스
+     *
+     *  @param articleFindCondition : keyword, categoryId;
+     */
+    @Override
+    public List<ArticleFindRes> findArticleByTitleAndCategory(ArticleFindCondition articleFindCondition){
+        log.info("ArticleService_ findArticleByTitleAndCategory_start: ");
+        List<ArticleFindRes> res = articleRepository.findByTitleContainingAndCategory_Id(articleFindCondition.getKeyword(), articleFindCondition.getCategoryId())
+                .stream().map(m -> ArticleFindRes.builder()
+                        .title(m.getTitle())
+                        .tagName(m.getCategory().getTagName())
+                        .createdDate(m.getCreatedDate().toString())
+                        .content(m.getContent())
+                        .files(findArticleFiles(m))
+                        .build()
+                ).collect(Collectors.toList());
+        log.info("ArticleService_ findArticleByTitleAndCategory_end: success");
+        return res;
+    }
+
 
     /**
      * 파일 이름 List 생성을 위한 API
@@ -239,4 +261,6 @@ public class ArticleServiceImpl implements ArticleService{
         }
         return files;
     }
+
+
 }

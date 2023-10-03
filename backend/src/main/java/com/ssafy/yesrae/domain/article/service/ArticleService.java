@@ -1,6 +1,7 @@
 package com.ssafy.yesrae.domain.article.service;
 
 import com.ssafy.yesrae.domain.article.dto.request.ArticleDeletePutReq;
+import com.ssafy.yesrae.domain.article.dto.request.ArticleFindCondition;
 import com.ssafy.yesrae.domain.article.dto.request.ArticleModifyPutReq;
 import com.ssafy.yesrae.domain.article.dto.request.ArticleRegistPostReq;
 import com.ssafy.yesrae.domain.article.dto.response.ArticleFindRes;
@@ -19,4 +20,6 @@ public interface ArticleService {
     boolean modifyArticle(ArticleModifyPutReq articleModifyPutReq, List<MultipartFile> files);
 
     List<ArticleFindRes> findAllArticle();
+
+    List<ArticleFindRes> findArticleByTitleAndCategory(ArticleFindCondition articleFindCondition);
 }

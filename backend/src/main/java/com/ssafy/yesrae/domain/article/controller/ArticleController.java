@@ -6,6 +6,7 @@ import com.ssafy.yesrae.common.exception.Template.TemplateNoResultException;
 import com.ssafy.yesrae.common.exception.Template.TemplatePossessionFailException;
 import com.ssafy.yesrae.common.model.CommonResponse;
 import com.ssafy.yesrae.domain.article.dto.request.ArticleDeletePutReq;
+import com.ssafy.yesrae.domain.article.dto.request.ArticleFindCondition;
 import com.ssafy.yesrae.domain.article.dto.request.ArticleModifyPutReq;
 import com.ssafy.yesrae.domain.article.dto.request.ArticleRegistPostReq;
 import com.ssafy.yesrae.domain.article.dto.response.ArticleFindRes;
@@ -133,6 +134,21 @@ public class ArticleController {
             articleService.findAllArticle());
 
         log.info("ArticleController_findAllArticle_end: " + findRes);
+        return CommonResponse.success(findRes.orElseThrow(TemplateNoResultException::new));
+    }
+
+    /**
+     * Article List 조회 (By keyword and categoryId)
+     *
+     * @return
+     */
+    @GetMapping()
+    public CommonResponse<List<ArticleFindRes>> findArticleByTitleAndCategory(ArticleFindCondition articleFindCondition) {
+        log.info("ArticleController_findArticleByTitleAndCategory_start: ");
+        Optional<List<ArticleFindRes>> findRes = Optional.ofNullable(
+                articleService.findArticleByTitleAndCategory(articleFindCondition));
+
+        log.info("ArticleController_findArticleByTitleAndCategory_end: " + findRes);
         return CommonResponse.success(findRes.orElseThrow(TemplateNoResultException::new));
     }
 }
