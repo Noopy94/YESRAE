@@ -76,7 +76,7 @@ public class PlaylistCommentServiceImpl implements PlaylistCommentService {
     @Override
     public List<PlaylistCommentFindRes> findPlaylistComment(Long playlistId) {
 
-        log.info("playlistCommentService_findplaylistComment_start: ");
+        log.info("playlistCommentService_findplaylistComment_start: " + playlistId);
 
         List<PlaylistCommentFindRes> res = playlistCommentRepository.findByPlaylistId(playlistId)
             .stream().map(m -> PlaylistCommentFindRes.builder()
@@ -88,7 +88,7 @@ public class PlaylistCommentServiceImpl implements PlaylistCommentService {
                 .build()
             ).collect(Collectors.toList());
 
-        log.info("playlistCommentService_findplaylistComment_end: success ");
+        log.info("playlistCommentService_findplaylistComment_end: success");
 
         return res;
     }
@@ -99,7 +99,8 @@ public class PlaylistCommentServiceImpl implements PlaylistCommentService {
     @Override
     public boolean deletePlaylistComment(PlaylistCommentDeletePutReq playlistCommentDeletePutReq) {
 
-        log.info("playlistCommentService_deleteplaylistComment_start: ");
+        log.info("playlistCommentService_deleteplaylistComment_start: "
+            + playlistCommentDeletePutReq.toString());
 
         PlaylistComment playlistComment = playlistCommentRepository.findById(
                 playlistCommentDeletePutReq.getId())
@@ -111,7 +112,7 @@ public class PlaylistCommentServiceImpl implements PlaylistCommentService {
             return false;
         }
 
-        log.info("playlistCommentService_deleteplaylistComment_end: true ");
+        log.info("playlistCommentService_deleteplaylistComment_end: success");
         return true;
     }
 }

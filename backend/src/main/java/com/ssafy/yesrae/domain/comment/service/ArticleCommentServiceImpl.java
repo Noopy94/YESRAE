@@ -122,7 +122,8 @@ public class ArticleCommentServiceImpl implements ArticleCommentService {
     @Override
     public boolean deleteArticleComment(ArticleCommentDeletePutReq articleCommentDeletePutReq) {
 
-        log.info("ArticleCommentService_deleteArticleComment_start: ");
+        log.info("ArticleCommentService_deleteArticleComment_start: "
+            + articleCommentDeletePutReq.toString());
 
         ArticleComment articleComment = articleCommentRepository.findById(
                 articleCommentDeletePutReq.getId())
@@ -134,7 +135,7 @@ public class ArticleCommentServiceImpl implements ArticleCommentService {
             return false;
         }
 
-        log.info("ArticleCommentService_deleteArticleComment_end: true ");
+        log.info("ArticleCommentService_deleteArticleComment_end: success");
         return true;
     }
 }

@@ -67,7 +67,12 @@ public enum ErrorCode {
 
     Comment_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다."),
 
-    Notification_Not_Found(HttpStatus.NOT_FOUND, "알림을 찾을 수 없습니다.");
+    Notification_NOT_FOUND(HttpStatus.NOT_FOUND, "알림을 찾을 수 없습니다."),
+
+    Song_NOT_FOUND(HttpStatus.NOT_FOUND, "노래를 찾을 수 없습니다."),
+
+    Songlike_NOT_FOUND(HttpStatus.NOT_FOUND, "노래 좋아요를 찾을 수 없습니다.");
+
     private final HttpStatus httpStatus;
     private final String message;
 
