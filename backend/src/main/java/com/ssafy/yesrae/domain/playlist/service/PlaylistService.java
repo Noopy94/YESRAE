@@ -23,28 +23,30 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface PlaylistService {
 
+    PlaylistGetResponse findPlaylist(Long id);
+
     Playlist registPlaylist(PlaylistRegistPostReq registInfo, MultipartFile img) throws IOException;
 
-    void modifyPlaylist(PlaylistModifyPutReq modifyInfo);
+    boolean modifyPlaylist(PlaylistModifyPutReq modifyInfo);
 
-    void modifyPlaylistImg(PlaylistImgModifyPutReq modifyInfo) throws IOException;
+    boolean modifyPlaylistImg(PlaylistImgModifyPutReq modifyInfo) throws IOException;
 
-    void deletePlaylist(PlaylistDeletePutReq deleteInfo);
+    boolean deletePlaylist(PlaylistDeletePutReq deleteInfo);
 
     PlaylistTag registPlaylistTag(PlaylistTagRegistPostReq registInfo);
 
-    void deletePlaylistTag(PlaylistTagDeletePutReq deleteInfo);
+    boolean deletePlaylistTag(PlaylistTagDeletePutReq deleteInfo);
 
     // 플레이 리스트에 노래 추가
     PlaylistSong registSongInPlaylist(PlaylistSongRegistPostReq registInfo);
 
     // 플레이 리스트 속 노래 삭제
-    void deletePlaylistSong(PlaylistSongDeletePutReq deleteInfo);
+    boolean deletePlaylistSong(PlaylistSongDeletePutReq deleteInfo);
 
-    void registPlaylistLike(PlaylistLikeRegistPostReq registInfo);
+    boolean registPlaylistLike(PlaylistLikeRegistPostReq registInfo);
 
     /// 플레이 리스트 좋아요 삭제
-    void deletePlaylistLike(PlaylistLikeDeletePutReq deleteInfo);
+    boolean deletePlaylistLike(PlaylistLikeDeletePutReq deleteInfo);
 
     // 플레이 리스트 안에 등록된 노래 조회
     List<Song> getPlaylistSong(Long playlistId);

@@ -13,6 +13,6 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PlaylistSongId implements Serializable {
 
-    private Long song;
+    private String song;
     private Long playlist;
 }

@@ -11,5 +11,4 @@ public class PlaylistRegistPostReq {
     private Integer isPublic;
     private String title;
     private String description;
-    private List<PlaylistSong> musicList;
 }

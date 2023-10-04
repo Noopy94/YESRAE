@@ -32,7 +32,6 @@ import org.hibernate.annotations.DynamicInsert;
 @Entity
 public class PlaylistSong implements Serializable {
 
-
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "playlist_id")
