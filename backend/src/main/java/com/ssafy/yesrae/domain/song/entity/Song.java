@@ -1,10 +1,8 @@
 package com.ssafy.yesrae.domain.song.entity;
 
-import com.ssafy.yesrae.common.model.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,11 +15,13 @@ import org.hibernate.annotations.DynamicInsert;
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@DynamicInsert
 @SuperBuilder
+@DynamicInsert
 @Entity
+public class Song {
 
-public class Song extends BaseEntity {
+    @Id
+    private String id;
 
     @Column(nullable = false, columnDefinition = "VARCHAR(255) CHARACTER SET UTF8")
     private String name;
@@ -61,7 +61,7 @@ public class Song extends BaseEntity {
     private Float acousticness;
 
     // 1에 가까울수록 댄스에 적합한 곡입니다.
-    @Column(nullable = false, columnDefinition = "FLOAT DEFAULT 0" )
+    @Column(nullable = false, columnDefinition = "FLOAT DEFAULT 0")
     private Float danceability;
 
     // 1에 가까울수록 빠르고 시끄럽습니다.
@@ -109,3 +109,4 @@ public class Song extends BaseEntity {
     private Boolean todaySong;
 
 }
+

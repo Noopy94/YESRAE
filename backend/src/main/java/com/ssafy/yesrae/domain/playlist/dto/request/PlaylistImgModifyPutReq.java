@@ -7,6 +7,10 @@ import org.springframework.web.multipart.MultipartFile;
 public class PlaylistImgModifyPutReq {
 
     private Long playlistId;
-    private MultipartFile img;
+    private MultipartFile file;
 
+    public PlaylistImgModifyPutReq(Long playlistId, MultipartFile file) {
+        this.playlistId = playlistId;
+        this.file = file;
+    }
 }

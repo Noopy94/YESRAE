@@ -85,7 +85,7 @@ public class PlaylistServiceImpl implements PlaylistService {
             .build();
 
         if (img != null) {
-            String imgUrl = s3Uploader.upload(img, "playListId" + playlist.getId());
+            String imgUrl = s3Uploader.upload(img, "playlistId" + playlist.getId());
             playlist.setImgUrl(imgUrl);
         }
 
@@ -95,47 +95,99 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     }
 
+    //Playlist 조회
+    public PlaylistGetResponse findPlaylist(Long Id) {
+
+        Playlist playlist = playlistRepository.findById(Id).orElseThrow(PlaylistNotFoundException::new);
+
+        int ispublic = playlist.getIsPublic();
+
+        if (ispublic==0) {
+            return null;
+        }
+
+        Long id = playlist.getId();
+        String title = playlist.getTitle();
+        Long userid = playlist.getUser().getId();
+        String description = playlist.getDescription();
+        String imgurl = playlist.getImgUrl();
+        Long viewcnt = playlist.getViewCount();
+        Long likecnt = playlist.getLikeCount();
+
+        PlaylistGetResponse playlistGetResponse = PlaylistGetResponse.builder().
+            id(id).
+            title(title).
+            userId(userid).
+            description(description).
+            imgUrl(imgurl).
+            likeCount(likecnt).
+            viewCount(viewcnt).build();
+
+        log.info("PlaylistService_PlaylistRegist_end : " + playlist.toString());
+        return playlistGetResponse;
+
+    }
+
+
     //PlayList만 수정
     @Override
-    public void modifyPlaylist(PlaylistModifyPutReq modifyInfo) {
+    public boolean modifyPlaylist(PlaylistModifyPutReq modifyInfo) {
 
-        log.info("PlaylistService_PlaylistModify_start : " + modifyInfo.toString());
+        try {
+            log.info("PlaylistService_PlaylistModify_start : " + modifyInfo.toString());
 
-        Playlist playlist = playlistRepository.findById(modifyInfo.getPlaylistId())
-            .orElseThrow(PlaylistNotFoundException::new);
-        playlist.modifyPlaylist(modifyInfo);
+            Playlist playlist = playlistRepository.findById(modifyInfo.getPlaylistId())
+                .orElseThrow(PlaylistNotFoundException::new);
+            playlist.modifyPlaylist(modifyInfo);
 
-        log.info("PlaylistService_PlaylistModify_end : " + playlist.toString());
+            log.info("PlaylistService_PlaylistModify_end : " + playlist.toString());
+            return true;
+        } catch (PlaylistNotFoundException e){
+            log.error("PlaylistNotFoundException occurred: " + e.getMessage());
+            return false;
+        }
     }
 
     @Override
-    public void modifyPlaylistImg(PlaylistImgModifyPutReq modifyInfo) throws IOException {
+    public boolean modifyPlaylistImg(PlaylistImgModifyPutReq modifyInfo) throws IOException {
         //이미지 변경 로직, 이미지 저장 하면서, 새로운 url 제공
 
-        log.info("PlaylistService_PlaylistImgModify_start : " + modifyInfo.toString());
+        try {
 
-        Playlist playlist = playlistRepository.findById(modifyInfo.getPlaylistId())
-            .orElseThrow(PlaylistNotFoundException::new);
-        MultipartFile img = modifyInfo.getImg();
+            log.info("PlaylistService_PlaylistImgModify_start : " + modifyInfo.toString());
 
-        if (img != null) {
-            String imgUrl = s3Uploader.upload(img, "playlistId" + modifyInfo.getPlaylistId());
-            playlist.setImgUrl(imgUrl);
+            Playlist playlist = playlistRepository.findById(modifyInfo.getPlaylistId())
+                .orElseThrow(PlaylistNotFoundException::new);
+            MultipartFile file = modifyInfo.getFile();
+
+            if (file != null) {
+                String imgUrl = s3Uploader.upload(file, "playlistId" + modifyInfo.getPlaylistId());
+                playlist.setImgUrl(imgUrl);
+            }
+            log.info("PlaylistService_PlaylistImgModify_end : " + playlist.toString());
+            return true;
+        } catch (PlaylistNotFoundException e){
+            log.error("PlaylistNotFoundException occurred: " + e.getMessage());
+            return false;
         }
-        log.info("PlaylistService_PlaylistImgModify_end : " + playlist.toString());
 
     }
 
     @Override
-    public void deletePlaylist(PlaylistDeletePutReq deleteInfo) {
+    public boolean deletePlaylist(PlaylistDeletePutReq deleteInfo) {
 
-        log.info("PlaylistService_PlaylistDelete_start : " + deleteInfo.toString());
+        try {
+            log.info("PlaylistService_PlaylistDelete_start : " + deleteInfo.toString());
 
-        Playlist playlist = playlistRepository.findById(deleteInfo.getPlaylistId())
-            .orElseThrow(PlaylistNotFoundException::new);
-        playlist.deletePlaylist();
+            Playlist playlist = playlistRepository.findById(deleteInfo.getPlaylistId())
+                .orElseThrow(PlaylistNotFoundException::new);
+            playlist.deletePlaylist();
 
-        log.info("PlaylistService_PlaylistDelete_end : " + playlist.toString());
+            log.info("PlaylistService_PlaylistDelete_end : " + playlist.toString());
+            return true;
+        } catch (PlaylistNotFoundException e){
+            return false;
+        }
 
     }
 
@@ -161,15 +213,20 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
 
     @Override
-    public void deletePlaylistTag(PlaylistTagDeletePutReq deleteInfo) {
+    public boolean deletePlaylistTag(PlaylistTagDeletePutReq deleteInfo) {
 
-        log.info("PlaylistService_PlaylistTagSongDelete_start : " + deleteInfo.toString());
+        try {
+            log.info("PlaylistService_PlaylistTagSongDelete_start : " + deleteInfo.toString());
 
-        PlaylistTag playlistTag = playlistTagRepository.findById(deleteInfo.getPlaylistTagId())
-            .orElseThrow(PlaylistTagNotFoundException::new);
-        playlistTag.deletePlaylistTag();
+            PlaylistTag playlistTag = playlistTagRepository.findById(deleteInfo.getPlaylistTagId())
+                .orElseThrow(PlaylistTagNotFoundException::new);
+            playlistTag.deletePlaylistTag();
 
-        log.info("PlaylistService_PlaylistTagSongDelete_end : " + deleteInfo.toString());
+            log.info("PlaylistService_PlaylistTagSongDelete_end : " + deleteInfo.toString());
+            return true;
+        } catch (PlaylistTagNotFoundException e){
+            return false;
+        }
     }
 
     @Override
@@ -204,7 +261,7 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
 
     @Override
-    public void deletePlaylistSong(PlaylistSongDeletePutReq deleteInfo) {
+    public boolean deletePlaylistSong(PlaylistSongDeletePutReq deleteInfo) {
 
         log.info("PlaylistService_PlaylistSongDelete_start : " + deleteInfo.toString());
 
@@ -222,55 +279,70 @@ public class PlaylistServiceImpl implements PlaylistService {
 //        }
 
         log.info("PlaylistService_PlaylistSongDelete_end");
+        return true;
     }
 
     @Override
-    public void registPlaylistLike(PlaylistLikeRegistPostReq registInfo) {
+    public boolean registPlaylistLike(PlaylistLikeRegistPostReq registInfo) {
 
-        log.info("PlaylistService_PlaylistLikeRegist_start : " + registInfo.toString());
+        try {
 
-        User user = userRepository.findById(registInfo.getUserId())
-            .orElseThrow(UserNotFoundException::new);
+            log.info("PlaylistService_PlaylistLikeRegist_start : " + registInfo.toString());
 
-        Playlist playlist = playlistRepository.findById(registInfo.getPlaylistId())
-            .orElseThrow(PlaylistNotFoundException::new);
+            User user = userRepository.findById(registInfo.getUserId())
+                .orElseThrow(UserNotFoundException::new);
 
-        PlaylistLike playlistLike = playlistLikeRepository.findByUserAndPlaylist(user, playlist);
+            Playlist playlist = playlistRepository.findById(registInfo.getPlaylistId())
+                .orElseThrow(PlaylistNotFoundException::new);
 
-        if (playlistLike == null) {
-            playlistLike = PlaylistLike.builder()
-                .user(user)
-                .playlist(playlist)
-                .build();
-            playlistLikeRepository.save(playlistLike);
-            playlist.incrementLikeCount();
-        } else {
-            playlistLike.setDeletedAt();
-            playlist.incrementLikeCount();
+            PlaylistLike playlistLike = playlistLikeRepository.findByUserAndPlaylist(user,
+                playlist);
+
+            if (playlistLike == null) {
+                playlistLike = PlaylistLike.builder()
+                    .user(user)
+                    .playlist(playlist)
+                    .build();
+                playlistLikeRepository.save(playlistLike);
+                playlist.incrementLikeCount();
+            } else {
+                playlistLike.setDeletedAt();
+                playlist.incrementLikeCount();
+            }
+
+            log.info("PlaylistService_PlaylistLikeRegist_end");
+            return true;
+        } catch (PlaylistNotFoundException e){
+            return false;
         }
-
-        log.info("PlaylistService_PlaylistLikeRegist_end");
     }
 
     @Override
-    public void deletePlaylistLike(PlaylistLikeDeletePutReq deleteInfo) {
+    public boolean deletePlaylistLike(PlaylistLikeDeletePutReq deleteInfo) {
 
-        log.info("PlaylistService_PlaylistLikeDelete_start : " + deleteInfo.toString());
+        try {
 
-        User user = userRepository.findById(deleteInfo.getUserId())
-            .orElseThrow(UserNotFoundException::new);
+            log.info("PlaylistService_PlaylistLikeDelete_start : " + deleteInfo.toString());
 
-        Playlist playlist = playlistRepository.findById(deleteInfo.getPlaylistId())
-            .orElseThrow(PlaylistNotFoundException::new);
+            User user = userRepository.findById(deleteInfo.getUserId())
+                .orElseThrow(UserNotFoundException::new);
 
-        PlaylistLike playlistLike = playlistLikeRepository.findByUserAndPlaylist(user, playlist);
+            Playlist playlist = playlistRepository.findById(deleteInfo.getPlaylistId())
+                .orElseThrow(PlaylistNotFoundException::new);
 
-        if (playlistLike.getDeletedAt() == null) {
-            playlistLike.deletePlaylistLike();
-            playlist.decrementLikeCount();
+            PlaylistLike playlistLike = playlistLikeRepository.findByUserAndPlaylist(user,
+                playlist);
+
+            if (playlistLike.getDeletedAt() == null) {
+                playlistLike.deletePlaylistLike();
+                playlist.decrementLikeCount();
+            }
+
+            log.info("PlaylistService_PlaylistLikeDelete_end");
+            return true;
+        } catch (UserNotFoundException e){
+            return false;
         }
-
-        log.info("PlaylistService_PlaylistLikeDelete_end");
     }
 
     @Override
@@ -354,7 +426,6 @@ public class PlaylistServiceImpl implements PlaylistService {
                 .viewCount(m.getViewCount())
                 .likeCount(m.getLikeCount())
                 .imgUrl(m.getImgUrl())
-                .createdAt(m.getCreatedAt())
                 .build()
             );
 
