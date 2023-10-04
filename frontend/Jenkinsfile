@@ -19,7 +19,7 @@ pipeline {
 		stage('Docker Build') {
 			steps {
 				dir('frontend') {
-					sh 'docker build -t yesrae:latest .'
+					sh 'docker build -t yesrae_frontend:latest .'
 				}
 			}
 		}
@@ -27,7 +27,7 @@ pipeline {
 		stage('Deploy') {
 			steps{
 				sh 'docker rm -f front'
-				sh 'docker run -d --name front -p 3126:3126 -u root yesrae:latest'
+				sh 'docker run -d --name front -p 3126:3126 -u root yesrae_frontend:latest'
 				}
 		}
 
