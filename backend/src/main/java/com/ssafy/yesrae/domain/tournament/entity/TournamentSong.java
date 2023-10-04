@@ -38,6 +38,9 @@ public class TournamentSong extends BaseEntity {
     @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
     private Integer vote;
 
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) CHARACTER SET UTF8")
+    private String imgUrl;
+
     /**
      * 이상형 월드컵 플레이 시마다 1위로 뽑힌 곡에 대하여 득표 수 올리기 위한 메소드
      */
