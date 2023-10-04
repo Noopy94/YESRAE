@@ -13,7 +13,6 @@ import Tournament from './pages/tournament/Tournament';
 import TournamentResult from './pages/tournament/TournamentResult';
 import TournamentRanking from './pages/tournament/TournamentRanking';
 
-
 function App() {
   return (
     <Router>
