@@ -16,14 +16,17 @@ public class TournamentPopularSongFindRes {
 
     private Double proportion;
 
+    private String imgUrl;
+
     //Querydsl을 위한 생성자
     public TournamentPopularSongFindRes() {
     }
 
     public TournamentPopularSongFindRes(String title, String singer,
-        Double proportion) {
+        Double proportion, String imgUrl) {
         this.title = title;
         this.singer = singer;
         this.proportion = proportion;
+        this.imgUrl = imgUrl;
     }
 }
