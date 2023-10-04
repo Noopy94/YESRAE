@@ -9,8 +9,10 @@ import PlayListRegist from './pages/playlist/PlayListRegist';
 import PlayListUpdate from './pages/playlist/PlayListUpdate';
 import Nomantle from './pages/nomantle/Nomantle';
 import NomantleRank from './pages/nomantle/NomantleRank';
+import Tournament from './pages/tournament/Tournament';
 import TournamentResult from './pages/tournament/TournamentResult';
 import TournamentRanking from './pages/tournament/TournamentRanking';
+
 
 function App() {
   return (
@@ -33,6 +35,7 @@ function App() {
         />
         <Route path="/quiz" element={<Nomantle />} />
         <Route path="/quiz/rank" element={<NomantleRank />} />
+        <Route path="/cup" element={<Tournament />} />
         <Route path="/tournament/result" element={<TournamentResult />} />
         <Route path="/tournament/ranking" element={<TournamentRanking />} />
       </Routes>
