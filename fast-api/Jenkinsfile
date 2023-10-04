@@ -12,7 +12,7 @@ pipeline {
                     steps {
                         dir('fast-api') {
                     // 이미지를 빌드합니다.
-                        sh 'docker build -t ./project/fastapi-app:latest .'
+                        sh 'docker build -t fastapi-app:latest .'
                         }
                     }
                 }
