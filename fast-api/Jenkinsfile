@@ -8,18 +8,43 @@ pipeline {
             }
         }
         
-        stage('Build and Deploy') {
-            steps {
-                script {
-                    // Docker 이미지 빌드
-                    sh "docker build -t fastapi-app ."
+        // stage('Build and Deploy') {
+        //     steps {
+        //         script {
+        //             // Docker 이미지 빌드
+        //             sh "docker build -t fastapi-app ."
                     
-                    // Docker 컨테이너 실행 또는 업데이트
-                    sh "docker stop fastapi-container || true"
-                    sh "docker rm fastapi-container || true"
-                    sh "docker run -d --name fastapi-container -p 81:81 fastapi-app"
+        //             // Docker 컨테이너 실행 또는 업데이트
+        //             sh "docker stop fastapi-container || true"
+        //             sh "docker rm fastapi-container || true"
+        //             sh "docker run -d --name fastapi-container -p 81:81 fastapi-app"
+        //         }
+        //     }
+        // }
+                stage('Docker Build') {
+                    steps {
+                        dir('fast-api') {
+                    // 이미지를 빌드합니다.
+                        sh 'docker build -t fastapi-app:latest .'
+                        }
+                    }
                 }
-            }
-        }
+
+                                // 배포 스테이지: 이전에 실행 중인 'back' 컨테이너를 제거하고 새로운 이미지로 컨테이너를 실행합니다.
+                stage('Deploy') {
+                    steps {
+                        sh "docker stop fastapi-container || true"
+                        sh "docker rm fastapi-container || true"
+                        sh "docker run -d --name fastapi-container -p 81:81 fastapi-app"
+                    }
+                }
+
+                // 완료 스테이지: 더이상 사용되지 않는 Docker 이미지를 제거합니다.
+                stage('Finish') {
+                    steps {
+                        // 사용되지 않는 (dangling) 이미지를 찾아 제거합니다.
+                        sh 'docker images -qf dangling=true | xargs -I{} docker rmi {}'
+                    }
+                }
     }
 }
