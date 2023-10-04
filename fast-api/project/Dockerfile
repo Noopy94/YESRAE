@@ -5,7 +5,7 @@ FROM python:3.10
 WORKDIR /app
 
 # 애플리케이션 의존성 설치
-COPY requirements.txt requirements.txt
+COPY requirements.txt ./project/requirements.txt
 RUN pip install -r requirements.txt
 
 # 애플리케이션 소스 코드 복사

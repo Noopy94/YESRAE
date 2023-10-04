@@ -7,20 +7,7 @@ pipeline {
                 checkout scm
             }
         }
-        
-        // stage('Build and Deploy') {
-        //     steps {
-        //         script {
-        //             // Docker 이미지 빌드
-        //             sh "docker build -t fastapi-app ."
-                    
-        //             // Docker 컨테이너 실행 또는 업데이트
-        //             sh "docker stop fastapi-container || true"
-        //             sh "docker rm fastapi-container || true"
-        //             sh "docker run -d --name fastapi-container -p 81:81 fastapi-app"
-        //         }
-        //     }
-        // }
+
                 stage('Docker Build') {
                     steps {
                         dir('fast-api') {
