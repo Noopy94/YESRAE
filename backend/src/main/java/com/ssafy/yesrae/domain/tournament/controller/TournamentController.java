@@ -6,6 +6,7 @@ import com.ssafy.yesrae.domain.tournament.dto.request.FindTournamentSongGetReq;
 import com.ssafy.yesrae.domain.tournament.dto.request.RegistTournamentResultPostReq;
 import com.ssafy.yesrae.domain.tournament.dto.response.TournamentPopularSongFindRes;
 import com.ssafy.yesrae.domain.tournament.dto.response.TournamentRegistPostRes;
+import com.ssafy.yesrae.domain.tournament.dto.response.TournamentRegistResultPostRes;
 import com.ssafy.yesrae.domain.tournament.dto.response.TournamentResultFindRes;
 import com.ssafy.yesrae.domain.tournament.dto.response.TournamentSongFindRes;
 import com.ssafy.yesrae.domain.tournament.service.TournamentService;
@@ -40,7 +41,7 @@ public class TournamentController {
     /**
      *  이상형 월드컵을 시작하기 위해 이상형 월드컵 게임에 들어올 노래 가져오기
      */
-    @GetMapping("/auth/song")
+    @GetMapping("/song")
     public CommonResponse<?> findTournamentSong(FindTournamentSongGetReq findTournamentSongGetReq) {
 
         log.info("TournamentController_findTournamentSong_start: "
@@ -82,10 +83,11 @@ public class TournamentController {
         log.info("TournamentController_registTournamentResult_start: "
             + registTournamentResultPostReq.toString());
 
-        tournamentService.registTournamentResult(registTournamentResultPostReq);
+        List<TournamentRegistResultPostRes> findRes =
+            tournamentService.registTournamentResult(registTournamentResultPostReq);
 
-        log.info("TournamentController_registTournamentResult_end: success");
-        return CommonResponse.success(SUCCESS);
+        log.info("TournamentController_registTournamentResult_end: " + findRes.toString());
+        return CommonResponse.success(findRes);
     }
 
     /**
@@ -106,7 +108,7 @@ public class TournamentController {
     /**
      *  이상형 월드컵 모든 유저들의 플레이 합한 결과 노래들을 1등 많이 한 순위로 정렬해서 가져오는 API
      */
-    @GetMapping("/auth/ranking")
+    @GetMapping("/ranking")
     public CommonResponse<?> findTournamentPopularSong() {
 
         log.info("TournamentController_findTournamentPopularSong_start");
