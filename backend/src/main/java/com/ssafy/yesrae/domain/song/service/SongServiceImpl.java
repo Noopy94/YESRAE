@@ -80,8 +80,6 @@ public class SongServiceImpl implements SongService {
 
         log.info("SongService_findSonglikeByUserId_start: " + userId);
 
-        // 다른 유저꺼 보는 경우는 어떻게 할건지?
-
         List<Songlike> songlikes = songlikeRepository.findByUserId(userId);
 
         List<SonglikeFindRes> res = new ArrayList<>();

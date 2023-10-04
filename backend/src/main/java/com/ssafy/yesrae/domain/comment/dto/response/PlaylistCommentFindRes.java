@@ -16,6 +16,6 @@ public class PlaylistCommentFindRes {
 
     private String content;
 
-    private LocalDateTime creaetedAt;
+    private LocalDateTime createdAt;
 
 }
