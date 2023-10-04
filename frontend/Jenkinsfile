@@ -11,7 +11,7 @@ pipeline {
 				dir('frontend') {
 					sh 'npm install -g pnpm'
 					sh 'pnpm install'
-                    sh 'pnpm run dev'
+                    sh 'pnpm run build'
 				}
 			}
 		}
