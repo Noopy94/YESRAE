@@ -5,6 +5,7 @@ import com.ssafy.yesrae.common.model.CommonResponse;
 import com.ssafy.yesrae.domain.tournament.dto.request.FindTournamentSongGetReq;
 import com.ssafy.yesrae.domain.tournament.dto.request.RegistTournamentResultPostReq;
 import com.ssafy.yesrae.domain.tournament.dto.response.TournamentPopularSongFindRes;
+import com.ssafy.yesrae.domain.tournament.dto.response.TournamentRegistPostRes;
 import com.ssafy.yesrae.domain.tournament.dto.response.TournamentResultFindRes;
 import com.ssafy.yesrae.domain.tournament.dto.response.TournamentSongFindRes;
 import com.ssafy.yesrae.domain.tournament.service.TournamentService;
@@ -61,10 +62,14 @@ public class TournamentController {
 
         log.info("TournamentController_registTournament_start: " + userId);
 
-        tournamentService.registTournament(userId);
+        Long tournamentId = tournamentService.registTournament(userId);
 
-        log.info("TournamentController_registTournament_end: success");
-        return CommonResponse.success(SUCCESS);
+        TournamentRegistPostRes tournamentRegistPostRes = TournamentRegistPostRes.builder()
+            .id(tournamentId)
+            .build();
+
+        log.info("TournamentController_registTournament_end: " + tournamentRegistPostRes.toString());
+        return CommonResponse.success(tournamentRegistPostRes);
     }
 
     /**

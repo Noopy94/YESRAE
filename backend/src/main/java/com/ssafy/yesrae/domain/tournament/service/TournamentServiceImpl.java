@@ -65,7 +65,7 @@ public class TournamentServiceImpl implements TournamentService{
      * @param userId : 이상형 월드컵 생성한 유저 ID
      */
     @Override
-    public void registTournament(Long userId) {
+    public Long registTournament(Long userId) {
 
         log.info("TournamentService_registTournament_start: "
             + userId);
@@ -76,9 +76,10 @@ public class TournamentServiceImpl implements TournamentService{
             .user(user)
             .build();
 
-        tournamentRepository.save(tournament);
+        tournament = tournamentRepository.save(tournament);
 
         log.info("TournamentService_registTournament_end: success");
+        return tournament.getId();
     }
 
     /**
