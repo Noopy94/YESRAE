@@ -8,4 +8,8 @@ public class PlaylistTagRegistPostReq {
     private Long playlistId;
     private String tagName;
 
+    public PlaylistTagRegistPostReq(Long playlistId, String tagName) {
+        this.playlistId = playlistId;
+        this.tagName = tagName;
+    }
 }

@@ -1,11 +1,13 @@
 package com.ssafy.yesrae.domain.playlist.repository;
 
+import com.ssafy.yesrae.domain.playlist.dto.response.PlaylistGetResponse;
 import com.ssafy.yesrae.domain.playlist.entity.Playlist;
 import com.ssafy.yesrae.domain.user.entity.User;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /*
@@ -20,11 +22,17 @@ public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
     Page<Playlist> findByTitleContainingAndIsPublic(String keyword, Integer isPublic,
         Pageable pageable);
 
-    //    likeCount 기준 정렬해서 100개 가져오기
-    Page<Playlist> findTop100ByOrderByLikeCountDesc(Pageable pageable);
+    //    likeCount 기준 정렬해서 20개 가져오기
+    List<Playlist> findTop20ByOrderByLikeCountDesc();
 
-    //    //viewCount 기준으로 100개 가져오기
-    Page<Playlist> findTop100ByOrderByViewCountDesc(Pageable pageable);
+    //   viewCount 기준으로 20개 가져오기
+    List<Playlist> findTop20ByOrderByViewCountDesc();
+
+    @Query(
+        "SELECT new com.ssafy.yesrae.domain.playlist.dto.response.PlaylistGetResponse(p.id, p.user.id, p.title, p.description, p.viewCount, p.likeCount, p.imgUrl) "
+            +
+            "FROM Playlist p WHERE p.id IN :ids")
+    Page<PlaylistGetResponse> findAllByIdInCustom(List<Long> ids, Pageable pageable);
 
 
 }
