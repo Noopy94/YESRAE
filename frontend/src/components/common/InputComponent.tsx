@@ -19,16 +19,16 @@ export default function InputComponent({
   onKeyDown,
 }: IInputProps) {
   return (
-    <div className="pl-8 py-4 relative">
+    <div className="relative py-4 pl-8">
       <input
-        className="w-48 h-12 rounded-md pl-11 text-lg text-black"
+        className="w-48 h-12 text-lg text-black rounded-md pl-11"
         type={type}
         value={value}
         placeholder={placeholder}
         onChange={onChange}
         onKeyDown={onKeyDown}
       />
-      <MagnifyingGlassIcon className="w-8 h-8 absolute top-6 left-9 text-gray-900" />
+      <MagnifyingGlassIcon className="absolute w-8 h-8 text-gray-900 top-6 left-9" />
     </div>
   );
 }

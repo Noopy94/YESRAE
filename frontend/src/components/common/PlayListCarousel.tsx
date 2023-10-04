@@ -2,16 +2,10 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
-
-interface playList {
-  id: number;
-  imageUrl: string;
-  title: string;
-  userNickName: string;
-}
+import { PlayList } from '../../recoil/defaultdata/data';
 
 interface playListProps {
-  playLists: playList[];
+  playLists: PlayList[];
 }
 
 const PlayListCarousel: React.FC<playListProps> = ({ playLists }) => {
@@ -37,7 +31,7 @@ const PlayListCarousel: React.FC<playListProps> = ({ playLists }) => {
     leftButton = (
       <button
         onClick={prevGroup}
-        className="absolute left-0 z-10 text-white transform -translate-y-1/2 bg-gray-900 rounded-full top-1/2"
+        className="absolute left-0 z-10 w-8 h-8 text-white transform -translate-y-1/2 bg-gray-900 rounded-full top-1/2"
       >
         <FontAwesomeIcon icon={faArrowLeft} />
       </button>
@@ -48,7 +42,7 @@ const PlayListCarousel: React.FC<playListProps> = ({ playLists }) => {
     rightButton = (
       <button
         onClick={nextGroup}
-        className="absolute right-0 z-10 text-white transform -translate-y-1/2 bg-gray-900 rounded-full top-1/2"
+        className="absolute right-0 z-10 w-8 h-8 text-white transform -translate-y-1/2 bg-gray-900 rounded-full top-1/2"
       >
         <FontAwesomeIcon icon={faArrowRight} />
       </button>
@@ -61,18 +55,21 @@ const PlayListCarousel: React.FC<playListProps> = ({ playLists }) => {
         {leftButton}
         <div className="flex items-center w-full">
           {playLists.slice(startIndex, endIndex).map((playList) => (
-            <div key={playList.id} className="relative px-3 carousel-slide">
-              <Link to={`/playList/${playList.id}`}>
+            <div
+              key={playList.playListId}
+              className="relative px-3 carousel-slide"
+            >
+              <Link to={`/playlist/${playList.playListId}`}>
                 <img
-                  src={playList.imageUrl}
-                  alt={playList.title}
+                  src={playList.playListImageUrl}
+                  alt={playList.playListTitle}
                   className="w-64 h-64"
                 />
               </Link>
               <h2 className="w-64 overflow-hidden text-lg font-semibold overflow-ellipsis whitespace-nowrap">
-                {playList.title}
+                {playList.playListTitle}
               </h2>
-              <p className="text-gray-600">{playList.userNickName}</p>
+              <p className="text-gray-400">{playList.playListUserNickName}</p>
             </div>
           ))}
         </div>

@@ -2,17 +2,17 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
-import { Song } from '../../recoil/defaultdata/data';
+import { PlayList } from '../../recoil/defaultdata/data';
 
-interface SongCarouselProps {
-  songs: Song[];
+interface playListProps {
+  playLists: PlayList[];
 }
 
-const SongCarousel: React.FC<SongCarouselProps> = ({ songs }) => {
+const MyPlayListCarousel: React.FC<playListProps> = ({ playLists }) => {
   const [currentGroup, setCurrentGroup] = useState(0);
 
   const slidesPerGroup = 4;
-  const groupCount = Math.ceil(songs.length / slidesPerGroup);
+  const groupCount = Math.ceil(playLists.length / slidesPerGroup);
 
   const nextGroup = () => {
     setCurrentGroup((prevGroup) => (prevGroup + 1) % groupCount);
@@ -54,19 +54,24 @@ const SongCarousel: React.FC<SongCarouselProps> = ({ songs }) => {
       <div className="relative flex carousel-container">
         {leftButton}
         <div className="flex items-center w-full">
-          {songs.slice(startIndex, endIndex).map((song) => (
-            <div key={song.songId} className="relative px-3 carousel-slide">
-              <Link to={`/song/${song.songId}`}>
-                <img
-                  src={song.songImgUrl}
-                  alt={song.songTitle}
-                  className="w-64 h-64"
-                />
-              </Link>
-              <h2 className="w-64 overflow-hidden text-lg font-semibold overflow-ellipsis whitespace-nowrap">
-                {song.songTitle}
-              </h2>
-              <p className="text-gray-400">{song.songArtist}</p>
+          {playLists.slice(startIndex, endIndex).map((playList) => (
+            <div
+              key={playList.playListId}
+              className="relative px-4 carousel-slide"
+            >
+              <div className="relative flex items-center justify-center w-64 h-64 group">
+                <Link to={`/playlistdetail/${playList.playListId}`}>
+                  <img
+                    src={playList.playListImageUrl}
+                    alt={playList.playListTitle}
+                    className="w-48 h-48 transition-opacity duration-200 rounded-3xl group-hover:opacity-40"
+                  />
+
+                  <div className="absolute z-20 flex items-center justify-center text-lg transition-opacity duration-200 opacity-0 inset-6 group-hover:opacity-100">
+                    {playList.playListTitle}
+                  </div>
+                </Link>
+              </div>
             </div>
           ))}
         </div>
@@ -76,4 +81,4 @@ const SongCarousel: React.FC<SongCarouselProps> = ({ songs }) => {
   );
 };
 
-export default SongCarousel;
+export default MyPlayListCarousel;

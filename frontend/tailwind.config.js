@@ -5,16 +5,18 @@ export default withMT({
   theme: {
     extend: {
       spacing: {
-        '280' : '70rem'
+        280: '70rem',
       },
       colors: {
         yesrae: {
           0: '#94E1FF',
           100: '#BCAAFF',
           200: '#9399FF',
+          800: '#CDC8C8',
+          900: '#1A1A1A',
         },
       },
     },
   },
-  plugins: [],
+  plugins: [require('tailwind-scrollbar-hide')],
 });

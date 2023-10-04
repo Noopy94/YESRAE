@@ -1,30 +1,46 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Howl, Howler } from 'howler';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faPlay,
+  faPause,
+  faForwardStep,
+  faBackwardStep,
+  faVolumeHigh,
+  faVolumeXmark,
+  faList,
+  faHeart,
+  faShuffle,
+  faRepeat,
+} from '@fortawesome/free-solid-svg-icons';
+import { useRecoilState } from 'recoil';
+import {
+  currentSongListState,
+  currentSongState,
+} from '../../recoil/currentsong/currentSong';
+import MiniSongListComponent from '../common/MiniSongListComponent';
+import { isListState } from '../../recoil/currentpage/currentPage';
 
 const MusicPlayer: React.FC = () => {
   const [sound, setSound] = useState<Howl | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [currentTime, setCurrentTime] = useState<number>(0); // 현재 시간을 저장하는 상태
+  const [isList, setIsList] = useRecoilState(isListState);
+  const [currentTime, setCurrentTime] = useState<number>(0);
+  const [volume, setVolume] = useState<number>(0.5);
+  const [isMuted, setIsMuted] = useState<boolean>(false); // 볼륨 상태 추가
   const soundRef = useRef<Howl | null>(null);
+  const [song, setSong] = useRecoilState(currentSongState);
+  const [songList, setSongList] = useRecoilState(currentSongListState);
 
-  //api로 song을 가져오는데 song의 id, title, artist, imgurl, songurl 가져와야함
-
-  // 해당 유저가 이 곡을 like를 했는지 아닌지 판단하는 로직 필요
-
-  // 음악 파일의 URL
-  const musicUrl =
-    'https://p.scdn.co/mp3-preview/ab879698733f3b9ff65a70a4be0b60b92b94bb59?cid=b76e1a72191a49e1bd4cc3b5aaa2511b.mp3';
+  const musicUrl = '/src/assets/test2.mp3';
 
   const playMusic = () => {
     if (!soundRef.current) {
-      // Howler로 음악 파일을 로드합니다.
       const newSound = new Howl({
         src: [musicUrl],
-        onend: () => {
-          // 음악 재생이 끝나면 실행할 작업을 여기에 추가하세요.
-        },
+        volume: isMuted ? 0 : volume, // 볼륨 상태에 따라 조절
+        onend: () => {},
         onplay: () => {
-          // 음악 재생이 시작될 때 현재 시간을 업데이트합니다.
           setCurrentTime(0);
         },
       });
@@ -49,31 +65,152 @@ const MusicPlayer: React.FC = () => {
     }
   };
 
+  const changeVolume = (newVolume: number) => {
+    if (soundRef.current) {
+      soundRef.current.volume(newVolume);
+      setVolume(newVolume);
+    }
+  };
+
+  const toggleMute = () => {
+    if (soundRef.current) {
+      if (isMuted) {
+        soundRef.current.volume(volume); // 볼륨 복원
+      } else {
+        soundRef.current.volume(0); // 볼륨 끄기
+      }
+      setIsMuted(!isMuted);
+    }
+  };
+
+  const showList = () => {
+    setIsList(!isList);
+  };
+
   useEffect(() => {
-    const intervalId = setInterval(updateCurrentTime, 100);
+    const intervalId = setInterval(updateCurrentTime, 30);
     return () => clearInterval(intervalId);
   }, []);
 
   return (
-    <div className="fixed bottom-0 left-0 flex w-full p-2 bg-gray-900 shadow-md ">
-      <img
-        src="https://i.scdn.co/image/ab67616d0000b273034c3a8ba89c6a5ecfda3175"
-        className="w-12 h-12"
-      ></img>
-      <div className="px-4">
-        <div>노래 제목</div>
-        <div className="text-sm">가수 이름</div>
-      </div>
-      <button
-        className={`bg-${
-          isPlaying ? 'red-500' : 'blue-500'
-        } text-white px-4 py-2 rounded cursor-pointer`}
-        onClick={playMusic}
+    <div>
+      <div
+        className={`fixed bottom-0 left-0 right-0 z-30 flex h-full pb-16 transition-transform duration-300 transform ${
+          isList ? 'translate-y-0' : 'translate-y-full'
+        } bg-black`}
       >
-        {isPlaying ? 'Pause' : 'Play'}
-      </button>
-      <div className="mx-12 my-auto text-center">
-        Current Time: {currentTime.toFixed(1)} seconds
+        <div className="flex items-center justify-center w-full">
+          <img src={song.songImgUrl} className="w-[480px] h-[480px]" />
+        </div>
+        <div className="py-6 border-l border-gray-900 w-96">
+          <div className="pb-4 pl-4 font-extrabold"> 이어지는 노래</div>
+          <MiniSongListComponent songs={songList} />
+        </div>
+      </div>
+      <div className="fixed z-50 w-full bottom-16">
+        <div className="h-1 bg-gray-900 ">
+          <div
+            className="h-1 bg-yesrae-0"
+            style={{
+              width: `${(currentTime / 30) * 100}%`,
+            }}
+          ></div>
+        </div>
+      </div>
+      <div className="fixed bottom-0 left-0 z-40 flex items-center justify-between w-full p-2 bg-gray-900 shadow-md">
+        <div className="flex">
+          <img src={song.songImgUrl} className="w-12 h-12"></img>
+          <div className="px-4">
+            <div className="w-24 overflow-hidden text-sm max-w-24 whitespace-nowrap text-overflow-ellipsis">
+              {song.songTitle}
+            </div>
+            <div className="w-24 overflow-hidden text-sm max-w-24 whitespace-nowrap text-overflow-ellipsis">
+              {song.songArtist}
+            </div>
+          </div>
+          <button>
+            <FontAwesomeIcon
+              icon={faHeart}
+              className="w-5 h-5 px-2 hover:text-yesrae-0"
+            />
+          </button>
+        </div>
+        <div className="justify-center ml-20">
+          <button>
+            <FontAwesomeIcon
+              icon={faShuffle}
+              className="w-5 h-5 px-2 hover:text-yesrae-0"
+            />
+          </button>
+          <button>
+            <FontAwesomeIcon
+              icon={faBackwardStep}
+              className="w-5 h-5 px-2 hover:text-yesrae-0"
+            />
+          </button>
+          <button onClick={playMusic}>
+            {isPlaying ? (
+              <FontAwesomeIcon
+                icon={faPause}
+                className="justify-center w-6 h-6 px-2 text-yesrae-0 hover:text-yesrae-100"
+              />
+            ) : (
+              <FontAwesomeIcon
+                icon={faPlay}
+                className="justify-center w-6 h-6 px-2 text-yesrae-0 hover:text-yesrae-100"
+              />
+            )}
+          </button>
+          <button>
+            <FontAwesomeIcon
+              icon={faForwardStep}
+              className="w-5 h-5 px-2 hover:text-yesrae-0"
+            />
+          </button>
+          <button>
+            <FontAwesomeIcon
+              icon={faRepeat}
+              className="w-5 h-5 px-2 hover:text-yesrae-0"
+            />
+          </button>
+        </div>
+        <div className="flex items-center my-auto">
+          <button
+            onClick={toggleMute}
+            className="w-6 h-6 mx-2 hover:text-yesrae-0"
+          >
+            {isMuted ? (
+              <FontAwesomeIcon icon={faVolumeXmark} />
+            ) : (
+              <FontAwesomeIcon icon={faVolumeHigh} />
+            )}
+          </button>
+          <input
+            type="range"
+            min={0}
+            max={1}
+            step={0.01}
+            value={isMuted ? 0 : volume}
+            onChange={(e) =>
+              isMuted ? toggleMute() : changeVolume(parseFloat(e.target.value))
+            }
+            className="w-20 h-1 mx-2"
+          />
+          <div className="px-4 text-sm text-center text-gray-400 w-36">
+            {`00:${currentTime.toFixed(0).padStart(2, '0')} / 00:30`}
+          </div>
+          <button className="mx-4 w-7 h-7">
+            <FontAwesomeIcon
+              icon={faList}
+              className={
+                isList
+                  ? 'w-7 h-7 text-yesrae-0 '
+                  : 'w-6 h-6  hover:w-7 hover:h-7 '
+              }
+              onClick={showList}
+            />
+          </button>
+        </div>
       </div>
     </div>
   );

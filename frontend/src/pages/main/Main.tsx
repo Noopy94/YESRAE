@@ -5,29 +5,40 @@ import PlayListCarousel from '../../components/common/PlayListCarousel';
 import { defaultsongs, defaultplayLists } from '../../recoil/defaultdata/data';
 import { userState } from '../../recoil/user/user';
 import { useRecoilState } from 'recoil';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import {
+  isListState,
+  currentPageState,
+} from '../../recoil/currentpage/currentPage';
+import '../../styles.css';
 
 export default function Main() {
   // 노래, 플레이 리스트 데이터 샘플, 나중에 api로 가져올 예정
   const [User, setUser] = useRecoilState(userState);
+  const [isList, setIsList] = useRecoilState(isListState);
+  const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
 
-  React.useEffect(() => {
+  useEffect(() => {
     //api 이용해서 userState 바뀔 때만 추천 알고리즘 변경
     // 로그아웃하고 다시 오면 추천 변경 되게
   }, [userState]);
 
+  useEffect(() => {
+    setCurrentPage({ pageName: '' });
+  }, []);
+
   function UserRecommend() {
-    if (User.nickName) {
+    if (User.nickname) {
       return (
         <div>
           <div className="mt-10 mb-3 text-2xl font-bold">
-            {User.nickName}님 맞춤 추천 노래 😍
+            {User.nickname}님 맞춤 추천 노래 😍
           </div>
           <div className="flex">
             <SongCarousel songs={defaultsongs} />
           </div>
           <div className="mt-10 mb-3 text-2xl font-bold">
-            {User.nickName}님 맞춤 추천 플레이 리스트 🎤
+            {User.nickname}님 맞춤 추천 플레이 리스트 🎤
           </div>
           <div className="flex">
             <PlayListCarousel playLists={defaultplayLists} />
@@ -44,7 +55,7 @@ export default function Main() {
         <div className="w-2/12">
           <HeaderNav />
         </div>
-        <main className="w-10/12 pt-12 pl-20 ">
+        <main className="w-10/12 pt-12 pl-20 scrollbar-hide">
           <div className="flex justify-center h-64 border-2 border-gray-800 w-280 ">
             대충 노래꼬맨틀 할래요? 광고
           </div>
@@ -79,7 +90,7 @@ export default function Main() {
           </div>
         </main>
       </div>
-      <footer className="flex">
+      <footer>
         <MusicPlayer />
       </footer>
     </div>
