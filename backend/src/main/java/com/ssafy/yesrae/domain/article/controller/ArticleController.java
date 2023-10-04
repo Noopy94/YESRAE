@@ -142,7 +142,7 @@ public class ArticleController {
      *
      * @return
      */
-    @GetMapping()
+    @GetMapping("/find")
     public CommonResponse<List<ArticleFindRes>> findArticleByTitleAndCategory(ArticleFindCondition articleFindCondition) {
         log.info("ArticleController_findArticleByTitleAndCategory_start: ");
         Optional<List<ArticleFindRes>> findRes = Optional.ofNullable(
