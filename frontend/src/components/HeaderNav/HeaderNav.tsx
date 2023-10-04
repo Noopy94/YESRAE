@@ -21,13 +21,17 @@ import { currentPageState } from '../../recoil/currentpage/currentPage';
 
 export default function HeaderNav() {
   const user = useRecoilValue(userState); // 유저 로그인 상태 전역 변수로 확인
-  const [User, setUser] = useRecoilState(userState);
   const currentPage = useRecoilValue(currentPageState); // currentPage.pageName 상태에 따라서 headerNav 색이 변함
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
   useEffect(() => {
     handleSearch();
   }, [search]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    window.location.href = '/';
+  };
 
   const onChangeSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
@@ -79,13 +83,18 @@ export default function HeaderNav() {
       </Link>
       <div className="p-3 border-t-2 border-gray-900">
         {user.nickname ? (
-          <div>
+          <div className="flex items-center justify-evenly gap-x-2">
             <img
               src={user.imageUrl}
               alt={user.nickname}
               className="w-12 h-12 rounded-full"
             />
-            <div>{user.nickname}님 안녕하세요.</div>
+            <div className="flex flex-col gap-y-2">
+              <div>{user.nickname}님</div>
+              <ButtonComponent type="isSmall" onClick={handleLogout}>
+                로그아웃
+              </ButtonComponent>
+            </div>
           </div>
         ) : (
           <div>
