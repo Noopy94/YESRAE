@@ -49,4 +49,9 @@ public class User extends BaseEntity {
     public void updateRefreshToken(String updateRefreshToken) {
         this.refreshToken = updateRefreshToken;
     }
+
+    public void modifyProfile(String nickname, Integer age) {
+        this.nickname = nickname;
+        this.age = age;
+    }
 }
