@@ -84,7 +84,7 @@ public class PlaylistCommentServiceImpl implements PlaylistCommentService {
                 .playlistId(m.getPlaylist().getId())
                 .userId(m.getUser().getId())
                 .content(m.getContent())
-                .creaetedAt(m.getCreatedAt())
+                .createdAt(m.getCreatedAt())
                 .build()
             ).collect(Collectors.toList());
 

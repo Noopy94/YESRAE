@@ -31,14 +31,13 @@ public class SongController {
         this.songService = songService;
     }
 
-    @GetMapping
+    @PostMapping
     public CommonResponse<?> findSong(@RequestBody SongFindGetReq songFindGetReq) {
 
         log.info("SongController_findSong_start: " + songFindGetReq.toString());
 
         SongFindRes res = songService.findSong(songFindGetReq.getSongId());
 
-        // 이게 맞나?
         SonglikeChangePostReq songlikeChangePostReq = new SonglikeChangePostReq();
         songlikeChangePostReq.setSongId(songFindGetReq.getSongId());
         songlikeChangePostReq.setUserId(songFindGetReq.getUserId());
