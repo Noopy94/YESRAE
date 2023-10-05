@@ -22,10 +22,10 @@ public class TournamentSongFindRes {
     public TournamentSongFindRes() {
     }
 
-    public TournamentSongFindRes(String title, String singer, String url, Long id) {
+    public TournamentSongFindRes(Long id, String title, String singer, String url) {
+        this.id = id;
         this.title = title;
         this.singer = singer;
         this.url = url;
-        this.id = id;
     }
 }

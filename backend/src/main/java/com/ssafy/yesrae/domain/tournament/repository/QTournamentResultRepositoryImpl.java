@@ -51,10 +51,10 @@ public class QTournamentResultRepositoryImpl implements QTournamentResultReposit
 //            .fetch();
 //    }
 
-    /**
-     * user id로 본인이 플레이 한 이상형 월드컵 조회하기 위해 user id 일치하는 데이터 가져오는 조건문
-     */
-    private BooleanExpression userIdEq(Long userId) {
-        return tournamentResult.tournament.user.id.eq(userId);
-    }
+//    /**
+//     * user id로 본인이 플레이 한 이상형 월드컵 조회하기 위해 user id 일치하는 데이터 가져오는 조건문
+//     */
+//    private BooleanExpression userIdEq(Long userId) {
+//        return tournamentResult.tournament.user.id.eq(userId);
+//    }
 }
