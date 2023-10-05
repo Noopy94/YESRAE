@@ -41,6 +41,7 @@ public class QTournamentSongRepositoryImpl implements QTournamentSongRepository{
 
         return queryFactory
             .select(Projections.constructor(TournamentSongFindRes.class,
+                tournamentSong.id.as("id"),
                 tournamentSong.title.as("title"),
                 tournamentSong.singer.as("singer"),
                 tournamentSong.url.as("url")))

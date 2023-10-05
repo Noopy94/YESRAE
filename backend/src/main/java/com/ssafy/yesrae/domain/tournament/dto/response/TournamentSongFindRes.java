@@ -10,6 +10,8 @@ import lombok.Data;
 @Builder
 public class TournamentSongFindRes {
 
+    private Long id;
+
     private String title;
 
     private String singer;
@@ -20,9 +22,10 @@ public class TournamentSongFindRes {
     public TournamentSongFindRes() {
     }
 
-    public TournamentSongFindRes(String title, String singer, String url) {
+    public TournamentSongFindRes(String title, String singer, String url, Long id) {
         this.title = title;
         this.singer = singer;
         this.url = url;
+        this.id = id;
     }
 }
