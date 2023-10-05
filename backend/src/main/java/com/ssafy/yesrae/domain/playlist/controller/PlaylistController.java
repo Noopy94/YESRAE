@@ -338,5 +338,20 @@ public class PlaylistController {
 
     }
 
+    @GetMapping("/playlistlike")
+    public CommonResponse<?> findPlayListLike(
+        @RequestBody PlaylistLikeRegistPostReq playlistLikeRegistPostReq) {
+
+        log.info(
+            "PlaylistController_findPlayListLike_start: " + playlistLikeRegistPostReq.toString());
+
+        Boolean findRes = playlistService.findByUserLike(playlistLikeRegistPostReq);
+
+        log.info("PlaylistController_findPlayListLike_end: ");
+
+        return CommonResponse.success(findRes);
+
+    }
+
 
 }
