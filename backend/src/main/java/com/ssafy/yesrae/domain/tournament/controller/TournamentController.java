@@ -59,11 +59,11 @@ public class TournamentController {
      *  플레이 한 이상형 월드컵을 각 플레이 마다 구분할 수 있도록 DB에 저장
      */
     @PostMapping()
-    public CommonResponse<?> registTournament(@PathVariable Long userId) {
+    public CommonResponse<?> registTournament() {
 
-        log.info("TournamentController_registTournament_start: " + userId);
+        log.info("TournamentController_registTournament_start");
 
-        Long tournamentId = tournamentService.registTournament(userId);
+        Long tournamentId = tournamentService.registTournament();
 
         TournamentRegistPostRes tournamentRegistPostRes = TournamentRegistPostRes.builder()
             .id(tournamentId)
@@ -90,20 +90,20 @@ public class TournamentController {
         return CommonResponse.success(findRes);
     }
 
-    /**
-     *  유저의 이상형 월드컵 플레이 결과 로그를 불러오는 API
-     */
-    @GetMapping("/result/{userId}")
-    public CommonResponse<?> findTournamentResult(@PathVariable Long userId) {
-
-        log.info("TournamentController_findTournamentResult_start: "
-            + userId);
-
-        List<TournamentResultFindRes> findRes = tournamentService.findTournamentResult(userId);
-
-        log.info("TournamentController_findTournamentResult_end: " + findRes.toString());
-        return CommonResponse.success(findRes);
-    }
+//    /**
+//     *  유저의 이상형 월드컵 플레이 결과 로그를 불러오는 API
+//     */
+//    @GetMapping("/result/{userId}")
+//    public CommonResponse<?> findTournamentResult(@PathVariable Long userId) {
+//
+//        log.info("TournamentController_findTournamentResult_start: "
+//            + userId);
+//
+//        List<TournamentResultFindRes> findRes = tournamentService.findTournamentResult(userId);
+//
+//        log.info("TournamentController_findTournamentResult_end: " + findRes.toString());
+//        return CommonResponse.success(findRes);
+//    }
 
     /**
      *  이상형 월드컵 모든 유저들의 플레이 합한 결과 노래들을 1등 많이 한 순위로 정렬해서 가져오는 API

@@ -64,18 +64,13 @@ public class TournamentServiceImpl implements TournamentService{
 
     /**
      * 플레이 한 이상형 월드컵을 각 플레이 마다 구분할 수 있도록 DB에 저장
-     * @param userId : 이상형 월드컵 생성한 유저 ID
      */
     @Override
-    public Long registTournament(Long userId) {
+    public Long registTournament() {
 
-        log.info("TournamentService_registTournament_start: "
-            + userId);
+        log.info("TournamentService_registTournament_start");
 
-        User user = userRepository.findById(userId)
-            .orElseThrow(NoDataException::new);
         Tournament tournament = Tournament.builder()
-            .user(user)
             .build();
 
         tournament = tournamentRepository.save(tournament);
@@ -130,20 +125,20 @@ public class TournamentServiceImpl implements TournamentService{
         return findRes;
     }
 
-    /**
-     * 유저 Id 별 이상형 월드컵 결과를 가져오기 위한 서비스
-     * @param userId : 이상형 월드컵 플레이 유저 Id
-     */
-    @Override
-    public List<TournamentResultFindRes> findTournamentResult(Long userId) {
-        log.info("TournamentService_findTournamentResult_start: "
-            + userId);
-
-        List<TournamentResultFindRes> findRes = tournamentResultRepository.findTournamentResult(userId);
-
-        log.info("TournamentService_findTournamentResult_end: success");
-        return findRes;
-    }
+//    /**
+//     * 유저 Id 별 이상형 월드컵 결과를 가져오기 위한 서비스
+//     * @param userId : 이상형 월드컵 플레이 유저 Id
+//     */
+//    @Override
+//    public List<TournamentResultFindRes> findTournamentResult(Long userId) {
+//        log.info("TournamentService_findTournamentResult_start: "
+//            + userId);
+//
+//        List<TournamentResultFindRes> findRes = tournamentResultRepository.findTournamentResult(userId);
+//
+//        log.info("TournamentService_findTournamentResult_end: success");
+//        return findRes;
+//    }
 
     /**
      * 이상형 월드컵 모든 유저들의 플레이 합한 결과 노래들을 1등 많이 한 순위로 정렬해서 가져오는 API

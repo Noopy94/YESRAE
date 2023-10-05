@@ -9,5 +9,5 @@ import java.util.List;
  */
 public interface QTournamentResultRepository {
 
-    List<TournamentResultFindRes> findTournamentResult(Long userId);
+//    List<TournamentResultFindRes> findTournamentResult(Long userId);
 }

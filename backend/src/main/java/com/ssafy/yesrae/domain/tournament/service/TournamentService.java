@@ -12,11 +12,11 @@ public interface TournamentService {
 
     List<TournamentSongFindRes> findTournamentSong(FindTournamentSongGetReq findTournamentSongGetReq);
 
-    Long registTournament(Long userId);
+    Long registTournament();
 
     List<TournamentRegistResultPostRes> registTournamentResult(RegistTournamentResultPostReq registTournamentResultPostReq);
 
-    List<TournamentResultFindRes> findTournamentResult(Long userId);
+//    List<TournamentResultFindRes> findTournamentResult(Long userId);
 
     List<TournamentPopularSongFindRes> findTournamentPopularSong();
 }

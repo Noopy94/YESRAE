@@ -28,10 +28,6 @@ import org.hibernate.annotations.DynamicInsert;
 @Entity
 public class Tournament extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
     @CreationTimestamp
     private LocalDateTime date;
 }
