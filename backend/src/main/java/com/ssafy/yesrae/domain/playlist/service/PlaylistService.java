@@ -79,5 +79,7 @@ public interface PlaylistService {
     // 태그로 플레이 리스트 검색, 페이지네이션 필요
     Page<PlaylistGetResponse> searchByTagPlaylist(String keyword, Pageable pageable);
 
+    boolean findByUserLike(PlaylistLikeRegistPostReq playlistLikeRegistPostReq);
+
 
 }

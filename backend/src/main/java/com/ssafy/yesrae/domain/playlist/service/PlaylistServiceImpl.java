@@ -573,8 +573,7 @@ public class PlaylistServiceImpl implements PlaylistService {
                 playlist.getDescription(),
                 playlist.getViewCount(),
                 playlist.getLikeCount(),
-                playlist.getImgUrl(),
-                playlistTagRepository.findTagNameByPlaylist(playlist)
+                playlist.getImgUrl()
             );
             results.add(response);
         }
@@ -624,6 +623,21 @@ public class PlaylistServiceImpl implements PlaylistService {
 
         log.info("PlaylistService_searchByTagPlaylist_end");
         return playlists;
+    }
+
+    public boolean findByUserLike(PlaylistLikeRegistPostReq playlistLikeRegistPostReq) {
+        User user = userRepository.findById(playlistLikeRegistPostReq.getUserId())
+            .orElse(null);
+
+        Playlist playlist = playlistRepository.findById(playlistLikeRegistPostReq.getPlaylistId())
+            .orElse(null);
+
+        if (user == null || playlist == null) {
+            return false;
+        }
+        PlaylistLike playlistLike = playlistLikeRepository.findByUserAndPlaylist(user, playlist);
+
+        return playlistLike != null;
     }
 
 }

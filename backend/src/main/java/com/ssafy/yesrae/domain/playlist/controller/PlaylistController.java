@@ -247,7 +247,7 @@ public class PlaylistController {
     }
 
     // 검색시 페이지네이션 플레이 리스트 반환
-    @GetMapping("/findtag")
+    @PostMapping("/findtag")
     public CommonResponse<Page<PlaylistGetResponse>> findPlaylistByTag(
         @RequestBody PlaylistSearchGetReq playlistSearchGetReq
     ) {
@@ -265,7 +265,7 @@ public class PlaylistController {
         return CommonResponse.success(findRes);
     }
 
-    @GetMapping("/findtitle")
+    @PostMapping("/findtitle")
     public CommonResponse<Page<PlaylistGetResponse>> findPlaylistByTitle(
         @RequestBody PlaylistSearchGetReq playlistSearchGetReq
     ) {
@@ -333,6 +333,22 @@ public class PlaylistController {
         List<PlaylistGetResponse> findRes = playlistService.getFollowerPlaylist(Id);
 
         log.info("PlaylistController_findFollowerPlayList_end: ");
+
+        return CommonResponse.success(findRes);
+
+    }
+
+    // Like 표시했는지 아닌지 확인
+    @PostMapping("/playlistlike")
+    public CommonResponse<?> findPlayListLike(
+        @RequestBody PlaylistLikeRegistPostReq playlistLikeRegistPostReq) {
+
+        log.info(
+            "PlaylistController_findPlayListLike_start: " + playlistLikeRegistPostReq.toString());
+
+        Boolean findRes = playlistService.findByUserLike(playlistLikeRegistPostReq);
+
+        log.info("PlaylistController_findPlayListLike_end: ");
 
         return CommonResponse.success(findRes);
 
