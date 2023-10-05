@@ -1,6 +1,9 @@
 import HeaderNav from '../../components/HeaderNav/HeaderNav';
 import MusicPlayer from '../../components/playercontroller/MusicPlayer';
-import { defaultplayLists } from '../../recoil/defaultdata/data';
+import {
+  defaultplayLists1,
+  defaultplayLists2,
+} from '../../recoil/defaultdata/data';
 import { userState } from '../../recoil/user/user';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useEffect, useState } from 'react';
@@ -15,20 +18,21 @@ export default function MyPlayList() {
 
   const User = useRecoilValue(userState);
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
-  const [playlist1, setPlayList1] = useState<PlayList[]>([]);
+  const [myPlaylist, setMyPlayList] = useState<PlayList[]>([]);
+  // const [myPlayLikelist, setMyLikePlayList] = useState<PlayList[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (User.nickname === '') {
+      navigate('/');
+    }
+
     // 내 플레이 리스트 가져오기
     async function MyPlaylists() {
-      if (User.nickname === '') {
-        navigate('/');
-      }
-
       try {
         console.log('내 플레이 리스트 가져오기 성공');
         const myPlaylists = await findUserPlayListApi(User.id);
-        setPlayList1(myPlaylists || []);
+        setMyPlayList(myPlaylists || []);
       } catch (error) {
         console.error('베스트 플레이 리스트 가져오기 실패:', error);
       }
@@ -36,6 +40,7 @@ export default function MyPlayList() {
 
     setCurrentPage({ pageName: 'MyPage' });
     MyPlaylists();
+    console.log('myPlaylist 확인' + myPlaylist.toString());
   }, []);
 
   return (
@@ -72,13 +77,20 @@ export default function MyPlayList() {
               나의 플레이 리스트 😎
             </div>
             <div className="flex py-4">
-              <MyPlayListCarousel playLists={playlist1} />
+              {myPlaylist.length > 0 ? (
+                <MyPlayListCarousel playLists={myPlaylist} />
+              ) : (
+                <div className="text-xl">
+                  아직 나만의 플레이 리스트가 없어요 😪 지금 만들러 가볼까요!?
+                  😆
+                </div>
+              )}
             </div>
             <div className="mt-12 mb-3 text-2xl font-bold">
               좋아요한 플레이 리스트 👍
             </div>
             <div className="flex py-4">
-              <MyPlayListCarousel playLists={defaultplayLists} />
+              <MyPlayListCarousel playLists={defaultplayLists2} />
             </div>
           </div>
           <div>

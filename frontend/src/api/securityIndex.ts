@@ -1,6 +1,4 @@
 import Axios from 'axios';
-import { useRecoilValue, useRecoilState } from 'recoil';
-import { userState } from '../recoil/user/user';
 
 //const BASE_URL = 'https://i9a304.p.ssafy.io/api';
 
@@ -14,11 +12,15 @@ const axios = Axios.create({
 
 axios.interceptors.request.use(
   (config) => {
-    const user = useRecoilValue(userState);
-    const jwtToken = sessionStorage.getItem(user.accessToken);
-    // JwtToken 확인
-    console.log('Jwt 토근 확인' + jwtToken);
-    config.headers['Authorization'] = jwtToken ? `Bearer ${jwtToken}` : '';
+    const userString = localStorage.getItem('user');
+    if (userString) {
+      const user = JSON.parse(userString);
+      const jwtToken: string = user.accessToken;
+      // JwtToken 확인
+      console.log('Jwt 토근 확인' + jwtToken);
+      config.headers['Authorization'] = jwtToken ? `Bearer ${jwtToken}` : '';
+    }
+    config.headers['Content-Type'] = 'multipart/form-data';
     return config;
   },
   (err) => err,
