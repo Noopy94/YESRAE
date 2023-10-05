@@ -9,9 +9,9 @@ logger = logging.getLogger(__name__)
 
 class SongRecommend:
 
-    def __init__(self):
+
         
-        self.song_repository = SongRepository()
+    song_repository = SongRepository()
 
 
     "노래 추천하기"
@@ -23,9 +23,11 @@ class SongRecommend:
 
         result = []
 
-        for song in recommend_song:
+        for song_id in recommend_song:
 
-            song_info = RecommendSongSchema(id=song)
+            song : Song = self.song_repository.get_song_by_id(song_id)
+
+            song_info = RecommendSongSchema(id=song[0].id, title=song[0].name, singer=song[0].artist_name, album_img=song[0].img_url)
 
             result.append(song_info)
 
