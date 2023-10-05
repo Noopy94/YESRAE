@@ -116,6 +116,7 @@ public class TournamentServiceImpl implements TournamentService{
                 .songTitle(tournamentSongs.get(i - 1).getTitle())
                 .songSinger(tournamentSongs.get(i - 1).getSinger())
                 .imgUrl(tournamentSongs.get(i - 1).getImgUrl())
+                .ranking(i == 4 ? 3 : i)
                 .build());
         }
 

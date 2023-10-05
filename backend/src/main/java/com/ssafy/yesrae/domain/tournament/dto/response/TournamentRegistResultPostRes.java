@@ -15,4 +15,6 @@ public class TournamentRegistResultPostRes {
     private String songSinger;
 
     private String imgUrl;
+
+    private Integer ranking;
 }
