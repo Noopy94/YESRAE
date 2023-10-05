@@ -1,15 +1,17 @@
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import HeadPhone from '../../assets/headphone_icon.svg';
 import Mike from '../../assets/mike_icon.svg';
 import Note from '../../assets/note_icon.svg';
 import Play from '../../assets/play_icon.svg';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 
 const Tournament = () => {
+  const navigate = useNavigate();
+
   // 버튼 클릭시 모달
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [selectedValue, setSelectedValue] = useState('');
+  const [selectedValue, setSelectedValue] = useState('4');
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -19,17 +21,20 @@ const Tournament = () => {
     setIsModalOpen(true);
   };
 
-  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setSelectedValue(event.target.value);
   };
 
   // 몇강인지 선택해서 보내기
+  const handleTournamentStart = () => {
+    navigate(`/tournament/${selectedValue}`);
+  };
 
   const category = [4, 8, 16, 32, 64];
 
   return (
     <div className="h-full mb-10">
-      <div className="mt-20 mb-20">
+      <div className="mt-16 mb-10">
         <div className="flex items-center justify-center text-6xl font-bold mb-30">
           이상형 월드컵
         </div>
@@ -37,20 +42,20 @@ const Tournament = () => {
 
       <div className="flex justify-center m-10 mb-10 text-6xl mt-30">
         <div className="mx-10 mt-20">
-          <img src={HeadPhone} alt="HeadPhone" className="flex" />
+          <img src={HeadPhone} alt="HeadPhone" className="flex min-w-max" />
         </div>
         <div className="mx-10 mt-25">
-          <img src={Mike} alt="Mike" className="flex" />
+          <img src={Mike} alt="Mike" className="flex min-w-max" />
         </div>
         <div className="mx-10 mt-44">
-          <img src={Note} alt="Note" className="flex" />
+          <img src={Note} alt="Note" className="flex min-w-max" />
         </div>
         <div className="mx-10 mt-10">
-          <img src={Play} alt="Play" className="flex " />
+          <img src={Play} alt="Play" className="flex min-w-max" />
         </div>
       </div>
-      <div className="mt-40 mb-30">
-        <div className="flex justify-center w-screen mt-10 mb-20 text-2xl">
+      <div>
+        <div className="flex justify-center w-screen mt-10 mb-10 text-2xl">
           이상형 월드컵 지금 시작해보세요!
         </div>
         <div className="flex items-center justify-center">
@@ -84,11 +89,12 @@ const Tournament = () => {
                     </option>
                   ))}
                 </select>
-                <Link to={`/tournament?category=${selectedValue}`}>
-                  <button className="w-24 h-12 text-xl mx-28 rounded-xl bg-yesrae-900 hover:bg-gray-800">
-                    선택
-                  </button>
-                </Link>
+                <button
+                  onClick={handleTournamentStart}
+                  className="w-24 h-12 text-xl mx-28 rounded-xl bg-yesrae-900 hover:bg-gray-800"
+                >
+                  선택
+                </button>
               </div>
             </div>
           </div>
