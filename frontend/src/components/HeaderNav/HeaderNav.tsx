@@ -65,7 +65,7 @@ export default function HeaderNav() {
   };
 
   const navigateToMyPage = () => {
-    navigate('/mypage/' + user.id);
+    navigate('/mypage/' + user.userId);
   };
 
   const navigateToAiVoice = () => {

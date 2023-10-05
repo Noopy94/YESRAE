@@ -27,7 +27,7 @@ export default function MyPlayList() {
 
       try {
         console.log('내 플레이 리스트 가져오기 성공');
-        const myPlaylists = await findUserPlayListApi(User.id);
+        const myPlaylists = await findUserPlayListApi(User.userId);
         setPlayList1(myPlaylists || []);
       } catch (error) {
         console.error('베스트 플레이 리스트 가져오기 실패:', error);
