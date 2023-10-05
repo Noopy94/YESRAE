@@ -38,7 +38,7 @@ public class TournamentSong extends BaseEntity {
     @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
     private Integer vote;
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(255) CHARACTER SET UTF8")
+    @Column(columnDefinition = "VARCHAR(255) CHARACTER SET UTF8")
     private String imgUrl;
 
     /**
