@@ -29,7 +29,7 @@ function App() {
           element={<PlayListDetail />}
         />
         <Route
-          path='/songdetail/:songId'
+          path='/song/:songId'
           element={<SongDetail />}
         />
       </Routes>

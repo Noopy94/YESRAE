@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { findNotification, getDate, getNotification } from '../../api/commentApi.ts';
 
 interface Notification {
+  id: number,
   title: string,
   content: string,
   createdAt: string,
@@ -10,38 +11,40 @@ interface Notification {
 
 interface NotificationProps {
   userId: number;
+  loading: (arg: boolean) => void;
 }
 
-const notifications: Notification[] = [];
-export default function NotificationComponent({ userId }: NotificationProps) {
+export default function NotificationComponent({ userId, loading }: NotificationProps) {
 
-  const [currentNotifiactionList, setCurrentNotificationList] = useState(notifications);
+  const [currentNotifiactionList, setCurrentNotificationList] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:8080/notification/user/' + userId)
-    .then((response) => {
-      setCurrentNotificationList(response.data.content);
-    })
-    .catch((error) => {
-      console.error('Error fetching Notification data:', error);
-    });
+    getNotification(userId).then((res) => setCurrentNotificationList(res));
   }, []);
 
-  const getDate = (createdAt: string) => {
-    const date = new Date(createdAt);
-    return date.getFullYear() + '-' + date.getMonth() + '-' + date.getDay() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+  const onChangeLoading = () => {
+    loading(true);
+  };
+
+  const readNotification = (notifiactionId: number) => {
+    findNotification(notifiactionId).then(onChangeLoading);
   };
 
   return (
-    <div>
+    <div className='bg-white w-4/5'>
       {currentNotifiactionList.map((notification: Notification, index: number) => (
-        <div key={index}
-             className={notification.isViewed === true ? 'text-gray-500' : 'text-white-900'}>
-          <div>제목 : {notification.title}</div>
+        <div key={index} className='p-5 cursor-pointer'>
+          <div
+            className={notification.isViewed === true ? 'text-gray-500' : 'text-black'}
+            onClick={() => readNotification(notification.id)}>
+            <div className='py-3'>
+              <div className='inline pr-5'>{notification.title}</div>
+              <div className='inline float-right text-xs'>{getDate(notification.createdAt)}</div>
+            </div>
+            <div className='pt-7'>{notification.content}</div>
+          </div>
           <br />
-          <div>내용 : {notification.content}</div>
-          <br />
-          <div>작성 시간 : {getDate(notification.createdAt)}</div>
+          <hr />
         </div>
       ))}
     </div>
