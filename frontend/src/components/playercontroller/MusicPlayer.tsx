@@ -20,6 +20,7 @@ import {
 } from '../../recoil/currentsong/currentSong';
 import MiniSongListComponent from '../common/MiniSongListComponent';
 import { isListState } from '../../recoil/currentpage/currentPage';
+import { userState } from '../../recoil/user/user';
 
 const MusicPlayer: React.FC = () => {
   const [sound, setSound] = useState<Howl | null>(null);
@@ -32,12 +33,11 @@ const MusicPlayer: React.FC = () => {
   const [song, setSong] = useRecoilState(currentSongState);
   const [songList, setSongList] = useRecoilState(currentSongListState);
 
-  const musicUrl = '/src/assets/test2.mp3';
-
   const playMusic = () => {
     if (!soundRef.current) {
+      const songurl = song.songUrl || '';
       const newSound = new Howl({
-        src: [musicUrl],
+        src: [songurl],
         volume: isMuted ? 0 : volume, // 볼륨 상태에 따라 조절
         onend: () => {},
         onplay: () => {
@@ -91,6 +91,39 @@ const MusicPlayer: React.FC = () => {
     const intervalId = setInterval(updateCurrentTime, 30);
     return () => clearInterval(intervalId);
   }, []);
+
+  useEffect(() => {
+    // song 값이 변경될 때마다 실행
+    if (song.songUrl) {
+      if (soundRef.current) {
+        soundRef.current.unload(); // 이전 음악 언로드
+      }
+
+      const newSound = new Howl({
+        src: [song.songUrl],
+        volume: isMuted ? 0 : volume,
+        onend: () => {},
+        onplay: () => {
+          setCurrentTime(0);
+        },
+      });
+      soundRef.current = newSound;
+      setSound(newSound);
+
+      // 재생 상태에 따라 음악 재생 또는 일시 정지
+      if (isPlaying) {
+        Howler.ctx.resume().then(() => {
+          soundRef.current?.play();
+        });
+      }
+    } else {
+      // song.songUrl이 없는 경우 음악 언로드 및 재생 상태 초기화
+      if (soundRef.current) {
+        soundRef.current.unload();
+      }
+      setIsPlaying(false);
+    }
+  }, [song]); // song 값이 변경될 때만 실행
 
   return (
     <div>

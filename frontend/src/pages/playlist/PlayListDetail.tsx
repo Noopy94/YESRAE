@@ -1,10 +1,8 @@
 import HeaderNav from '../../components/HeaderNav/HeaderNav';
 import MusicPlayer from '../../components/playercontroller/MusicPlayer';
-import { userState } from '../../recoil/user/user';
 import { useRecoilState } from 'recoil';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
 import { currentPlayListState } from '../../recoil/playlist/currentPlayList';
 import {
   currentPageState,
@@ -25,7 +23,6 @@ import { defaultplayLists } from '../../recoil/defaultdata/data';
 export default function PlayListDetail() {
   // 노래, 플레이 리스트 데이터 샘플, 나중에 api로 가져올 예정
 
-  const [User, setUser] = useRecoilState(userState);
   const { playListId } = useParams();
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
   const [currentSong, setCurrentSong] = useRecoilState(currentSongState);

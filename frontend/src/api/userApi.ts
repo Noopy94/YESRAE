@@ -59,3 +59,11 @@ export const regist = async (
   });
   return response.data;
 };
+
+// Id로 유저 닉네임 찾는 api
+export const findnickname = async (Id: number) => {
+  const response = await axios.get(BASE_URL + 'user/nickname/' + Id);
+  console.log('responsedata: ' + response.data.content);
+
+  return response.data.content.nickname;
+};
