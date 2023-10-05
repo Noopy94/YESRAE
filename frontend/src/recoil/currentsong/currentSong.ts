@@ -3,21 +3,19 @@ import { Song } from '../defaultdata/data';
 
 // 플레이 리스트 초기상태
 const initialCurrentSongState = {
-  songId: '3cGp1jXxLReLKz7QgVbWZR',
-  songTitle: 'Hello',
-  songUrl:
-    'https://p.scdn.co/mp3-preview/09b71fad1e13164f43c9248ecc8d9ab85abd9ae8?cid=b76e1a72191a49e1bd4cc3b5aaa2511b',
-  songArtist: '조이',
+  songId: '484dgUyawknLkNyQfXoDkh',
+  songTitle: '기억을 걷는 시간 (Feat. 10CM)',
+  songUrl: '/src/assets/testmusic1.mp3',
+  songArtist: 'Sion',
   songImgUrl:
-    'https://i.scdn.co/image/ab67616d00001e0266ff63bc084fb412aa2dddd3',
+    'https://i.scdn.co/image/ab67616d00001e02ed58cc90fece9bdd2ed59527',
 };
 
 const initialCurrentSongListState: Song[] = [
   {
     songId: '484dgUyawknLkNyQfXoDkh',
     songTitle: '기억을 걷는 시간 (Feat. 10CM)',
-    songUrl:
-      'https://p.scdn.co/mp3-preview/d628dcf4d51ed6b8d5ff77b881877f60cfbc8f13?cid=b76e1a72191a49e1bd4cc3b5aaa2511b',
+    songUrl: '/src/assets/testmusic1.mp3',
     songArtist: 'Sion',
     songImgUrl:
       'https://i.scdn.co/image/ab67616d00001e02ed58cc90fece9bdd2ed59527',
@@ -25,119 +23,58 @@ const initialCurrentSongListState: Song[] = [
   {
     songId: '1jCRPdDQvCA5kQXtrPFWPC',
     songTitle: '돌덩이',
-    songUrl:
-      'https://p.scdn.co/mp3-preview/a8583fb66e438c93e1ed0d4aa57fa1f245d81b6b?cid=b76e1a72191a49e1bd4cc3b5aaa2511b',
+    songUrl: '/src/assets/testmusic2.mp3',
     songArtist: '하현우',
     songImgUrl:
       'https://i.scdn.co/image/ab67616d00001e02a99b40ff1a1b414586c0b0a3',
   },
   {
-    songId: '6PdMx183cnLH6iqar2XzJv',
-    songTitle: 'With You (사내연애 사절! X Young K)',
-    songUrl:
-      'https://p.scdn.co/mp3-preview/154d06b451936fa2b0b0cd6c1e9757f5f815ad7d?cid=b76e1a72191a49e1bd4cc3b5aaa2511b',
-    songArtist: 'Young K',
+    songId: '3cGp1jXxLReLKz7QgVbWZR',
+    songTitle: 'Hello',
+    songUrl: '/src/assets/testmusic3.mp3',
+    songArtist: '조이',
     songImgUrl:
-      'https://i.scdn.co/image/ab67616d00001e02135435ecf6953fd2c9a556d6',
+      'https://i.scdn.co/image/ab67616d00001e0266ff63bc084fb412aa2dddd3',
   },
   {
     songId: '7CZRguMolNqIobnXxpV735',
     songTitle: 'Coin',
-    songUrl:
-      'https://p.scdn.co/mp3-preview/76984dd3cc833134c0284618d7c33a5736681dcb?cid=b76e1a72191a49e1bd4cc3b5aaa2511b',
+    songUrl: '/src/assets/testmusic4.mp3',
     songArtist: '아이유',
     songImgUrl:
       'https://i.scdn.co/image/ab67616d00001e024ed058b71650a6ca2c04adff',
   },
   {
-    songId: '7CZRguMolNqIobnXxpV735',
-    songTitle: 'Coin',
-    songUrl:
-      'https://p.scdn.co/mp3-preview/76984dd3cc833134c0284618d7c33a5736681dcb?cid=b76e1a72191a49e1bd4cc3b5aaa2511b',
-    songArtist: '아이유',
+    songId: '6RBziRcDeiho3iTPdtEeg9',
+    songTitle: '사건의 지평선',
+    songUrl: '/src/assets/testmusic5.mp3',
+    songArtist: '윤하',
     songImgUrl:
-      'https://i.scdn.co/image/ab67616d00001e024ed058b71650a6ca2c04adff',
+      'https://i.scdn.co/image/ab67616d00001e022918f236448bf544586e388a',
   },
   {
-    songId: '7CZRguMolNqIobnXxpV735',
-    songTitle: 'Coin',
-    songUrl:
-      'https://p.scdn.co/mp3-preview/76984dd3cc833134c0284618d7c33a5736681dcb?cid=b76e1a72191a49e1bd4cc3b5aaa2511b',
-    songArtist: '아이유',
+    songId: '5sdQOyqq2IDhvmx2lHOpwd',
+    songTitle: 'Super Shy',
+    songUrl: '/src/assets/testmusic6.mp3',
+    songArtist: 'NewJeans',
     songImgUrl:
-      'https://i.scdn.co/image/ab67616d00001e024ed058b71650a6ca2c04adff',
+      'https://i.scdn.co/image/ab67616d00001e023d98a0ae7c78a3a9babaf8af',
   },
   {
-    songId: '7CZRguMolNqIobnXxpV735',
-    songTitle: 'Coin',
-    songUrl:
-      'https://p.scdn.co/mp3-preview/76984dd3cc833134c0284618d7c33a5736681dcb?cid=b76e1a72191a49e1bd4cc3b5aaa2511b',
-    songArtist: '아이유',
+    songId: '5aHwYjiSGgJAxy10mBMlDT',
+    songTitle: 'Dynamite',
+    songUrl: '/src/assets/testmusic7.mp3',
+    songArtist: '방탄 소년단',
     songImgUrl:
-      'https://i.scdn.co/image/ab67616d00001e024ed058b71650a6ca2c04adff',
+      'https://i.scdn.co/image/ab67616d00001e02184d20129ccf5aafcc776d11',
   },
   {
-    songId: '7CZRguMolNqIobnXxpV735',
-    songTitle: 'Coin',
-    songUrl:
-      'https://p.scdn.co/mp3-preview/76984dd3cc833134c0284618d7c33a5736681dcb?cid=b76e1a72191a49e1bd4cc3b5aaa2511b',
-    songArtist: '아이유',
+    songId: '68r87x3VZdAMhv8nBVuynz',
+    songTitle: '퀸카',
+    songUrl: '/src/assets/testmusic8.mp3',
+    songArtist: '아이들',
     songImgUrl:
-      'https://i.scdn.co/image/ab67616d00001e024ed058b71650a6ca2c04adff',
-  },
-  {
-    songId: '7CZRguMolNqIobnXxpV735',
-    songTitle: 'Coin',
-    songUrl:
-      'https://p.scdn.co/mp3-preview/76984dd3cc833134c0284618d7c33a5736681dcb?cid=b76e1a72191a49e1bd4cc3b5aaa2511b',
-    songArtist: '아이유',
-    songImgUrl:
-      'https://i.scdn.co/image/ab67616d00001e024ed058b71650a6ca2c04adff',
-  },
-  {
-    songId: '7CZRguMolNqIobnXxpV735',
-    songTitle: 'Coin',
-    songUrl:
-      'https://p.scdn.co/mp3-preview/76984dd3cc833134c0284618d7c33a5736681dcb?cid=b76e1a72191a49e1bd4cc3b5aaa2511b',
-    songArtist: '아이유',
-    songImgUrl:
-      'https://i.scdn.co/image/ab67616d00001e024ed058b71650a6ca2c04adff',
-  },
-  {
-    songId: '7CZRguMolNqIobnXxpV735',
-    songTitle: 'Coin',
-    songUrl:
-      'https://p.scdn.co/mp3-preview/76984dd3cc833134c0284618d7c33a5736681dcb?cid=b76e1a72191a49e1bd4cc3b5aaa2511b',
-    songArtist: '아이유',
-    songImgUrl:
-      'https://i.scdn.co/image/ab67616d00001e024ed058b71650a6ca2c04adff',
-  },
-  {
-    songId: '7CZRguMolNqIobnXxpV735',
-    songTitle: 'Coin',
-    songUrl:
-      'https://p.scdn.co/mp3-preview/76984dd3cc833134c0284618d7c33a5736681dcb?cid=b76e1a72191a49e1bd4cc3b5aaa2511b',
-    songArtist: '아이유',
-    songImgUrl:
-      'https://i.scdn.co/image/ab67616d00001e024ed058b71650a6ca2c04adff',
-  },
-  {
-    songId: '7CZRguMolNqIobnXxpV735',
-    songTitle: 'Coin',
-    songUrl:
-      'https://p.scdn.co/mp3-preview/76984dd3cc833134c0284618d7c33a5736681dcb?cid=b76e1a72191a49e1bd4cc3b5aaa2511b',
-    songArtist: '아이유',
-    songImgUrl:
-      'https://i.scdn.co/image/ab67616d00001e024ed058b71650a6ca2c04adff',
-  },
-  {
-    songId: '7CZRguMolNqIobnXxpV735',
-    songTitle: 'Coin',
-    songUrl:
-      'https://p.scdn.co/mp3-preview/76984dd3cc833134c0284618d7c33a5736681dcb?cid=b76e1a72191a49e1bd4cc3b5aaa2511b',
-    songArtist: '아이유',
-    songImgUrl:
-      'https://i.scdn.co/image/ab67616d00001e024ed058b71650a6ca2c04adff',
+      'https://i.scdn.co/image/ab67616d00001e0257de3da10da259d0a19a81b4',
   },
 ];
 

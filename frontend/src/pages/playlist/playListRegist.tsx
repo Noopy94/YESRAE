@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
-import { useRecoilState } from 'recoil';
+import React, { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import { userState } from '../../recoil/user/user';
-import { isListState } from '../../recoil/currentpage/currentPage';
 import HeaderNav from '../../components/HeaderNav/HeaderNav';
 import MusicPlayer from '../../components/playercontroller/MusicPlayer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 export default function PlayListRegist() {
-  const [User, setUser] = useRecoilState(userState);
-  const [isList, setIsList] = useRecoilState(isListState);
+  const User = useRecoilValue(userState);
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [playlistTitle, setPlaylistTitle] = useState('');
@@ -67,6 +65,12 @@ export default function PlayListRegist() {
   const onRegistPlayList = () => {
     // 데이터 모아서 api로 전송! 등록! 완료되면 플레이 리스트로 돌려 보낼것!
   };
+
+  useEffect(() => {
+    if (User.nickname === '') {
+      navigate('/');
+    }
+  }, []);
 
   return (
     <div>

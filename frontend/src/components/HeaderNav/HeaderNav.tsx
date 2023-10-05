@@ -20,8 +20,8 @@ import { userState } from '../../recoil/user/user';
 import { currentPageState } from '../../recoil/currentpage/currentPage';
 
 export default function HeaderNav() {
-  const user = useRecoilValue(userState); // 유저 로그인 상태 전역 변수로 확인
-  const currentPage = useRecoilValue(currentPageState); // currentPage.pageName 상태에 따라서 headerNav 색이 변함
+  const user = useRecoilValue(userState);
+  const currentPage = useRecoilValue(currentPageState);
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
   useEffect(() => {
@@ -65,7 +65,7 @@ export default function HeaderNav() {
   };
 
   const navigateToMyPage = () => {
-    navigate('/mypage');
+    navigate('/mypage/' + user.id);
   };
 
   const navigateToAiVoice = () => {
@@ -85,9 +85,11 @@ export default function HeaderNav() {
         {user.nickname ? (
           <div className="flex items-center justify-evenly gap-x-2">
             <img
-              src={user.imageUrl}
+              src={
+                user.imageUrl ? user.imageUrl : '/src/assets/defaultUserImg.png'
+              }
               alt={user.nickname}
-              className="w-12 h-12 rounded-full"
+              className="rounded-full w-14 h-14"
             />
             <div className="flex flex-col gap-y-2">
               <div>{user.nickname}님</div>
@@ -199,7 +201,7 @@ export default function HeaderNav() {
             <div className="pl-2">마이페이지</div>
           </li>
         )}
-        {currentPage.pageName === 'MyPage' ? (
+        {currentPage.pageName === 'AI' ? (
           <li
             className="flex items-center pt-3 text-xl hover:text-yesrae-200 text-yesrae-0"
             onClick={navigateToAiVoice}
@@ -217,7 +219,7 @@ export default function HeaderNav() {
           </li>
         )}
       </ul>
-      {currentPage.pageName === 'MyPage' ? (
+      {currentPage.pageName === 'AI' ? (
         <div
           className="flex items-center px-8 pt-3 text-xl hover:text-yesrae-200 text-yesrae-0"
           onClick={navigateToServiceInfo}

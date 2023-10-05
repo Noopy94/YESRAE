@@ -59,9 +59,13 @@ const PlayListCarousel: React.FC<playListProps> = ({ playLists }) => {
               key={playList.playListId}
               className="relative px-3 carousel-slide"
             >
-              <Link to={`/playlist/${playList.playListId}`}>
+              <Link to={`/playlistdetail/${playList.playListId}`}>
                 <img
-                  src={playList.playListImageUrl}
+                  src={
+                    playList.playListImageUrl
+                      ? playList.playListImageUrl
+                      : '/src/assets/defaultUserImg.png'
+                  }
                   alt={playList.playListTitle}
                   className="w-64 h-64"
                 />

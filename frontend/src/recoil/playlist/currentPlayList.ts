@@ -3,8 +3,8 @@ import { PlayList } from '../defaultdata/data';
 
 // 플레이 리스트 초기상태
 const initialCurrentPlayListState: PlayList = {
-  playListId: '1',
-  playListUserId: 1,
+  playListId: 0,
+  playListUserId: 0,
   playListUserNickName: '유저 닉네임',
   playListTitle: '플레이리스트 제목',
   playListDescription:

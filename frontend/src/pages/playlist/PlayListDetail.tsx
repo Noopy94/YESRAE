@@ -1,10 +1,13 @@
 import HeaderNav from '../../components/HeaderNav/HeaderNav';
 import MusicPlayer from '../../components/playercontroller/MusicPlayer';
-import { userState } from '../../recoil/user/user';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { currentPageState, isListState } from '../../recoil/currentpage/currentPage';
+import { currentPlayListState } from '../../recoil/playlist/currentPlayList';
+import {
+  currentPageState,
+  isListState,
+} from '../../recoil/currentpage/currentPage';
 import ButtonComponent from '../../components/common/ButtonComponent';
 import { currentSongListState, currentSongState } from '../../recoil/currentsong/currentSong';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -19,6 +22,7 @@ export default function PlayListDetail() {
   // 노래, 플레이 리스트 데이터 샘플, 나중에 api로 가져올 예정
 
   const user = useRecoilValue(userState);
+
   const { playListId } = useParams();
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
   const [currentSong, setCurrentSong] = useRecoilState(currentSongState);
