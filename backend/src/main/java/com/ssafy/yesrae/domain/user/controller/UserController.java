@@ -4,6 +4,7 @@ import com.ssafy.yesrae.common.model.CommonResponse;
 import com.ssafy.yesrae.domain.user.dto.request.UserFollowCheckGetReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserFollowPostReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserLoginPostReq;
+import com.ssafy.yesrae.domain.user.dto.request.UserModifyProfilePutReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserRegistPostReq;
 import com.ssafy.yesrae.domain.user.dto.response.UserCheckEmailRes;
 import com.ssafy.yesrae.domain.user.dto.response.UserCheckNicknameRes;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -139,5 +141,18 @@ public class UserController {
         log.info("UserController_findNickname_end: success");
 
         return CommonResponse.success(userNicknameFindRes);
+    }
+
+    @PutMapping("/mypage")
+    public CommonResponse<?> modifyProfile(
+        @RequestBody UserModifyProfilePutReq userModifyProfilePutReq) {
+
+        log.info("UserController_findNickname_start: " + userModifyProfilePutReq.toString());
+
+        userService.modifyProfile(userModifyProfilePutReq);
+
+        log.info("UserController_modifyProfile_end: success");
+
+        return CommonResponse.success(SUCCESS);
     }
 }

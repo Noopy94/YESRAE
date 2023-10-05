@@ -3,6 +3,7 @@ package com.ssafy.yesrae.domain.user.service;
 import com.ssafy.yesrae.domain.user.dto.request.UserFollowCheckGetReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserFollowPostReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserLoginPostReq;
+import com.ssafy.yesrae.domain.user.dto.request.UserModifyProfilePutReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserRegistPostReq;
 import com.ssafy.yesrae.domain.user.dto.response.UserCheckEmailRes;
 import com.ssafy.yesrae.domain.user.dto.response.UserCheckNicknameRes;
@@ -13,21 +14,23 @@ import java.util.List;
 
 public interface UserService {
 
-    public void regist(UserRegistPostReq userRegistPostReq);
+    void regist(UserRegistPostReq userRegistPostReq);
 
-    public UserFindRes oauthLogin(String accessToken);
+    UserFindRes oauthLogin(String accessToken);
 
-    public void follow(UserFollowPostReq userFollowPostReq);
+    void follow(UserFollowPostReq userFollowPostReq);
 
-    public List<UserFollowFindRes> findFollow(Long userId);
+    List<UserFollowFindRes> findFollow(Long userId);
 
-    public boolean checkFollow(UserFollowCheckGetReq userFollowCheckGetReq);
+    boolean checkFollow(UserFollowCheckGetReq userFollowCheckGetReq);
 
-    public UserNicknameFindRes findNickname(Long userId);
+    UserNicknameFindRes findNickname(Long userId);
 
-    public UserFindRes login(UserLoginPostReq userLoginPostReq);
+    UserFindRes login(UserLoginPostReq userLoginPostReq);
 
-    public UserCheckEmailRes checkEmail(String email);
+    UserCheckEmailRes checkEmail(String email);
 
-    public UserCheckNicknameRes checkNickname(String nickname);
+    UserCheckNicknameRes checkNickname(String nickname);
+
+    void modifyProfile(UserModifyProfilePutReq userModifyProfilePutReq);
 }

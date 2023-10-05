@@ -14,7 +14,7 @@ public class NotificationFindRes {
 
     private String content;
 
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     private Boolean isViewed;
 }

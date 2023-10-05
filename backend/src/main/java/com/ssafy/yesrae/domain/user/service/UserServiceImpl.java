@@ -12,6 +12,7 @@ import com.ssafy.yesrae.domain.user.Role;
 import com.ssafy.yesrae.domain.user.dto.request.UserFollowCheckGetReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserFollowPostReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserLoginPostReq;
+import com.ssafy.yesrae.domain.user.dto.request.UserModifyProfilePutReq;
 import com.ssafy.yesrae.domain.user.dto.request.UserRegistPostReq;
 import com.ssafy.yesrae.domain.user.dto.response.UserCheckEmailRes;
 import com.ssafy.yesrae.domain.user.dto.response.UserCheckNicknameRes;
@@ -254,5 +255,18 @@ public class UserServiceImpl implements UserService {
         log.info("UserService_findNickname_end: success");
 
         return userNicknameFindRes;
+    }
+
+    @Override
+    public void modifyProfile(UserModifyProfilePutReq userModifyProfilePutReq) {
+
+        log.info("UserService_modifyProfile_start: " + userModifyProfilePutReq.toString());
+
+        User user = userRepository.findByEmail(userModifyProfilePutReq.getEmail())
+            .orElseThrow(UserNotFoundException::new);
+
+        user.modifyProfile(userModifyProfilePutReq.getNickname(), userModifyProfilePutReq.getAge());
+
+        log.info("UserService_modifyProfile_end: success");
     }
 }

@@ -71,7 +71,7 @@ public class NotificationServiceImpl implements NotificationService {
         List<NotificationFindRes> res = notificationRepository.findAllByUserId(userId)
             .stream().map(m -> NotificationFindRes.builder()
                 .id(m.getId()).title(m.getTitle()).content(m.getContent())
-                .createAt(m.getCreatedAt()).isViewed(m.getIsViewed()).build())
+                .createdAt(m.getCreatedAt()).isViewed(m.getIsViewed()).build())
             .collect(Collectors.toList());
 
         log.info("NotificationService_findNotificationByUserId_end: success");
@@ -95,7 +95,7 @@ public class NotificationServiceImpl implements NotificationService {
 
         NotificationFindRes res = NotificationFindRes.builder().id(notification.getId())
             .title(notification.getTitle()).content(notification.getContent())
-            .createAt(notification.getCreatedAt())
+            .createdAt(notification.getCreatedAt())
             .isViewed(notification.getIsViewed()).build();
 
         log.info("NotificationService_findNotification_end: success");
