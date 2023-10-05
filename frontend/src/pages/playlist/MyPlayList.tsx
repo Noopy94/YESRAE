@@ -19,7 +19,7 @@ export default function MyPlayList() {
   const User = useRecoilValue(userState);
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
   const [myPlaylist, setMyPlayList] = useState<PlayList[]>([]);
-  // const [myPlayLikelist, setMyLikePlayList] = useState<PlayList[]>([]);
+  const [myPlayLikelist, setMyLikePlayList] = useState<PlayList[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,8 +31,8 @@ export default function MyPlayList() {
     async function MyPlaylists() {
       try {
         console.log('내 플레이 리스트 가져오기 성공');
-        const myPlaylists = await findUserPlayListApi(User.id);
-        setMyPlayList(myPlaylists || []);
+        const myPlaylists = await findUserPlayListApi(User.userId);
+        setMyLikePlayList(myPlaylists || []);
       } catch (error) {
         console.error('베스트 플레이 리스트 가져오기 실패:', error);
       }

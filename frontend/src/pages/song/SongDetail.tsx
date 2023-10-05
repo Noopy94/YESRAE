@@ -3,39 +3,43 @@ import MusicPlayer from '../../components/playercontroller/MusicPlayer';
 import { userState } from '../../recoil/user/user';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { useEffect, useState } from 'react';
-import { currentPageState, isListState } from '../../recoil/currentpage/currentPage';
+import { currentPageState } from '../../recoil/currentpage/currentPage';
 import ButtonComponent from '../../components/common/ButtonComponent';
-import { currentSongListState, currentSongState } from '../../recoil/currentsong/currentSong';
+import {
+  currentSongListState,
+  currentSongState,
+} from '../../recoil/currentsong/currentSong';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { useParams } from 'react-router-dom';
 import { registSongLike, songDetail } from '../../api/songApi.ts';
+import ProgressComponent from '../../components/common/ProgressComponent.tsx';
 
 export interface ISongDetail {
-  id: string,
-  name: string,
-  albumId: string,
-  albumName: string,
-  artistId: string,
-  artistName: string,
-  imgUrl: string,
-  previewUrl: string,
-  releaseYear: number,
-  duration: number,
-  popularity: number,
-  acousticness: number,
-  danceability: number,
-  energy: number,
-  instrumentalness: number,
-  tune: number,
-  liveness: number,
-  loudness: number,
-  mode: number,
-  speechiness: number,
-  tempo: number,
-  timeSignature: number,
-  valence: number,
-  songlike: boolean,
+  id: string;
+  name: string;
+  albumId: string;
+  albumName: string;
+  artistId: string;
+  artistName: string;
+  imgUrl: string;
+  previewUrl: string;
+  releaseYear: number;
+  duration: number;
+  popularity: number;
+  acousticness: number;
+  danceability: number;
+  energy: number;
+  instrumentalness: number;
+  tune: number;
+  liveness: number;
+  loudness: number;
+  mode: number;
+  speechiness: number;
+  tempo: number;
+  timeSignature: number;
+  valence: number;
+  songlike: boolean;
 }
 
 export default function SongDetail() {
@@ -45,7 +49,6 @@ export default function SongDetail() {
   const { songId } = useParams();
   const setCurrentPage = useSetRecoilState(currentPageState);
   const [currentSong, setCurrentSong] = useRecoilState(currentSongState);
-  const [isList, setIsList] = useRecoilState(isListState);
   const [songList, setSongList] = useRecoilState(currentSongListState);
   const [songLike, setSongLike] = useState(false);
   const [isTooltipVisible, setTooltipVisible] = useState(false);
@@ -92,12 +95,13 @@ export default function SongDetail() {
   };
 
   useEffect(() => {
+    window.scroll(0, 0);
     setCurrentPage({ pageName: '' });
   }, []);
 
   useEffect(() => {
     if (songId != null) {
-      const res = songDetail(user.id, songId);
+      const res = songDetail(user.userId, songId);
       if (res != null) {
         onChangeSongDetail(res);
         startLikeCheck();
@@ -111,8 +115,9 @@ export default function SongDetail() {
 
   const SongLike = () => {
     onChangeSonglike();
+    console.log(user);
     if (songId != null) {
-      registSongLike(user.id, songId);
+      registSongLike(user.userId, songId);
     }
   };
 
@@ -124,92 +129,127 @@ export default function SongDetail() {
 
   return (
     <div>
-      <div className='flex'>
+      <div className="flex">
         <div>
           <HeaderNav />
         </div>
-        <main className='w-10/12 pr-20 pt-12 pl-72'>
-          <div className='flex pb-10 border-b border-gray-900'>
-            <img
-              className='w-56 h-56'
-              src={currentSongDetail.imgUrl}
-            ></img>
-            <div className='relative px-6'>
-              <div className='text-3xl font-bold text-white'>
+        <main className="w-10/12 pt-12 pr-20 pl-72">
+          <div className="flex pb-10 border-b border-gray-900">
+            <img className="w-56 h-56" src={currentSongDetail.imgUrl}></img>
+            <div className="relative px-6">
+              <div className="text-3xl font-bold text-white">
                 {currentSongDetail.name}
               </div>
-              <div className='pt-3 text-xl text-white'>
-                <div className='inline'>
-                  {currentSongDetail.artistName}
-                </div>
+              <div className="pt-3 text-xl text-white">
+                <div className="inline">{currentSongDetail.artistName}</div>
               </div>
-              <div className='pt-1 text-gray-500'>
+              <div className="pt-1 text-gray-500">
                 수록 앨범
-                <div className='ml-3 inline'>
-                  {currentSongDetail.albumName}
-                </div>
+                <div className="inline ml-3">{currentSongDetail.albumName}</div>
               </div>
-              <div className='pt-1 text-gray-500'>
+              <div className="pt-1 text-gray-500">
                 출시 연도
-                <div className='ml-3 inline'>
+                <div className="inline ml-3">
                   {currentSongDetail.releaseYear}
                 </div>
               </div>
-              <div className='pt-1 text-gray-500'>
-                {Math.floor(currentSongDetail.duration / 60000)}분 {Math.floor(currentSongDetail.duration % 60000 / 1000)}초
+              <div className="pt-1 text-gray-500">
+                {Math.floor(currentSongDetail.duration / 60000)}분{' '}
+                {Math.floor((currentSongDetail.duration % 60000) / 1000)}초
               </div>
-              <div className='flex pt-3'>
-                <ButtonComponent onClick={onChangePlayList} type='isSmall'>
+              <div className="flex pt-3">
+                <ButtonComponent onClick={onChangePlayList} type="isSmall">
                   재생하기
                 </ButtonComponent>
                 <button
-                  className='flex items-center justify-center w-10 h-10 mx-4 bg-black border-2 border-gray-700 rounded-full group'
-                  onClick={SongLike}>
-                  {songLike ? <FontAwesomeIcon
-                    icon={faHeart}
-                    className='w-5 h-5 text-red-600'
-                  /> : <FontAwesomeIcon
-                    icon={faHeart}
-                    className='group-hover:text-red-600 group-hover:w-5 group-hover:h-5'
-                  />}
+                  className="flex items-center justify-center w-10 h-10 mx-4 bg-black border-2 border-gray-700 rounded-full group"
+                  onClick={SongLike}
+                >
+                  {songLike ? (
+                    <FontAwesomeIcon
+                      icon={faHeart}
+                      className="w-5 h-5 text-red-600"
+                    />
+                  ) : (
+                    <FontAwesomeIcon
+                      icon={faHeart}
+                      className="group-hover:text-red-600 group-hover:w-5 group-hover:h-5"
+                    />
+                  )}
                 </button>
                 <button
-                  className='flex items-center justify-center w-10 h-10 bg-black border-2 border-gray-700 rounded-full group '
+                  className="flex items-center justify-center w-10 h-10 bg-black border-2 border-gray-700 rounded-full group "
                   onClick={toggleTooltip}
                 >
                   <FontAwesomeIcon
                     icon={faEllipsisH}
-                    className='w-5 h-5 group-hover:text-white'
+                    className="w-5 h-5 group-hover:text-white"
                   />
                 </button>
                 {isTooltipVisible && (
-                  <div
-                    className='absolute z-20 w-48 py-2 mx-8 bg-gray-900 rounded-lg shadow-lg left-60'>
-                    <div className='px-2 py-1 hover:bg-gray-800' onClick={onChangePlayList}>
+                  <div className="absolute z-20 w-48 py-2 mx-8 bg-gray-900 rounded-lg shadow-lg left-60">
+                    <div
+                      className="px-2 py-1 hover:bg-gray-800"
+                      onClick={onChangePlayList}
+                    >
                       💘 플레이 리스트에 추가
                     </div>
-                    <div className='px-2 py-1 hover:bg-gray-800' onClick={SongLike}>🥰 좋아요
+                    <div
+                      className="px-2 py-1 hover:bg-gray-800"
+                      onClick={SongLike}
+                    >
+                      🥰 좋아요
                     </div>
-                    <div className='px-2 py-1 hover:bg-gray-800'>👩‍❤️‍👩 공유</div>
+                    <div className="px-2 py-1 hover:bg-gray-800">👩‍❤️‍👩 공유</div>
                   </div>
                 )}
               </div>
             </div>
           </div>
-          <div className='fixed relative bottom-0 left-0 h-52'>
-            popularity : {currentSongDetail.popularity}<br /><br />
-            acosticness : {currentSongDetail.acousticness}<br /><br />
-            danceability : {currentSongDetail.danceability}<br /><br />
-            energy : {currentSongDetail.energy}<br /><br />
-            instrumentalness : {currentSongDetail.instrumentalness}<br /><br />
-            livness : {currentSongDetail.liveness}<br /><br />
-            loudness : {currentSongDetail.loudness}<br /><br />
-            speechiness : {currentSongDetail.speechiness}<br /><br />
-            tempo : {currentSongDetail.tempo}<br /><br />
-            mode : {currentSongDetail.mode}<br /><br />
-            tune : {currentSongDetail.tune}<br /><br />
-            timeSignature : {currentSongDetail.timeSignature}<br /><br />
-            valence : {currentSongDetail.valence}<br /><br />
+          <div className="fixed relative bottom-0 left-0 h-52">
+            <div>
+              popularity
+              <ProgressComponent
+                amount={currentSongDetail.popularity}
+                max={100}
+              />
+            </div>
+            acosticness : {currentSongDetail.acousticness}
+            <br />
+            <br />
+            danceability : {currentSongDetail.danceability}
+            <br />
+            <br />
+            energy : {currentSongDetail.energy}
+            <br />
+            <br />
+            instrumentalness : {currentSongDetail.instrumentalness}
+            <br />
+            <br />
+            livness : {currentSongDetail.liveness}
+            <br />
+            <br />
+            loudness : {currentSongDetail.loudness}
+            <br />
+            <br />
+            speechiness : {currentSongDetail.speechiness}
+            <br />
+            <br />
+            tempo : {currentSongDetail.tempo}
+            <br />
+            <br />
+            mode : {currentSongDetail.mode}
+            <br />
+            <br />
+            tune : {currentSongDetail.tune}
+            <br />
+            <br />
+            timeSignature : {currentSongDetail.timeSignature}
+            <br />
+            <br />
+            valence : {currentSongDetail.valence}
+            <br />
+            <br />
           </div>
         </main>
       </div>

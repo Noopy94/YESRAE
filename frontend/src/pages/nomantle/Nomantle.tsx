@@ -3,7 +3,7 @@ import QuestionLogo from '../../assets//nomantle_question.svg';
 import React, { useEffect, useState } from 'react';
 import Category from '../../components/nomantle/Category';
 import SongInfo from '../../components/nomantle/SongInfo';
-import { searchSong, getSongResult } from '../../api/nomantle';
+import { searchSong, getSongResult } from '../../api/nomantleApi';
 import { Link } from 'react-router-dom';
 
 interface Title {

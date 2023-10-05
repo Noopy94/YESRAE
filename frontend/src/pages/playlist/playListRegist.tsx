@@ -71,7 +71,7 @@ export default function PlayListRegist() {
     console.log('플레이 리스트 등록 시작!');
     // 데이터 모아서 api로 전송! 등록! 완료되면 플레이 리스트로 돌려 보낼것!
     const playListRegistPostReq: PlayListRegistPostReq = {
-      userId: User.id,
+      userId: User.userId,
       isPublic: 1,
       title: playlistTitle,
       description: playlistDescription,
@@ -83,7 +83,7 @@ export default function PlayListRegist() {
       console.log('플레이 리스트 등록 성공!');
 
       // 등록 완료 후 페이지 이동
-      navigate(`/mypage/${User.id}`);
+      navigate(`/mypage/${User.userId}`);
     } catch (error) {
       console.error('플레이 리스트 등록 실패:', error);
     }

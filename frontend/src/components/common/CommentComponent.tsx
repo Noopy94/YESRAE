@@ -4,7 +4,6 @@ import {
   deletePlaylistComment,
   getComment,
   getDate,
-  getName,
 } from '../../api/commentApi.ts';
 import { userState } from '../../recoil/user/user.ts';
 import { useRecoilValue } from 'recoil';
@@ -20,11 +19,10 @@ interface Comment {
 interface CommentProps {
   type: 'article' | 'playlist',
   typeId: number,
-  loading: (arg: boolean) => void;
 }
 
 const comments: Comment[] = [];
-export default function CommentComponent({ type, typeId, loading }: CommentProps) {
+export default function CommentComponent({ type, typeId}: CommentProps) {
 
   const user = useRecoilValue(userState);
   const [currentCommentList, setCurrentCommentList] = useState(comments);
@@ -33,46 +31,38 @@ export default function CommentComponent({ type, typeId, loading }: CommentProps
     setCurrentCommentList(data);
   };
 
-  const onChangeLoading = () => {
-    loading(true);
-  };
 
   useEffect(() => {
     getComment(type, typeId).then((res) => {
-      res.map((comment: Comment) => {
-        getName(comment.userId).then((nickname) => {
-          comment.nickName = nickname;
-        });
-      });
       onChangeCurrentCommentList(res);
-    }).then(onChangeLoading);
+    });
   }, []);
 
   const deleteComment = (commentId: number) => {
     if (confirm('정말로 댓글을 삭제하시겠습니까?')) {
       if (type === 'playlist') {
-        deletePlaylistComment(commentId, user.id);
+        deletePlaylistComment(commentId, user.userId);
       } else if (type === 'article') {
-        deleteArticleComment(commentId, user.id);
+        deleteArticleComment(commentId, user.userId);
       }
     }
   };
 
   return (
-    <div className='bg-white text-black w-4/5 min-h-fit'>
+    <div className='bg-black text-white w-full min-h-fit pt-3'>
       {currentCommentList.map((comment: Comment, index: number) => (
-        <div key={index} className='p-5 pt-0'>
+        <div key={index} className='pt-3'>
           <div className='pb-3'>
             <div className='pb-5'>
               <div className='inline pr-3'>{comment.nickName}</div>
               <div className='inline text-xs'>|</div>
               <div className='inline pl-3 text-xs'>{getDate(comment.createdAt)}</div>
-              {comment.userId === user.id ?
-                <button className='float-right'
+              {comment.userId === user.userId ?
+                <button className='float-right text-sm'
                         onClick={() => deleteComment(comment.id)}>삭제하기</button> :
                 <div />}
             </div>
-            <div>{comment.content}</div>
+            <div className='text-sm'>{comment.content}</div>
           </div>
           <br />
           <hr />

@@ -12,16 +12,6 @@ export const getComment = async (type: string, typeId: number) => {
   }
 };
 
-export const getName = async (userId: number) => {
-  const response = await axios.get(BASE_URL + 'user/nickname/' + userId);
-  if (response.data.success) {
-    return response.data.content.nickname;
-  } else {
-    alert(response.data.error.message);
-    return null;
-  }
-};
-
 export const getDate = (createdAt: string): string => {
   const date = new Date(createdAt);
   return date.getFullYear() + '.' + ((date.getMonth() + 1) < 9 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + '.' + ((date.getDay() + 1) < 9 ? '0' + (date.getDay() + 1) : (date.getDay() + 1)) + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
@@ -48,7 +38,6 @@ export const registArticleComment = async (typeId: number, userId: number, conte
     articletId: typeId,
   });
   if (response.data.success) {
-    alert('댓글이 등록되었습니다.');
     return true;
   } else {
     alert(response.data.error.message);
@@ -61,11 +50,11 @@ export const deletePlaylistComment = async (commentId: number, userId: number) =
     userId: userId,
     id: commentId,
   });
-  console.log(response);
   if (response.data.success) {
-    return '삭제가 완료되었습니다.';
+    alert('삭제가 완료되었습니다.');
+    history.go(0);
   } else {
-    return response.data.error.message;
+    alert(response.data.error.message);
   }
 };
 

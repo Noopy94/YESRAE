@@ -16,6 +16,7 @@ import TournamentResult from './pages/tournament/TournamentResult';
 import TournamentRanking from './pages/tournament/TournamentRanking';
 import MyPlayList from './pages/playlist/MyPlayList.tsx';
 import SearchPage from './pages/playlist/Search.tsx';
+import RecommendResult from './pages/recommend/RecommendResult.tsx';
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
         <Route path="/tournament/:round" element={<TournamentProcess />} />
         <Route path="/tournament/result" element={<TournamentResult />} />
         <Route path="/tournament/ranking" element={<TournamentRanking />} />
+        <Route path="/recommend" element={<RecommendResult />} />
       </Routes>
     </Router>
   );
