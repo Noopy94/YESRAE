@@ -15,7 +15,6 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.Where;
 
 /**
  * 유저가 수행한 이상형 월드컵을 저장하는 DB
@@ -26,7 +25,6 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor
 @SuperBuilder
 @DynamicInsert
-@Where(clause = "deleted_at is null")
 @Entity
 public class Tournament extends BaseEntity {
 

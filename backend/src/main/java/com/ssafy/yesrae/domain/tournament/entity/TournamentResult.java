@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.Where;
 
 /**
  * 유저가 이상형 월드컵을 수행한 결과를 저장하는 DB. 몇 강을 선택했는지 여부와 상관 없이 1등 ~ 4등 노래가 결과로 저장됨
@@ -24,7 +23,6 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor
 @SuperBuilder
 @DynamicInsert
-@Where(clause = "deleted_at is null")
 @Entity
 public class TournamentResult extends BaseEntity {
 

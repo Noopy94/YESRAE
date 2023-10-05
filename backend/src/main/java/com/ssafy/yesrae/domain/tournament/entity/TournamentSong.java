@@ -3,7 +3,6 @@ package com.ssafy.yesrae.domain.tournament.entity;
 import com.ssafy.yesrae.common.model.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.Where;
 
 /**
  * 이상형 월드컵에 수록 될 노래 256곡에 대한 Entity
@@ -22,7 +20,6 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor
 @SuperBuilder
 @DynamicInsert
-@Where(clause = "deleted_at is null")
 @Entity
 public class TournamentSong extends BaseEntity {
 
