@@ -11,7 +11,7 @@ export async function deletePlaylistLikeApi(
   playlistLikeDeletePutReq: PlaylistLikeDeletePutReq,
 ) {
   try {
-    const apiUrl = '/deletelike';
+    const apiUrl = 'deletelike';
 
     const response: AxiosResponse = await axios.put(
       apiUrl,

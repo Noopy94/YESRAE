@@ -76,6 +76,14 @@ const initialCurrentSongListState: Song[] = [
     songImgUrl:
       'https://i.scdn.co/image/ab67616d00001e0257de3da10da259d0a19a81b4',
   },
+  {
+    songId: '5fOjFkFA0k5MTOo1LmnVTO',
+    songTitle: 'Heroes Tonight',
+    songUrl: '/src/assets/testmusic9.mp3',
+    songArtist: 'Janji, Johnning',
+    songImgUrl:
+      'https://i.scdn.co/image/ab67616d00001e02fefb9f8c3b9e802da9732453',
+  },
 ];
 
 // 현재 페이지 전역변수, 현재 페이지에 따라서 HeaderNav의 상태가 달라짐

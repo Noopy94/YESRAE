@@ -8,7 +8,7 @@ import ButtonComponent from '../../components/common/ButtonComponent';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH, faHeart } from '@fortawesome/free-solid-svg-icons';
 import PlayListCarousel from '../../components/common/PlayListCarousel';
-import { defaultplayLists, Song } from '../../recoil/defaultdata/data';
+import { defaultplayLists1, Song } from '../../recoil/defaultdata/data';
 import CommentComponent from '../../components/common/CommentComponent.tsx';
 import {
   registNotification,
@@ -32,7 +32,6 @@ interface playList {
 
 export default function PlayListDetail() {
   const user = useRecoilValue(userState);
-
   const { playListId } = useParams();
   const setCurrentPage = useSetRecoilState(currentPageState);
   const [songsLoading, setSongsLoading] = useState(false);
@@ -203,13 +202,13 @@ export default function PlayListDetail() {
             연관된 플레이 리스트 😎
           </div>
           <div className="flex py-4">
-            <PlayListCarousel playLists={defaultplayLists} />
+            <PlayListCarousel playLists={defaultplayLists1} />
           </div>
           <div className="mt-12 mb-3 text-2xl font-bold">
             해당 유저의 플레이 리스트 🐏
           </div>
           <div className="flex py-4">
-            <PlayListCarousel playLists={defaultplayLists} />
+            <PlayListCarousel playLists={defaultplayLists1} />
           </div>
           <div>
             <div className="fixed relative bottom-0 left-0 h-36" />

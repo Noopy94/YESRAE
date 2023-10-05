@@ -1,20 +1,20 @@
 import HeaderNav from '../../components/HeaderNav/HeaderNav';
 import MusicPlayer from '../../components/playercontroller/MusicPlayer';
-import { defaultplayLists } from '../../recoil/defaultdata/data';
+import {
+  defaultplayLists1,
+  defaultplayLists2,
+  defaultplayLists3,
+} from '../../recoil/defaultdata/data';
 import { userState } from '../../recoil/user/user';
 import { useRecoilState } from 'recoil';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
-import { currentPlayListState } from '../../recoil/playlist/currentPlayList';
 import MyPlayListCarousel from '../../components/common/MyPlayListCarousel';
-import { PlayList } from '../../recoil/defaultdata/data';
 import {
   currentPageState,
   isListState,
 } from '../../recoil/currentpage/currentPage';
 import { Link } from 'react-router-dom';
-import { findUserPlayListApi } from '../../api/playlistApi';
 
 export default function PlayListPage() {
   // 노래, 플레이 리스트 데이터 샘플, 나중에 api로 가져올 예정
@@ -23,26 +23,9 @@ export default function PlayListPage() {
   const { userId } = useParams();
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
   const [isList, setIsList] = useRecoilState(isListState);
-  const [list1, setList1] = useState<PlayList[]>();
 
   useEffect(() => {
     setCurrentPage({ pageName: 'PlayList' });
-  }, []);
-
-  useEffect(() => {
-    // 내 플레이 리스트 가져오기
-    async function MyPlaylists() {
-      try {
-        console.log('내 플레이 리스트 가져오기 성공');
-        const myPlaylists = await findUserPlayListApi(User.userId);
-        setList1(myPlaylists);
-      } catch (error) {
-        console.error('베스트 플레이 리스트 가져오기 실패:', error);
-      }
-    }
-
-    setCurrentPage({ pageName: 'MyPage' });
-    MyPlaylists();
   }, []);
 
   return (
@@ -56,11 +39,6 @@ export default function PlayListPage() {
             <Link to="/playlist">
               <div className="pr-12 text-xl font-semibold text-white hover:text-yesrae-0">
                 플레이 리스트
-              </div>
-            </Link>
-            <Link to="/follower">
-              <div className="pr-12 text-xl font-semibold text-gray-700 hover:font-semibold hover:text-white">
-                팔로우
               </div>
             </Link>
             <Link to="/registplaylist">
@@ -80,7 +58,7 @@ export default function PlayListPage() {
                 좋아요한 플레이 리스트 👍
               </div>
               <div className="flex py-4">
-                <MyPlayListCarousel playLists={defaultplayLists} />
+                <MyPlayListCarousel playLists={defaultplayLists1} />
               </div>
             </div>
           ) : null}
@@ -92,13 +70,13 @@ export default function PlayListPage() {
             YESRAE 추천 플레이 리스트{' '}
           </div>
           <div className="flex py-4">
-            <MyPlayListCarousel playLists={defaultplayLists} />
+            <MyPlayListCarousel playLists={defaultplayLists2} />
           </div>
           <div className="mt-12 mb-3 text-2xl font-bold">
             실시간 베스트 플레이 리스트 🔥
           </div>
           <div className="flex py-4">
-            <MyPlayListCarousel playLists={defaultplayLists} />
+            <MyPlayListCarousel playLists={defaultplayLists3} />
           </div>
 
           <div>

@@ -15,6 +15,7 @@ import TournamentProcess from './pages/tournament/TournamentProcess';
 import TournamentResult from './pages/tournament/TournamentResult';
 import TournamentRanking from './pages/tournament/TournamentRanking';
 import MyPlayList from './pages/playlist/MyPlayList.tsx';
+import SearchPage from './pages/playlist/Search.tsx';
 import RecommendResult from './pages/recommend/RecommendResult.tsx';
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
         <Route path="/oauth2" element={<LoginRedirect />} />
         <Route path="/playlist" element={<PlayListPage />} />
         <Route path="/playlist/:userid" element={<PlayListPage />} />
+        <Route path="/search/:keyword" element={<SearchPage />} />
         <Route path="/registplaylist" element={<PlayListRegist />} />
         <Route
           path="/updateplaylist/:playlistid"
