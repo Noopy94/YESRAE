@@ -4,6 +4,7 @@ import com.ssafy.yesrae.common.exception.NoDataException;
 import com.ssafy.yesrae.domain.tournament.dto.request.FindTournamentSongGetReq;
 import com.ssafy.yesrae.domain.tournament.dto.request.RegistTournamentResultPostReq;
 import com.ssafy.yesrae.domain.tournament.dto.response.TournamentPopularSongFindRes;
+import com.ssafy.yesrae.domain.tournament.dto.response.TournamentRegistResultPostRes;
 import com.ssafy.yesrae.domain.tournament.dto.response.TournamentResultFindRes;
 import com.ssafy.yesrae.domain.tournament.dto.response.TournamentSongFindRes;
 import com.ssafy.yesrae.domain.tournament.entity.Tournament;
@@ -14,6 +15,7 @@ import com.ssafy.yesrae.domain.tournament.repository.TournamentResultRepository;
 import com.ssafy.yesrae.domain.tournament.repository.TournamentSongRepository;
 import com.ssafy.yesrae.domain.user.entity.User;
 import com.ssafy.yesrae.domain.user.repository.UserRepository;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +67,7 @@ public class TournamentServiceImpl implements TournamentService{
      * @param userId : 이상형 월드컵 생성한 유저 ID
      */
     @Override
-    public void registTournament(Long userId) {
+    public Long registTournament(Long userId) {
 
         log.info("TournamentService_registTournament_start: "
             + userId);
@@ -76,9 +78,10 @@ public class TournamentServiceImpl implements TournamentService{
             .user(user)
             .build();
 
-        tournamentRepository.save(tournament);
+        tournament = tournamentRepository.save(tournament);
 
         log.info("TournamentService_registTournament_end: success");
+        return tournament.getId();
     }
 
     /**
@@ -86,53 +89,45 @@ public class TournamentServiceImpl implements TournamentService{
      * @param registTournamentResultPostReq : 이상형 월드컵 진행 결과 1등 ~ 4등
      */
     @Override
-    public void registTournamentResult(
+    public List<TournamentRegistResultPostRes> registTournamentResult(
         RegistTournamentResultPostReq registTournamentResultPostReq) {
 
         log.info("TournamentService_registTournamentResult_start: "
             + registTournamentResultPostReq.toString());
 
+        List<TournamentSong> tournamentSongs = new ArrayList<>();
+        List<TournamentRegistResultPostRes> findRes = new ArrayList<>();
+
         Tournament tournament = tournamentRepository.findById(registTournamentResultPostReq.getTournamentId())
             .orElseThrow(NoDataException::new);
 
-        TournamentSong songOne = tournamentSongRepository.findById(registTournamentResultPostReq.getFirstSongId())
-            .orElseThrow(NoDataException::new);
-        TournamentSong songTwo = tournamentSongRepository.findById(registTournamentResultPostReq.getSecondSongId())
-            .orElseThrow(NoDataException::new);
-        TournamentSong songThree = tournamentSongRepository.findById(registTournamentResultPostReq.getSemiFinalSongOneId())
-            .orElseThrow(NoDataException::new);
-        TournamentSong songFour = tournamentSongRepository.findById(registTournamentResultPostReq.getSemiFinalSongTwoId())
-            .orElseThrow(NoDataException::new);
+        tournamentSongs.add(tournamentSongRepository.findById(registTournamentResultPostReq.getFirstSongId())
+            .orElseThrow(NoDataException::new));
+        tournamentSongs.add(tournamentSongRepository.findById(registTournamentResultPostReq.getSecondSongId())
+            .orElseThrow(NoDataException::new));
+        tournamentSongs.add(tournamentSongRepository.findById(registTournamentResultPostReq.getSemiFinalSongOneId())
+            .orElseThrow(NoDataException::new));
+        tournamentSongs.add(tournamentSongRepository.findById(registTournamentResultPostReq.getSemiFinalSongTwoId())
+            .orElseThrow(NoDataException::new));
 
-        TournamentResult tournamentResultOne = TournamentResult.builder()
-            .tournament(tournament)
-            .tournamentSong(songOne)
-            .ranking(1)
-            .build();
-        TournamentResult tournamentResultTwo = TournamentResult.builder()
-            .tournament(tournament)
-            .tournamentSong(songTwo)
-            .ranking(2)
-            .build();
-        TournamentResult tournamentResultThree = TournamentResult.builder()
-            .tournament(tournament)
-            .tournamentSong(songThree)
-            .ranking(3)
-            .build();
-        TournamentResult tournamentResultFour = TournamentResult.builder()
-            .tournament(tournament)
-            .tournamentSong(songFour)
-            .ranking(3)
-            .build();
+        for(int i = 1; i <= 4; i++) {
+            tournamentResultRepository.save(TournamentResult.builder()
+                .tournament(tournament)
+                .tournamentSong(tournamentSongs.get(i - 1))
+                .ranking(i == 4 ? 3 : i)
+                .build());
 
-        tournamentResultRepository.save(tournamentResultOne);
-        tournamentResultRepository.save(tournamentResultTwo);
-        tournamentResultRepository.save(tournamentResultThree);
-        tournamentResultRepository.save(tournamentResultFour);
+            findRes.add(TournamentRegistResultPostRes.builder()
+                .songTitle(tournamentSongs.get(i - 1).getTitle())
+                .songSinger(tournamentSongs.get(i - 1).getSinger())
+                .imgUrl(tournamentSongs.get(i - 1).getImgUrl())
+                .build());
+        }
 
-        songOne.addVote();
+        tournamentSongs.get(0).addVote();
 
-        log.info("TournamentService_registTournamentResult_end: success");
+        log.info("sTournamentService_registTournamentResult_end: success");
+        return findRes;
     }
 
     /**

@@ -63,7 +63,8 @@ public class QTournamentSongRepositoryImpl implements QTournamentSongRepository{
                 tournamentSong.title.as("title"),
                 tournamentSong.singer.as("singer"),
                 tournamentSong.vote.doubleValue()
-                    .divide(tournamentSong.vote.sum().doubleValue()).as("proportion")))
+                    .divide(tournamentSong.vote.sum().doubleValue()).as("proportion"),
+                tournamentSong.imgUrl.as("imgUrl")))
             .from(tournamentSong)
             .orderBy(tournamentSong.vote.desc())
             .fetch();

@@ -83,7 +83,7 @@ public class ArticleCommentServiceImpl implements ArticleCommentService {
                 .articleId(m.getArticle().getId())
                 .userId(m.getUser().getId())
                 .content(m.getContent())
-                .creaetedAt(m.getCreatedAt())
+                .createdAt(m.getCreatedAt())
                 .build()
             ).collect(Collectors.toList());
 
@@ -108,7 +108,7 @@ public class ArticleCommentServiceImpl implements ArticleCommentService {
             .articleId(comment.getArticle().getId())
             .userId(comment.getUser().getId())
             .content(comment.getContent())
-            .creaetedAt(comment.getCreatedAt())
+            .createdAt(comment.getCreatedAt())
             .build();
 
         log.info("ArticleCommentService_findArticleComment_end: success");
