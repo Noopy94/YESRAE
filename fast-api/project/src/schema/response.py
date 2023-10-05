@@ -57,9 +57,14 @@ class SongTotalRankSchema(BaseModel):
 
 class RecommendSongSchema(BaseModel):
     id : str
+    title : str
+    singer : str
+    album_img : str
 
     class Config:
         from_attributes = True
+
+
 
 class RecommendSongListSchema(BaseModel):
     songs : List[RecommendSongSchema]

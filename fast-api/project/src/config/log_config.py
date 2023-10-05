@@ -1,7 +1,7 @@
 import logging
 
 logging.basicConfig(
-    #filename = "yesrae.log",
+    filename = "yesrae.log",
     level=logging.INFO, 
     format='%(asctime)s - %(levelname)s - %(message)s',
     encoding='utf-8'
