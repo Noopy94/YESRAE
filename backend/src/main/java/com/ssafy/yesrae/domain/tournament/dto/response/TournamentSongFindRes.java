@@ -18,14 +18,17 @@ public class TournamentSongFindRes {
 
     private String url;
 
+    private String spotifyId;
+
     //Querydsl을 위한 생성자
     public TournamentSongFindRes() {
     }
 
-    public TournamentSongFindRes(Long id, String title, String singer, String url) {
+    public TournamentSongFindRes(Long id, String title, String singer, String url, String spotifyId) {
         this.id = id;
         this.title = title;
         this.singer = singer;
         this.url = url;
+        this.spotifyId = spotifyId;
     }
 }

@@ -38,6 +38,9 @@ public class TournamentSong extends BaseEntity {
     @Column(columnDefinition = "VARCHAR(255) CHARACTER SET UTF8")
     private String imgUrl;
 
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) CHARACTER SET UTF8")
+    private String spotifyId;
+
     /**
      * 이상형 월드컵 플레이 시마다 1위로 뽑힌 곡에 대하여 득표 수 올리기 위한 메소드
      */

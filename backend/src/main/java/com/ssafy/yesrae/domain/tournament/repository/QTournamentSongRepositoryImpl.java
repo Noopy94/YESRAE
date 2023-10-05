@@ -44,7 +44,8 @@ public class QTournamentSongRepositoryImpl implements QTournamentSongRepository{
                 tournamentSong.id.as("id"),
                 tournamentSong.title.as("title"),
                 tournamentSong.singer.as("singer"),
-                tournamentSong.url.as("url")))
+                tournamentSong.url.as("url"),
+                tournamentSong.spotifyId.as("spotifyId")))
             .from(tournamentSong)
             .orderBy(Expressions.numberTemplate(Double.class, "RAND()").asc())
             .limit(findTournamentSongGetReq.getRound())
