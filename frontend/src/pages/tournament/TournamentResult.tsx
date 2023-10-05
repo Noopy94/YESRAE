@@ -2,40 +2,66 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import SongResultInfo from '../../components/tournament/SongResultInfo';
 import Trophy from '../../assets/trophy.svg';
-import React from 'react';
+import { tournamentResult } from '../../recoil/tournament/tournamentResult';
+import { useRecoilValue } from 'recoil';
+import { getTournamentResult } from '../../api/tournamentApi';
 
 export default function TournamentResult() {
+  const result = useRecoilValue(tournamentResult);
+
+  const [resultInfo, setResultInfo] = useState([]);
+
+  useEffect(() => {
+    const getResult = async (result: {
+      tournamentId: number;
+      firstSongId: number;
+      secondSongId: number;
+      semiFinalSongOneId: number;
+      semiFinalSongTwoId: number;
+    }) => {
+      const response = await getTournamentResult(result);
+      setResultInfo(response);
+    };
+    getResult({
+      tournamentId: result.tournamentId,
+      firstSongId: result.firstSongId,
+      secondSongId: result.secondSongId,
+      semiFinalSongOneId: result.semiFinalSongOneId,
+      semiFinalSongTwoId: result.semiFinalSongTwoId,
+    });
+  }, []);
+
   // 더미 데이터 -> 이후에 api 연결 필요
-  const resultInfo = [
-    {
-      data: 'New Jeans',
-      songTitle: 'Hype boy',
-      ranking: 1,
-      album_img:
-        'https://i.scdn.co/image/ab67616d0000b2739d28fd01859073a3ae6ea209',
-    },
-    {
-      data: '태양',
-      songTitle: 'shoong',
-      ranking: 2,
-      album_img:
-        'https://i.scdn.co/image/ab67616d0000b2733e39c67040f721ffe568d448',
-    },
-    {
-      data: '아이유',
-      songTitle: '내 손을 잡아',
-      ranking: 3,
-      album_img:
-        'https://i.scdn.co/image/ab67616d0000b273f1efb467ac4c748630ffd22f',
-    },
-    {
-      data: 'Charlie Puth',
-      songTitle: 'The Way I Am',
-      ranking: 3,
-      album_img:
-        'https://i.scdn.co/image/ab67616d0000b273897f73256b9128a9d70eaf66',
-    },
-  ];
+  // const resultInfo = [
+  //   {
+  //     songSinger: 'New Jeans',
+  //     songTitle: 'Hype boy',
+  //     ranking: 1,
+  //     imgUrl:
+  //       'https://i.scdn.co/image/ab67616d0000b2739d28fd01859073a3ae6ea209',
+  //   },
+  //   {
+  //     songSinger: '태양',
+  //     songTitle: 'shoong',
+  //     ranking: 2,
+  //     imgUrl:
+  //       'https://i.scdn.co/image/ab67616d0000b2733e39c67040f721ffe568d448',
+  //   },
+  //   {
+  //     songSinger: '아이유',
+  //     songTitle: '내 손을 잡아',
+  //     ranking: 3,
+  //     imgUrl:
+  //       'https://i.scdn.co/image/ab67616d0000b273f1efb467ac4c748630ffd22f',
+  //   },
+  //   {
+  //     songSinger: 'Charlie Puth',
+  //     songTitle: 'The Way I Am',
+  //     ranking: 3,
+  //     imgUrl:
+  //       'https://i.scdn.co/image/ab67616d0000b273897f73256b9128a9d70eaf66',
+  //   },
+  // ];
 
   return (
     <div className="w-full h-full ">
@@ -54,7 +80,7 @@ export default function TournamentResult() {
         })}
       </div>
       <div className="flex justify-center mt-10">
-        <Link to="/">
+        <Link to="/recommend">
           <button
             type="button"
             className="flex items-center justify-center h-12 text-xl w-36 mx-28 rounded-xl bg-yesrae-900 hover:bg-gray-800"

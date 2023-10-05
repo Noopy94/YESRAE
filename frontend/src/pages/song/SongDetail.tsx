@@ -3,13 +3,13 @@ import MusicPlayer from '../../components/playercontroller/MusicPlayer';
 import { userState } from '../../recoil/user/user';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { currentPageState, isListState } from '../../recoil/currentpage/currentPage';
 import ButtonComponent from '../../components/common/ButtonComponent';
 import { currentSongListState, currentSongState } from '../../recoil/currentsong/currentSong';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { useParams } from 'react-router-dom';
+import { registSongLike, songDetail } from '../../api/songApi.ts';
 
 export interface ISongDetail {
   id: string,
@@ -41,8 +41,8 @@ export interface ISongDetail {
 export default function SongDetail() {
   // 노래, 플레이 리스트 데이터 샘플, 나중에 api로 가져올 예정
 
+  const user = useRecoilValue(userState);
   const { songId } = useParams();
-  const User = useRecoilValue(userState);
   const setCurrentPage = useSetRecoilState(currentPageState);
   const [currentSong, setCurrentSong] = useRecoilState(currentSongState);
   const [isList, setIsList] = useRecoilState(isListState);
@@ -75,77 +75,88 @@ export default function SongDetail() {
     valence: 0,
     songlike: false,
   });
-
   const onChangePlayList = () => {
     // setCurrentPlayList
   };
 
-  const onChangeSong = (data: ISongDetail) => {
-    setCurrentSongDetail(data);
+  const onChangeSongDetail = async (data: Promise<ISongDetail>) => {
+    setCurrentSongDetail(await data);
+  };
+
+  // const onChangeSong = (song: Song) => {
+  //   setCurrentSong(song);
+  // };
+
+  const onChangeSonglike = () => {
+    setSongLike(!songLike);
   };
 
   useEffect(() => {
     setCurrentPage({ pageName: '' });
   }, []);
 
+  useEffect(() => {
+    if (songId != null) {
+      const res = songDetail(user.id, songId);
+      if (res != null) {
+        onChangeSongDetail(res);
+        startLikeCheck();
+      }
+    }
+  }, [currentSongDetail.songlike]);
+
   const toggleTooltip = () => {
     setTooltipVisible(!isTooltipVisible);
   };
 
-  const onChangeSongLike = () => {
-    setSongLike(!songLike);
-    axios.post(`http://localhost:8080/song/songlike`, {
-      userId: 1,
-      songId: songId,
-    })
-    .catch((error) => {
-      console.error('Error songlike :', error);
-    });
+  const SongLike = () => {
+    onChangeSonglike();
+    if (songId != null) {
+      registSongLike(user.id, songId);
+    }
   };
 
-  useEffect(() => {
-    axios.post(`http://localhost:8080/song`, {
-      userId: 1,
-      songId: songId,
-    })
-    .then((response) => {
-      onChangeSong(response.data.content);
-    })
-    .catch((error) => {
-      console.error('Error fetching song data:', error);
-    });
-  }, [songId, User.id]);
+  const startLikeCheck = () => {
+    if (currentSongDetail.songlike) {
+      onChangeSonglike();
+    }
+  };
 
   return (
     <div>
       <div className='flex'>
-        <div className='w-2/12'>
+        <div>
           <HeaderNav />
         </div>
-        <main className='w-10/12 px-20 pt-12'>
+        <main className='w-10/12 pr-20 pt-12 pl-72'>
           <div className='flex pb-10 border-b border-gray-900'>
             <img
               className='w-56 h-56'
               src={currentSongDetail.imgUrl}
             ></img>
             <div className='relative px-6'>
-              <div className='text-3xl font-semibold'>
+              <div className='text-3xl font-bold text-white'>
                 {currentSongDetail.name}
               </div>
-              <div className='pt-3'>
-                가수 이름
-                {currentSongDetail.artistName}
+              <div className='pt-3 text-xl text-white'>
+                <div className='inline'>
+                  {currentSongDetail.artistName}
+                </div>
               </div>
-              <div className='w-full h-12 max-w-3xl pt-2 text-gray-400 max-h-24'>
-                앨범 이름
-                {currentSongDetail.albumName}
+              <div className='pt-1 text-gray-500'>
+                수록 앨범
+                <div className='ml-3 inline'>
+                  {currentSongDetail.albumName}
+                </div>
               </div>
-              <div className='w-full h-12 max-w-3xl pt-2 text-gray-400 max-h-24'>
+              <div className='pt-1 text-gray-500'>
                 출시 연도
-                {currentSongDetail.releaseYear}
+                <div className='ml-3 inline'>
+                  {currentSongDetail.releaseYear}
+                </div>
               </div>
-              <div className='w-full h-12 max-w-3xl pt-2 text-gray-400 max-h-24'>
-                {currentSongDetail.duration}초
+              <div className='pt-1 text-gray-500'>
+                {Math.floor(currentSongDetail.duration / 60000)}분 {Math.floor(currentSongDetail.duration % 60000 / 1000)}초
               </div>
               <div className='flex pt-3'>
                 <ButtonComponent onClick={onChangePlayList} type='isSmall'>
@@ -153,8 +164,8 @@ export default function SongDetail() {
                 </ButtonComponent>
                 <button
                   className='flex items-center justify-center w-10 h-10 mx-4 bg-black border-2 border-gray-700 rounded-full group'
-                  onClick={onChangeSongLike}>
-                  {songLike === true ? <FontAwesomeIcon
+                  onClick={SongLike}>
+                  {songLike ? <FontAwesomeIcon
                     icon={faHeart}
                     className='w-5 h-5 text-red-600'
                   /> : <FontAwesomeIcon
@@ -177,7 +188,7 @@ export default function SongDetail() {
                     <div className='px-2 py-1 hover:bg-gray-800' onClick={onChangePlayList}>
                       💘 플레이 리스트에 추가
                     </div>
-                    <div className='px-2 py-1 hover:bg-gray-800' onClick={onChangeSongLike}>🥰 좋아요
+                    <div className='px-2 py-1 hover:bg-gray-800' onClick={SongLike}>🥰 좋아요
                     </div>
                     <div className='px-2 py-1 hover:bg-gray-800'>👩‍❤️‍👩 공유</div>
                   </div>
