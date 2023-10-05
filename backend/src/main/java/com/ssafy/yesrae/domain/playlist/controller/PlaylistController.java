@@ -171,7 +171,7 @@ public class PlaylistController {
     }
 
     //플레이 리스트 조회
-    @GetMapping("/{Id}")
+    @GetMapping("/find/{Id}")
     public CommonResponse<?> findPlaylist(@PathVariable Long Id) {
 
         log.info("PlaylisController_find_start: " + Id);
@@ -187,7 +187,7 @@ public class PlaylistController {
     }
 
     //플레이 리스트 내부 노래 조회
-    @GetMapping("songs/{Id}")
+    @GetMapping("/songs/{Id}")
     public CommonResponse<?> findPlaylistSongs(@PathVariable Long Id) {
 
         log.info("PlaylisController_findSongs_start: " + Id);
@@ -203,7 +203,7 @@ public class PlaylistController {
     }
 
     //플레이 리스트 내부 태그 조회
-    @GetMapping("tags/{Id}")
+    @GetMapping("/tags/{Id}")
     public CommonResponse<?> findPlaylistTags(@PathVariable Long Id) {
 
         log.info("PlaylisController_findTags_start: " + Id);
