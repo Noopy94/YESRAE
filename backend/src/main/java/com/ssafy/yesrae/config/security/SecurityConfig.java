@@ -44,7 +44,10 @@ public class SecurityConfig {
     private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
     private final CustomOAuth2UserService customOAuth2UserService;
     private static final String[] WHITE_LIST = {
-        "/api/auth/**", "/template/**", "/tournament/**", "/user/**", "/oauth2/**"
+        "/api/auth/**", "/template/**", "/tournament/auth/**", "/user/**", "/oauth2/**",
+        "playlist/find/**", "playlist/songs/**", "playlist/tags/**", "playlist/findtag",
+        "playlist/findtitle",
+        "playlist/best20likecnt", "playlist/best20viewcnt"
     };
 
     @Bean

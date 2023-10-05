@@ -8,13 +8,14 @@ import com.ssafy.yesrae.domain.playlist.dto.request.PlaylistModifyPutReq;
 import com.ssafy.yesrae.domain.playlist.dto.request.PlaylistRegistPostReq;
 import com.ssafy.yesrae.domain.playlist.dto.request.PlaylistSongDeletePutReq;
 import com.ssafy.yesrae.domain.playlist.dto.request.PlaylistSongRegistPostReq;
-import com.ssafy.yesrae.domain.playlist.dto.request.PlaylistTagDeletePutReq;
 import com.ssafy.yesrae.domain.playlist.dto.request.PlaylistTagRegistPostReq;
+import com.ssafy.yesrae.domain.playlist.dto.request.PlaylistTagUpdatePutReq;
 import com.ssafy.yesrae.domain.playlist.dto.response.PlaylistGetResponse;
+import com.ssafy.yesrae.domain.playlist.dto.response.SongGetRes;
 import com.ssafy.yesrae.domain.playlist.entity.Playlist;
 import com.ssafy.yesrae.domain.playlist.entity.PlaylistSong;
 import com.ssafy.yesrae.domain.playlist.entity.PlaylistTag;
-import com.ssafy.yesrae.domain.song.entity.Song;
+import com.ssafy.yesrae.domain.user.entity.User;
 import java.io.IOException;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -35,7 +36,7 @@ public interface PlaylistService {
 
     PlaylistTag registPlaylistTag(PlaylistTagRegistPostReq registInfo);
 
-    boolean deletePlaylistTag(PlaylistTagDeletePutReq deleteInfo);
+    boolean updatePlaylistTag(PlaylistTagUpdatePutReq updateInfo);
 
     // 플레이 리스트에 노래 추가
     PlaylistSong registSongInPlaylist(PlaylistSongRegistPostReq registInfo);
@@ -48,20 +49,29 @@ public interface PlaylistService {
     /// 플레이 리스트 좋아요 삭제
     boolean deletePlaylistLike(PlaylistLikeDeletePutReq deleteInfo);
 
+    // 플레이 리스트의 태그 정보 조회
+    List<String> getPlaylistTag(Long playlistId);
+
     // 플레이 리스트 안에 등록된 노래 조회
-    List<Song> getPlaylistSong(Long playlistId);
+    List<SongGetRes> getPlaylistSong(Long playlistId);
 
-    // 비로그인시 플레이 리스트 홈화면 추천 플레이 리스트(7가지)
-    List<Playlist> getHomeRecommendPlaylist();
+    // 좋아요 베스트 20개 플레이리스트 가져오기
+    List<PlaylistGetResponse> getBest20LikeCntPlaylist();
 
-    // 유저 로그인시 플레이 리스트 홈화면 추천 플레이 리스트(7가지)
-    List<Playlist> getHomeRecommendPlaylist(Long userId);
+    // 조회수 베스트 20개 플레이리스트 가져오기
+    List<PlaylistGetResponse> getBest20ViewCntPlaylist();
 
-    //유저 로그인시 팔로워의 추천 플레이 리스트 (7가지)
-    List<Playlist> getFollowerPlaylist(Long userId);
+    // 유저 플레이 리스트 가져오기
+    List<PlaylistGetResponse> getUserPlaylist(Long userId);
 
-    // 자기 플레이 리스트 가져오기
-    List<Playlist> getUserPlaylist(Long userId);
+    // 좋아요 플레이 리스트 가져오기
+    List<PlaylistGetResponse> getUserLikePlaylist(User user);
+
+    // 유저 로그인시 플레이 리스트 홈화면 추천 플레이 리스트를 위한 SongId 4가지(4가지)
+    List<String> getHomeRecommendSongs(Long userId);
+
+    //유저 로그인시 팔로워의 추천 플레이 리스트 (8가지)
+    List<PlaylistGetResponse> getFollowerPlaylist(Long userId);
 
     // 제목으로 플레이 리스트 검색, 페이지네이션 필요
     Page<PlaylistGetResponse> searchByTitlePlaylist(String keyword, Pageable pageable);
@@ -69,7 +79,5 @@ public interface PlaylistService {
     // 태그로 플레이 리스트 검색, 페이지네이션 필요
     Page<PlaylistGetResponse> searchByTagPlaylist(String keyword, Pageable pageable);
 
-    // 플레이 리스트 좋아요 수 세기
-    Long countPlaylistLike(Long playlistId);
 
 }

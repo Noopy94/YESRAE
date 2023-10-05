@@ -3,6 +3,7 @@ package com.ssafy.yesrae.domain.playlist.repository;
 import com.ssafy.yesrae.domain.playlist.entity.Playlist;
 import com.ssafy.yesrae.domain.playlist.entity.PlaylistLike;
 import com.ssafy.yesrae.domain.user.entity.User;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,9 +14,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PlaylistLikeRepository extends JpaRepository<PlaylistLike, Long> {
 
-    // Playlist에 있는 PlaylistLike 숫자세기
-    Long countByPlaylistIdAndDeletedAtIsNull(Long playlistId);
-
     PlaylistLike findByUserAndPlaylist(User user, Playlist playlist);
+
+    List<PlaylistLike> findAllByUser(User user);
 
 }

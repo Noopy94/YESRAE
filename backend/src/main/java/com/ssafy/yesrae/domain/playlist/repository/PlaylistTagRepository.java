@@ -14,7 +14,8 @@ public interface PlaylistTagRepository extends JpaRepository<PlaylistTag, Long> 
 
     // Playlist에 있는 태그들 가져오기
     List<PlaylistTag> findByPlaylist(Playlist playlist);
-
+    List<String> findTagNameByPlaylist(Playlist playlist);
     List<PlaylistTag> findByTagName(String tagName);
+
 
 }
