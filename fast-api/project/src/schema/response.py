@@ -63,11 +63,3 @@ class RecommendSongSchema(BaseModel):
 
     class Config:
         from_attributes = True
-
-
-
-class RecommendSongListSchema(BaseModel):
-    songs : List[RecommendSongSchema]
-    
-    class Config:
-        from_attributes = True
