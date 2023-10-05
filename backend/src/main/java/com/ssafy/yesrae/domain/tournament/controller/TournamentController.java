@@ -58,7 +58,7 @@ public class TournamentController {
     /**
      *  플레이 한 이상형 월드컵을 각 플레이 마다 구분할 수 있도록 DB에 저장
      */
-    @PostMapping("/{userId}")
+    @PostMapping()
     public CommonResponse<?> registTournament(@PathVariable Long userId) {
 
         log.info("TournamentController_registTournament_start: " + userId);
