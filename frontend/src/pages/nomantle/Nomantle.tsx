@@ -3,14 +3,15 @@ import QuestionLogo from '../../assets//nomantle_question.svg';
 import { useEffect, useState } from 'react';
 import Category from '../../components/nomantle/Category';
 import SongInfo from '../../components/nomantle/SongInfo';
-import { searchSong, getSongResult } from '../../api/nomantle';
+import { searchSong, getSongResult } from '../../api/nomantleApi';
 import { Link } from 'react-router-dom';
+import React from 'react';
 
 interface Title {
   title: string;
 }
 
-interface SongInfo {
+interface ISongInfo {
   index: number;
   id: string;
   title: string;
@@ -42,7 +43,7 @@ export default function Nomantle() {
   // 정답입니다 모달 -> O
   const [answerModalOpen, setAnswerModalOpen] = useState(false);
 
-  const [songInfoLocalStorage, setSongInfoLocalStorage] = useState<SongInfo[]>(
+  const [songInfoLocalStorage, setSongInfoLocalStorage] = useState<ISongInfo[]>(
     [],
   );
 
@@ -146,7 +147,7 @@ export default function Nomantle() {
 
         // localStorage 에서 꺼내오기
         const storedData = localStorage.getItem('song');
-        const localStorageData: SongInfo[] = storedData
+        const localStorageData: ISongInfo[] = storedData
           ? JSON.parse(storedData)
           : [];
 
@@ -165,7 +166,7 @@ export default function Nomantle() {
           return item.index > max ? item.index : max;
         }, 0);
 
-        const newGuess: SongInfo = {
+        const newGuess: ISongInfo = {
           index: maxIndex + 1,
           id: result.id,
           title: result.title,
@@ -246,7 +247,7 @@ export default function Nomantle() {
     const storedData = localStorage.getItem('song');
 
     if (storedData) {
-      const data: SongInfo[] = JSON.parse(storedData);
+      const data: ISongInfo[] = JSON.parse(storedData);
 
       const storedDate = localStorage.getItem('createdDate');
       const currentDate = getCurrentDate();

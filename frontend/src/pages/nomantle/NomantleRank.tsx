@@ -1,6 +1,6 @@
 import NomantleLogo from '../../assets/nomantle_logo.svg';
 import { useEffect, useState } from 'react';
-import { getRank } from '../../api/nomantle';
+import { getRank } from '../../api/nomantleApi';
 
 interface IRankInfo {
   title: string;

@@ -15,6 +15,7 @@ import TournamentProcess from './pages/tournament/TournamentProcess';
 import TournamentResult from './pages/tournament/TournamentResult';
 import TournamentRanking from './pages/tournament/TournamentRanking';
 import MyPlayList from './pages/playlist/MyPlayList.tsx';
+import RecommendResult from './pages/recommend/RecommendResult.tsx';
 
 function App() {
   return (
@@ -36,16 +37,14 @@ function App() {
           path="/playlistdetail/:playListId"
           element={<PlayListDetail />}
         />
-        <Route
-          path='/song/:songId'
-          element={<SongDetail />}
-        />
+        <Route path="/song/:songId" element={<SongDetail />} />
         <Route path="/quiz" element={<Nomantle />} />
         <Route path="/quiz/rank" element={<NomantleRank />} />
         <Route path="/cup" element={<Tournament />} />
         <Route path="/tournament/:round" element={<TournamentProcess />} />
         <Route path="/tournament/result" element={<TournamentResult />} />
         <Route path="/tournament/ranking" element={<TournamentRanking />} />
+        <Route path="/recommend" element={<RecommendResult />} />
       </Routes>
     </Router>
   );
