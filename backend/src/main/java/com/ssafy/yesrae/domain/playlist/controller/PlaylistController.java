@@ -60,11 +60,12 @@ public class PlaylistController {
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public CommonResponse<?> registPlaylist(
         @RequestPart PlaylistRegistPostReq playlistRegistPostReq,
-        @RequestPart(value = "files", required = false) MultipartFile file) throws IOException {
+        @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
 
         if (file != null) { // 게시물에 파일 있으면
-            log.info("PlaylistController_regist_start: " + playlistRegistPostReq.toString() + ", "
-                + file);
+            log.info(
+                "PlaylistController_registfile_start: " + playlistRegistPostReq.toString() + ", "
+                    + file);
         } else {
             log.info("PlaylistController_regist_start: " + playlistRegistPostReq.toString());
         }
@@ -86,7 +87,6 @@ public class PlaylistController {
     // playlist에 노래 등록
     @PostMapping("/registsong")
     public CommonResponse<?> RegistSong(
-
         @RequestBody PlaylistSongRegistPostReq playlistSongRegistPostReq) {
 
         log.info("PlaylistController_registsong_start: " + playlistSongRegistPostReq.toString());
@@ -121,7 +121,7 @@ public class PlaylistController {
     // 플레이 리스트 제거
     @PutMapping("/delete")
     public CommonResponse<?> deletePlaylist(
-        @PathVariable PlaylistDeletePutReq playlistDeletePutReq) {
+        @RequestBody PlaylistDeletePutReq playlistDeletePutReq) {
 
         log.info("PlaylistController_delete_start: " + playlistDeletePutReq.toString());
 
@@ -202,6 +202,18 @@ public class PlaylistController {
         }
     }
 
+    //플레이 리스트 내부 태그 조회
+    @GetMapping("tags/{Id}")
+    public CommonResponse<?> findPlaylistTags(@PathVariable Long Id) {
+
+        log.info("PlaylisController_findTags_start: " + Id);
+
+        List<String> tags = playlistService.getPlaylistTag(Id);
+
+        log.info("PlaylistController_findTags_end: " + tags.toString());
+        return CommonResponse.success(tags);
+    }
+
 
     // 플레이 리스트 수정, 태그도 수정
     @PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -237,7 +249,7 @@ public class PlaylistController {
     // 검색시 페이지네이션 플레이 리스트 반환
     @GetMapping("/findtag")
     public CommonResponse<Page<PlaylistGetResponse>> findPlaylistByTag(
-        PlaylistSearchGetReq playlistSearchGetReq
+        @RequestBody PlaylistSearchGetReq playlistSearchGetReq
     ) {
         log.info("PlaylistController_findPlaylistByTag_start: ");
 
@@ -255,7 +267,7 @@ public class PlaylistController {
 
     @GetMapping("/findtitle")
     public CommonResponse<Page<PlaylistGetResponse>> findPlaylistByTitle(
-        PlaylistSearchGetReq playlistSearchGetReq
+        @RequestBody PlaylistSearchGetReq playlistSearchGetReq
     ) {
         log.info("PlaylistController_findPlaylistByTitle_start: ");
 
@@ -310,6 +322,7 @@ public class PlaylistController {
         return CommonResponse.success(findRes);
 
     }
+
 
     // 특정 유저 follwer 플레이 리스트 가져오기
     @GetMapping("/follwerplaylist/{Id}")

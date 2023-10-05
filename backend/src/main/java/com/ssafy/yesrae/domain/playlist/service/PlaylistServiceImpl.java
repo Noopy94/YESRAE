@@ -34,6 +34,7 @@ import com.ssafy.yesrae.domain.user.repository.UserFollowRepository;
 import com.ssafy.yesrae.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -95,14 +96,19 @@ public class PlaylistServiceImpl implements PlaylistService {
             .isPublic(isPublic)
             .title(title)
             .description(description)
+            .likeCount(0L)
+            .viewCount(0L)
+            .createdAt(LocalDateTime.now())
             .build();
+
+        playlistRepository.save(playlist);
 
         if (img != null) {
             String imgUrl = s3Uploader.upload(img, "playlistId" + playlist.getId());
             playlist.setImgUrl(imgUrl);
+            log.info("PlaylistService_PlaylistImgRegist_end");
         }
 
-        playlistRepository.save(playlist);
         log.info("PlaylistService_PlaylistRegist_end : " + playlist.toString());
         return playlist;
 
@@ -217,8 +223,7 @@ public class PlaylistServiceImpl implements PlaylistService {
                 playlist.getDescription(),
                 playlist.getViewCount(),
                 playlist.getLikeCount(),
-                playlist.getImgUrl(),
-                playlistTagRepository.findTagNameByPlaylist(playlist)
+                playlist.getImgUrl()
             );
             results.add(response);
         }
@@ -240,8 +245,7 @@ public class PlaylistServiceImpl implements PlaylistService {
                 playlist.getDescription(),
                 playlist.getViewCount(),
                 playlist.getLikeCount(),
-                playlist.getImgUrl(),
-                playlistTagRepository.findTagNameByPlaylist(playlist)
+                playlist.getImgUrl()
             );
             results.add(response);
         }
@@ -264,8 +268,7 @@ public class PlaylistServiceImpl implements PlaylistService {
                 playlist.getDescription(),
                 playlist.getViewCount(),
                 playlist.getLikeCount(),
-                playlist.getImgUrl(),
-                playlistTagRepository.findTagNameByPlaylist(playlist)
+                playlist.getImgUrl()
             );
             results.add(response);
         }
@@ -273,6 +276,7 @@ public class PlaylistServiceImpl implements PlaylistService {
         return results;
 
     }
+
 
     // 유저별 좋아요 표시한 플레이 리스트 가져오기
     @Override
@@ -512,9 +516,26 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
 
 
-    // 로그인시 홈화면 투데이 추천 플레이리스트 8가지만 가져오기
     @Override
-    public List<PlaylistGetResponse> getHomeRecommendPlaylist(Long userId) {
+    public List<String> getPlaylistTag(Long playlistId) {
+        log.info("PlaylistService_getPlaylistTag_start: " + playlistId);
+
+        Playlist playlist = playlistRepository.findById(playlistId)
+            .orElseThrow(PlaylistNotFoundException::new);
+
+        List<String> results = playlistTagRepository.findByPlaylist(playlist).stream()
+            .filter(playlistTag -> playlistTag.getDeletedAt() == null)
+            .map(PlaylistTag::getTagName)
+            .collect(Collectors.toList());
+
+        log.info("PlaylistService_getPlaylistTag_end");
+
+        return results;
+    }
+
+    // 로그인시 SongId 4개 보내기 아직 미완성
+    @Override
+    public List<String> getHomeRecommendSongs(Long userId) {
         return null;
     }
 

@@ -49,6 +49,9 @@ public interface PlaylistService {
     /// 플레이 리스트 좋아요 삭제
     boolean deletePlaylistLike(PlaylistLikeDeletePutReq deleteInfo);
 
+    // 플레이 리스트의 태그 정보 조회
+    List<String> getPlaylistTag(Long playlistId);
+
     // 플레이 리스트 안에 등록된 노래 조회
     List<SongGetRes> getPlaylistSong(Long playlistId);
 
@@ -64,9 +67,8 @@ public interface PlaylistService {
     // 좋아요 플레이 리스트 가져오기
     List<PlaylistGetResponse> getUserLikePlaylist(User user);
 
-
-    // 유저 로그인시 플레이 리스트 홈화면 추천 플레이 리스트(8가지)
-    List<PlaylistGetResponse> getHomeRecommendPlaylist(Long userId);
+    // 유저 로그인시 플레이 리스트 홈화면 추천 플레이 리스트를 위한 SongId 4가지(4가지)
+    List<String> getHomeRecommendSongs(Long userId);
 
     //유저 로그인시 팔로워의 추천 플레이 리스트 (8가지)
     List<PlaylistGetResponse> getFollowerPlaylist(Long userId);
