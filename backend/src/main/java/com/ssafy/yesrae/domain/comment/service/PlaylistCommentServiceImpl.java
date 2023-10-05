@@ -85,6 +85,7 @@ public class PlaylistCommentServiceImpl implements PlaylistCommentService {
                 .userId(m.getUser().getId())
                 .content(m.getContent())
                 .createdAt(m.getCreatedAt())
+                .nickName(userRepository.findById(m.getUser().getId()).orElseThrow(UserNotFoundException::new).getNickname())
                 .build()
             ).collect(Collectors.toList());
 

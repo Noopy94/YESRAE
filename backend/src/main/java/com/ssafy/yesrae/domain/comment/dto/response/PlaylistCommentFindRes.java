@@ -18,4 +18,6 @@ public class PlaylistCommentFindRes {
 
     private LocalDateTime createdAt;
 
+    private String nickName;
+
 }
