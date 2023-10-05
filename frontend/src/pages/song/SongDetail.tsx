@@ -3,13 +3,14 @@ import MusicPlayer from '../../components/playercontroller/MusicPlayer';
 import { userState } from '../../recoil/user/user';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { useEffect, useState } from 'react';
-import { currentPageState, isListState } from '../../recoil/currentpage/currentPage';
+import { currentPageState } from '../../recoil/currentpage/currentPage';
 import ButtonComponent from '../../components/common/ButtonComponent';
 import { currentSongListState, currentSongState } from '../../recoil/currentsong/currentSong';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisH, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { useParams } from 'react-router-dom';
 import { registSongLike, songDetail } from '../../api/songApi.ts';
+import ProgressComponent from '../../components/common/ProgressComponent.tsx';
 
 export interface ISongDetail {
   id: string,
@@ -45,7 +46,6 @@ export default function SongDetail() {
   const { songId } = useParams();
   const setCurrentPage = useSetRecoilState(currentPageState);
   const [currentSong, setCurrentSong] = useRecoilState(currentSongState);
-  const [isList, setIsList] = useRecoilState(isListState);
   const [songList, setSongList] = useRecoilState(currentSongListState);
   const [songLike, setSongLike] = useState(false);
   const [isTooltipVisible, setTooltipVisible] = useState(false);
@@ -92,12 +92,13 @@ export default function SongDetail() {
   };
 
   useEffect(() => {
+    window.scroll(0,0);
     setCurrentPage({ pageName: '' });
   }, []);
 
   useEffect(() => {
     if (songId != null) {
-      const res = songDetail(user.id, songId);
+      const res = songDetail(user.userId, songId);
       if (res != null) {
         onChangeSongDetail(res);
         startLikeCheck();
@@ -111,8 +112,9 @@ export default function SongDetail() {
 
   const SongLike = () => {
     onChangeSonglike();
+    console.log(user);
     if (songId != null) {
-      registSongLike(user.id, songId);
+      registSongLike(user.userId, songId);
     }
   };
 
@@ -197,7 +199,10 @@ export default function SongDetail() {
             </div>
           </div>
           <div className='fixed relative bottom-0 left-0 h-52'>
-            popularity : {currentSongDetail.popularity}<br /><br />
+            <div>
+                popularity
+              <ProgressComponent amount={currentSongDetail.popularity} max={100}/>
+            </div>
             acosticness : {currentSongDetail.acousticness}<br /><br />
             danceability : {currentSongDetail.danceability}<br /><br />
             energy : {currentSongDetail.energy}<br /><br />
