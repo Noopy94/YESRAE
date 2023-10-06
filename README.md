@@ -7,7 +7,7 @@
 | Application                       | Domain                                | Language                      | Framework                               |
 | --------------------------------- | ------------------------------------- | ----------------------------- | --------------------------------------- |
 | :white_check_mark: Desktop Web    | :black_square_button: AI              | :white_check_mark: JavaScript | :black_square_button: Vue.js            |
-| :black_square_button: Mobile Web  | :black_square_button: Big Data        | :white_check_mark: TypeScript | :white_check_mark: React                |
+| :black_square_button: Mobile Web  | :white_check_mark: Big Data        | :white_check_mark: TypeScript | :white_check_mark: React                |
 | :white_check_mark: Responsive Web | :black_square_button: Blockchain      | :black_square_button: C/C++   | :black_square_button: Angular           |
 | :black_square_button: Android App | :black_square_button: IoT             | :black_square_button: C#      | :black_square_button: Node.js           |
 | :black_square_button: iOS App     | :black_square_button: AR/VR/Metaverse | :white_check_mark: Python     | :white_check_mark: Flask/Django/FastAPI |
