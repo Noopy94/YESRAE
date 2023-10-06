@@ -114,7 +114,7 @@ export default function SongDetail() {
     onChangeSonglike();
     console.log(user);
     if (songId != null) {
-      registSongLike(user.id, songId);
+      registSongLike(user.id, songId, user.accessToken);
     }
   };
 
