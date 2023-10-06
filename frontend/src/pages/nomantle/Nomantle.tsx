@@ -1,11 +1,10 @@
 import NomantleLogo from '../../assets/nomantle_logo.svg';
 import QuestionLogo from '../../assets//nomantle_question.svg';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Category from '../../components/nomantle/Category';
 import SongInfo from '../../components/nomantle/SongInfo';
 import { searchSong, getSongResult } from '../../api/nomantleApi';
 import { Link } from 'react-router-dom';
-import React from 'react';
 
 interface Title {
   title: string;

@@ -2,14 +2,15 @@ import HeaderNav from '../../components/HeaderNav/HeaderNav';
 import MusicPlayer from '../../components/playercontroller/MusicPlayer';
 import SongCarousel from '../../components/common/SongCarousel';
 import PlayListCarousel from '../../components/common/PlayListCarousel';
-import { defaultsongs } from '../../recoil/defaultdata/data';
-import { userState } from '../../recoil/user/user';
-import { useRecoilState } from 'recoil';
-import { useState, useEffect } from 'react';
 import {
-  isListState,
-  currentPageState,
-} from '../../recoil/currentpage/currentPage';
+  defaultsongs,
+  defaultsongs2,
+  defaultsongs3,
+} from '../../recoil/defaultdata/data';
+import { userState } from '../../recoil/user/user';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { useState, useEffect } from 'react';
+import { currentPageState } from '../../recoil/currentpage/currentPage';
 import '../../styles.css';
 import { PlayList } from '../../recoil/defaultdata/data';
 import {
@@ -19,8 +20,7 @@ import {
 
 export default function Main() {
   // 노래, 플레이 리스트 데이터 샘플, 나중에 api로 가져올 예정
-  const [User, setUser] = useRecoilState(userState);
-  const [isList, setIsList] = useRecoilState(isListState);
+  const User = useRecoilValue(userState);
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
   const [bestLike20songs, setBestLike20Songs] = useState<PlayList[]>([]);
   const [bestView20songs, setBestView20Songs] = useState<PlayList[]>([]);
@@ -80,7 +80,7 @@ export default function Main() {
             YESRAE 추천 플레이 노래 😍
           </div>
           <div className="flex">
-            <SongCarousel songs={defaultsongs} />
+            <SongCarousel songs={defaultsongs2} />
           </div>
           <div className="mt-10 mb-3 text-2xl font-bold">
             베스트 좋아요 플레이 리스트 🔥
@@ -98,7 +98,7 @@ export default function Main() {
             가을 감성을 담은 노래 🍂
           </div>
           <div className="flex">
-            <SongCarousel songs={defaultsongs} />
+            <SongCarousel songs={defaultsongs3} />
           </div>
           {/* 밑에 부분은 공간 남는거 채우는 용도니 그대로 둘것*/}
           <div>

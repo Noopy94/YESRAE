@@ -6,11 +6,16 @@ import HeaderNav from '../../components/HeaderNav/HeaderNav';
 import MusicPlayer from '../../components/playercontroller/MusicPlayer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import {
+  registPlaylistApi,
+  PlayListRegistPostReq,
+} from '../../api/registPlaylistApi';
 
 export default function PlayListRegist() {
   const User = useRecoilValue(userState);
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [playlistTitle, setPlaylistTitle] = useState('');
   const [playlistDescription, setPlaylistDescription] = useState('');
   const [playlistTag, setPlaylistTag] = useState('');
@@ -19,6 +24,7 @@ export default function PlayListRegist() {
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      setSelectedFile(file);
       const reader = new FileReader();
       reader.onload = (e) => {
         setSelectedImage(e.target?.result as string);
@@ -55,15 +61,32 @@ export default function PlayListRegist() {
 
   const AddTag = () => {
     if (playlistTag) {
-      // 기존의 태그 배열을 복사하여 새 배열을 생성하고, 새 태그를 추가합니다.
       const newTagList = [...tagList, playlistTag];
       setTagList(newTagList);
-      setPlaylistTag(''); // 입력 필드 초기화
+      setPlaylistTag('');
     }
   };
 
-  const onRegistPlayList = () => {
+  const onRegistPlayList = async () => {
+    console.log('플레이 리스트 등록 시작!');
     // 데이터 모아서 api로 전송! 등록! 완료되면 플레이 리스트로 돌려 보낼것!
+    const playListRegistPostReq: PlayListRegistPostReq = {
+      userId: User.userId,
+      isPublic: 1,
+      title: playlistTitle,
+      description: playlistDescription,
+      tags: tagList,
+    };
+
+    try {
+      await registPlaylistApi(playListRegistPostReq, selectedFile);
+      console.log('플레이 리스트 등록 성공!');
+
+      // 등록 완료 후 페이지 이동
+      navigate(`/mypage/${User.userId}`);
+    } catch (error) {
+      console.error('플레이 리스트 등록 실패:', error);
+    }
   };
 
   useEffect(() => {
@@ -119,6 +142,11 @@ export default function PlayListRegist() {
               type="text"
               value={playlistTag}
               onChange={handleTagChange}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  AddTag();
+                }
+              }}
             />
             <button
               className="h-8 px-2 text-lg text-white border-2 border-gray-900 rounded-md hover:font-semibold"

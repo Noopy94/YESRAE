@@ -4,9 +4,9 @@ import axios from './securityIndex';
 export interface PlayListRegistPostReq {
   userId: number;
   isPublic: number;
-  title: String;
-  description: String;
-  tags: String[];
+  title: string;
+  description: string;
+  tags: string[];
 }
 
 // Playlist 등록 Api
@@ -15,26 +15,23 @@ export async function registPlaylistApi(
   file: File | null,
 ) {
   try {
-    const apiUrl = '/playlist';
+    const apiUrl = 'playlist';
     const formData = new FormData();
-    formData.append(
-      'playlistRegistPostReq',
-      JSON.stringify(playlistRegistPostReq),
-    );
+    const json = JSON.stringify(playlistRegistPostReq);
+    const blob = new Blob([json], { type: 'application/json' });
+    formData.append('playlistRegistPostReq', blob);
 
     if (file) {
       formData.append('file', file);
     }
 
-    const response = await axios.post(apiUrl, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    console.log('플레이 리스트 등록 api 시작');
 
+    const response = await axios.post(apiUrl, formData);
+    console.log(response.data);
     return response.data;
   } catch (error) {
-    console.error('실패:', (error as AxiosError).message);
+    console.error('실패:', error as AxiosError);
   }
 }
 
@@ -43,22 +40,17 @@ export async function updatePlaylistApi(
   file: File | null,
 ) {
   try {
-    const apiUrl = '/playlist';
+    const apiUrl = 'playlist';
     const formData = new FormData();
-    formData.append(
-      'playlistRegistPostReq',
-      JSON.stringify(playlistRegistPostReq),
-    );
+    const json = JSON.stringify(playlistRegistPostReq);
+    const blob = new Blob([json], { type: 'application/json' });
+    formData.append('playlistRegistPostReq', blob);
 
     if (file) {
       formData.append('file', file);
     }
 
-    const response = await axios.put(apiUrl, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    const response = await axios.put(apiUrl, formData);
 
     return response.data;
   } catch (error) {
@@ -76,7 +68,7 @@ export async function findPlayListLikeApi(
   playlistLikeRegistPostReq: PlaylistLikeRegistPostReq,
 ) {
   try {
-    const apiUrl = '/playlist/playlistlike';
+    const apiUrl = 'playlist/playlistlike';
 
     const response: AxiosResponse = await axios.post(
       apiUrl,

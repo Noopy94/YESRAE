@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { findnickname } from './userApi';
+import { PlayList } from '../recoil/defaultdata/data';
 
 //const BASE_URL = 'https://i9a304.p.ssafy.io/api';
 
@@ -110,15 +111,6 @@ export async function findPlaylistByTitleApi(
   } catch (error) {
     console.error('실패:', (error as AxiosError).message);
   }
-}
-
-export interface PlayList {
-  playListId: number;
-  playListUserId: number;
-  playListUserNickName: string;
-  playListTitle: string;
-  playListDescription: string | null;
-  playListImageUrl: string;
 }
 
 export interface PlaylistGetResponse {
