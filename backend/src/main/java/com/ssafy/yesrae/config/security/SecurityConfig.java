@@ -47,7 +47,7 @@ public class SecurityConfig {
         "/api/auth/**", "/template/**", "/tournament/**", "/user/**", "/oauth2/**",
         "playlist/find/**", "playlist/songs/**", "playlist/tags/**", "playlist/findtag",
         "playlist/findtitle",
-        "playlist/best20likecnt", "playlist/best20viewcnt"
+        "playlist/best20likecnt", "playlist/best20viewcnt", "/song"
     };
 
     @Bean
