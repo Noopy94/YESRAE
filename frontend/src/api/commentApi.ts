@@ -14,7 +14,7 @@ export const getComment = async (type: string, typeId: number) => {
 
 export const getDate = (createdAt: string): string => {
   const date = new Date(createdAt);
-  return date.getFullYear() + '.' + ((date.getMonth() + 1) < 9 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + '.' + ((date.getDay() + 1) < 9 ? '0' + (date.getDay() + 1) : (date.getDay() + 1)) + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+  return date.getFullYear() + '.' + ((date.getMonth() + 1) < 9 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + '.' + ((date.getDay() + 1) < 9 ? '0' + (date.getDay() + 1) : (date.getDay() + 1)) + ' ' + (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':' + (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':' + (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
 };
 
 export const registPlaylistComment = async (typeId: number, userId: number, content: string) => {

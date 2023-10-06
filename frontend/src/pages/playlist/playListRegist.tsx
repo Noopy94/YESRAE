@@ -6,10 +6,7 @@ import HeaderNav from '../../components/HeaderNav/HeaderNav';
 import MusicPlayer from '../../components/playercontroller/MusicPlayer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
-import {
-  registPlaylistApi,
-  PlayListRegistPostReq,
-} from '../../api/registPlaylistApi';
+import { PlayListRegistPostReq, registPlaylistApi } from '../../api/registPlaylistApi';
 
 export default function PlayListRegist() {
   const User = useRecoilValue(userState);
@@ -71,7 +68,7 @@ export default function PlayListRegist() {
     console.log('플레이 리스트 등록 시작!');
     // 데이터 모아서 api로 전송! 등록! 완료되면 플레이 리스트로 돌려 보낼것!
     const playListRegistPostReq: PlayListRegistPostReq = {
-      userId: User.userId,
+      userId: User.id,
       isPublic: 1,
       title: playlistTitle,
       description: playlistDescription,
@@ -83,7 +80,7 @@ export default function PlayListRegist() {
       console.log('플레이 리스트 등록 성공!');
 
       // 등록 완료 후 페이지 이동
-      navigate(`/mypage/${User.userId}`);
+      navigate(`/mypage/${User.id}`);
     } catch (error) {
       console.error('플레이 리스트 등록 실패:', error);
     }
@@ -97,37 +94,38 @@ export default function PlayListRegist() {
 
   return (
     <div>
-      <div className="flex">
-        <div className="w-2/12">
+      <div className='flex'>
+        <div className='w-2/12'>
           <HeaderNav />
         </div>
-        <main className="w-10/12 pt-16 pl-20">
-          <div className="flex pb-8 border-b border-gray-800">
-            <div className="relative w-64 h-64 overflow-hidden rounded-3xl">
+        <main className='w-10/12 pt-16 pl-20'>
+          <div className='flex pb-8 border-b border-gray-800'>
+            <div className='relative w-64 h-64 overflow-hidden rounded-3xl'>
               {selectedImage ? (
                 <img
                   src={selectedImage}
-                  alt="Preview"
-                  className="object-cover w-full h-full cursor-pointer"
+                  alt='Preview'
+                  className='object-cover w-full h-full cursor-pointer'
                   onClick={handleAddImageClick}
                 />
               ) : (
-                <div className="flex items-center justify-center w-full h-full text-5xl text-gray-400 bg-gray-900">
+                <div
+                  className='flex items-center justify-center w-full h-full text-5xl text-gray-400 bg-gray-900'>
                   <button onClick={handleAddImageClick}>+</button>
                 </div>
               )}
             </div>
-            <div className="flex flex-col gap-3 px-6">
-              <div className="text-xl">플레이 리스트 제목</div>
+            <div className='flex flex-col gap-3 px-6'>
+              <div className='text-xl'>플레이 리스트 제목</div>
               <input
-                className="h-8 px-2 text-white bg-gray-900 rounded-md w-96"
-                type="text"
+                className='h-8 px-2 text-white bg-gray-900 rounded-md w-96'
+                type='text'
                 value={playlistTitle}
                 onChange={handleTitleChange}
               />
-              <div className="text-xl">플레이 리스트 설명</div>
+              <div className='text-xl'>플레이 리스트 설명</div>
               <textarea
-                className="h-32 px-2 text-white bg-gray-900 rounded-md w-[600px] max-h-32 resize-none"
+                className='h-32 px-2 text-white bg-gray-900 rounded-md w-[600px] max-h-32 resize-none'
                 value={playlistDescription}
                 onChange={handleDescriptionChange}
                 rows={4}
@@ -135,11 +133,11 @@ export default function PlayListRegist() {
               />
             </div>
           </div>
-          <div className="flex items-center gap-1 py-2">
-            <div className="text-lg">태그</div>
+          <div className='flex items-center gap-1 py-2'>
+            <div className='text-lg'>태그</div>
             <input
-              className="h-8 px-2 m-2 text-white bg-gray-900 rounded-md w-[480px]"
-              type="text"
+              className='h-8 px-2 m-2 text-white bg-gray-900 rounded-md w-[480px]'
+              type='text'
               value={playlistTag}
               onChange={handleTagChange}
               onKeyPress={(e) => {
@@ -149,30 +147,30 @@ export default function PlayListRegist() {
               }}
             />
             <button
-              className="h-8 px-2 text-lg text-white border-2 border-gray-900 rounded-md hover:font-semibold"
+              className='h-8 px-2 text-lg text-white border-2 border-gray-900 rounded-md hover:font-semibold'
               onClick={AddTag}
             >
               추가
             </button>
           </div>
-          <div className="flex flex-wrap">
+          <div className='flex flex-wrap'>
             {tagList.map((tag, index) => (
               <div
                 key={index}
-                className="relative flex items-center h-8 px-1 m-2 bg-black border border-white rounded-md"
+                className='relative flex items-center h-8 px-1 m-2 bg-black border border-white rounded-md'
               >
                 <FontAwesomeIcon
                   icon={faXmark}
-                  className="justify-center w-3 h-3 p-1 text-white bg-gray-900 rounded-full"
+                  className='justify-center w-3 h-3 p-1 text-white bg-gray-900 rounded-full'
                   onClick={() => handleRemoveTag(index)}
                 />
                 {tag}
               </div>
             ))}
           </div>
-          <div className="flex justify-end px-1 pr-24 pt-36">
+          <div className='flex justify-end px-1 pr-24 pt-36'>
             <button
-              className="px-2 py-1 text-lg border border-white rounded-md hover:font-semibold"
+              className='px-2 py-1 text-lg border border-white rounded-md hover:font-semibold'
               onClick={onRegistPlayList}
             >
               {' '}
@@ -182,14 +180,14 @@ export default function PlayListRegist() {
 
           {/* 밑에 부분은 공간 남는거 채우는 용도니 그대로 둘것*/}
           <div>
-            <div className="fixed relative bottom-0 left-0 h-36" />
+            <div className='fixed relative bottom-0 left-0 h-36' />
           </div>
         </main>
       </div>
       <input
-        id="image-input"
-        type="file"
-        accept="image/*"
+        id='image-input'
+        type='file'
+        accept='image/*'
         style={{ display: 'none' }}
         onChange={handleImageChange}
       />
