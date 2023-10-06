@@ -1,0 +1,18 @@
+package com.ssafy.yesrae.domain.playlist.entity;
+
+import java.io.Serializable;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
+@Data
+@SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class PlaylistSongId implements Serializable {
+
+    private String song;
+    private Long playlist;
+}
