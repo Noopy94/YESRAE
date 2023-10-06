@@ -90,7 +90,7 @@ public class SongServiceImpl implements SongService {
 
             if (!songlike.getIsDeleted()) {
                 res.add(SonglikeFindRes.builder()
-                    .songId(song.getId())
+                    .id(song.getId())
                     .name(song.getName())
                     .albumId(song.getAlbumId())
                     .albumName(song.getAlbumName())

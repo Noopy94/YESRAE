@@ -7,7 +7,7 @@ import lombok.Data;
 @Builder
 public class SonglikeFindRes {
 
-    private String songId;
+    private String id;
 
     private String name;
 
