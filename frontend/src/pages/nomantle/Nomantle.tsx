@@ -92,9 +92,8 @@ export default function Nomantle() {
 
   // list 에 해당하는 item 클릭
   const handleListItemClick = async (song_name: string) => {
-    setErrorMsg('');
     setInputValue(song_name);
-    await handleGuess(inputValue);
+    setErrorMsg('');
   };
 
   // ? 호버시 노맨틀 설명 보여주기
@@ -195,6 +194,7 @@ export default function Nomantle() {
         //setErrorMsg('');
       } else {
         setErrorMsg(`${song_name}은 존재하지 않는 곡 제목입니다.`);
+        setTitleList([]);
       }
     } catch (error) {
       console.error('API 요청 중 오류 발생:', error);
