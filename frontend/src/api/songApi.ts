@@ -15,10 +15,14 @@ export const songDetail = async (userId: number, songId: string) => {
   }
 };
 
-export const registSongLike = async (userId: number, songId: string) => {
+export const registSongLike = async (userId: number, songId: string, token: string) => {
   const response = await axios.post(BASE_URL + 'song/songlike', {
     userId: userId,
     songId: songId,
+  }, {
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
   });
   if (!response.data.success) {
     alert(response.data.error.message);

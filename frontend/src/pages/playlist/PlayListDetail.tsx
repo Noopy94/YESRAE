@@ -96,7 +96,7 @@ export default function PlayListDetail() {
   };
 
   const registComment = () => {
-    registPlaylistComment(Number(playListId), user.id, comment).then(
+    registPlaylistComment(Number(playListId), user.id, comment, user.accessToken).then(
       (res) => {
         if (res) {
           alert('댓글이 등록되었습니다.');
@@ -106,6 +106,7 @@ export default function PlayListDetail() {
               currentPlayListDetail.title,
               user.nickname,
               currentPlayListDetail.userId,
+              user.accessToken,
             );
           }
           history.go(0);
