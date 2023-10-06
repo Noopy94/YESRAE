@@ -204,7 +204,7 @@ export default function SongDetail() {
               </div>
             </div>
           </div>
-          <div className='text-xl'>
+          <div className='text-xl pb-52'>
             <div className='pb-4'>
               popularity
               <ProgressComponent amount={currentSongDetail.popularity} max={100} />
