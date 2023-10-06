@@ -2,8 +2,12 @@ import axios from 'axios';
 
 const BASE_URL = 'http://localhost:8080/';
 
-export const getComment = async (type: string, typeId: number) => {
-  const response = await axios.get(BASE_URL + type + 'Comment/' + typeId);
+export const getComment = async (type: string, typeId: number, token: string) => {
+  const response = await axios.get(BASE_URL + type + 'Comment/' + typeId, {
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
+  });
   if (response.data.success) {
     return response.data.content;
   } else {
@@ -17,11 +21,15 @@ export const getDate = (createdAt: string): string => {
   return date.getFullYear() + '.' + ((date.getMonth() + 1) < 9 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)) + '.' + ((date.getDay() + 1) < 9 ? '0' + (date.getDay() + 1) : (date.getDay() + 1)) + ' ' + (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':' + (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':' + (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
 };
 
-export const registPlaylistComment = async (typeId: number, userId: number, content: string) => {
+export const registPlaylistComment = async (typeId: number, userId: number, content: string, token: string) => {
   const response = await axios.post(BASE_URL + 'playlistComment', {
     userId: userId,
     content: content,
     playlistId: typeId,
+  }, {
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
   });
   if (response.data.success) {
     return true;
@@ -45,10 +53,14 @@ export const registArticleComment = async (typeId: number, userId: number, conte
   }
 };
 
-export const deletePlaylistComment = async (commentId: number, userId: number) => {
+export const deletePlaylistComment = async (commentId: number, userId: number, token: string) => {
   const response = await axios.put(BASE_URL + 'playlistComment/delete', {
     userId: userId,
     id: commentId,
+  }, {
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
   });
   if (response.data.success) {
     alert('삭제가 완료되었습니다.');
@@ -58,10 +70,14 @@ export const deletePlaylistComment = async (commentId: number, userId: number) =
   }
 };
 
-export const deleteArticleComment = async (commentId: number, userId: number) => {
+export const deleteArticleComment = async (commentId: number, userId: number, token: string) => {
   const response = await axios.put(BASE_URL + 'articleComment/delete', {
     userId: userId,
     id: commentId,
+  }, {
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
   });
   if (response.data.success) {
     alert('삭제가 완료되었습니다.');
@@ -88,7 +104,7 @@ export const findNotification = async (notificationId: number) => {
   }
 };
 
-export const registNotification = async (type: 'playlistComment' | 'articleComment', target: string, senderName: string, recipientId: number) => {
+export const registNotification = async (type: 'playlistComment' | 'articleComment', target: string, senderName: string, recipientId: number, token: string) => {
   let title = '';
   let content = '';
   if (type === 'articleComment') {
@@ -102,6 +118,10 @@ export const registNotification = async (type: 'playlistComment' | 'articleComme
     recipientId: recipientId,
     content: content,
     title: title,
+  }, {
+    headers: {
+      Authorization: 'Bearer ' + token,
+    },
   });
   if (!response.data.success) {
     alert(response.data.error.message);

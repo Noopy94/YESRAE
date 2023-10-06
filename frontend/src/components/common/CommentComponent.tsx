@@ -33,7 +33,7 @@ export default function CommentComponent({ type, typeId }: CommentProps) {
 
 
   useEffect(() => {
-    getComment(type, typeId).then((res) => {
+    getComment(type, typeId, user.accessToken).then((res) => {
       onChangeCurrentCommentList(res);
     });
   }, []);
@@ -41,9 +41,9 @@ export default function CommentComponent({ type, typeId }: CommentProps) {
   const deleteComment = (commentId: number) => {
     if (confirm('정말로 댓글을 삭제하시겠습니까?')) {
       if (type === 'playlist') {
-        deletePlaylistComment(commentId, user.id);
+        deletePlaylistComment(commentId, user.id, user.accessToken);
       } else if (type === 'article') {
-        deleteArticleComment(commentId, user.id);
+        deleteArticleComment(commentId, user.id, user.accessToken);
       }
     }
   };
