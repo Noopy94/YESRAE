@@ -22,7 +22,7 @@ interface CommentProps {
 }
 
 const comments: Comment[] = [];
-export default function CommentComponent({ type, typeId}: CommentProps) {
+export default function CommentComponent({ type, typeId }: CommentProps) {
 
   const user = useRecoilValue(userState);
   const [currentCommentList, setCurrentCommentList] = useState(comments);
@@ -41,9 +41,9 @@ export default function CommentComponent({ type, typeId}: CommentProps) {
   const deleteComment = (commentId: number) => {
     if (confirm('정말로 댓글을 삭제하시겠습니까?')) {
       if (type === 'playlist') {
-        deletePlaylistComment(commentId, user.userId);
+        deletePlaylistComment(commentId, user.id);
       } else if (type === 'article') {
-        deleteArticleComment(commentId, user.userId);
+        deleteArticleComment(commentId, user.id);
       }
     }
   };
@@ -57,7 +57,7 @@ export default function CommentComponent({ type, typeId}: CommentProps) {
               <div className='inline pr-3'>{comment.nickName}</div>
               <div className='inline text-xs'>|</div>
               <div className='inline pl-3 text-xs'>{getDate(comment.createdAt)}</div>
-              {comment.userId === user.userId ?
+              {comment.userId === user.id ?
                 <button className='float-right text-sm'
                         onClick={() => deleteComment(comment.id)}>삭제하기</button> :
                 <div />}

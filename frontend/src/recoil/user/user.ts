@@ -5,7 +5,7 @@ import localStorageEffect from '../localStorageEffect';
 export const userState = atom({
   key: 'userState', // 고유한 키
   default: {
-    userId: 0,
+    id: 0,
     nickname: '',
     imageUrl: '',
     accessToken: '',

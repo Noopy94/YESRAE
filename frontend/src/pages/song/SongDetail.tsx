@@ -98,7 +98,7 @@ export default function SongDetail() {
 
   useEffect(() => {
     if (songId != null) {
-      const res = songDetail(user.userId, songId);
+      const res = songDetail(user.id, songId);
       if (res != null) {
         onChangeSongDetail(res);
         startLikeCheck();
@@ -114,7 +114,7 @@ export default function SongDetail() {
     onChangeSonglike();
     console.log(user);
     if (songId != null) {
-      registSongLike(user.userId, songId);
+      registSongLike(user.id, songId);
     }
   };
 
