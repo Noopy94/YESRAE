@@ -1,15 +1,26 @@
-import { useEffect, useState } from 'react';
 import Category from '../../components/nomantle/Category';
 import RankingResultInfo from '../../components/tournament/RankingInfo';
+// import { useEffect, useState } from 'react';
+// import { getTournamentRanking } from '../../api/tournamentApi';
 
 export default function TournamentRanking() {
   const category = ['순위', '앨범 아트', '제목', '가수', '우승 비율'];
+
+  // const [info, setInfo] = useState([]);
+
+  // useEffect(() => {
+  //   const getRanking = async () => {
+  //     const response = await getTournamentRanking();
+  //     setInfo(response);
+  //   };
+  //   getRanking();
+  // }, []);
 
   // 더미 데이터 -> 이후에 api 연결 필요
   const info = [
     {
       rank: 1,
-      album_img:
+      imgUrl:
         'https://i.scdn.co/image/ab67616d0000b273633a2d775747bccfbcb17a45',
       title: '1등 제목',
       singer: 'charlie puth',
@@ -17,7 +28,7 @@ export default function TournamentRanking() {
     },
     {
       rank: 2,
-      album_img:
+      imgUrl:
         'https://i.scdn.co/image/ab67616d0000b2730744690248ef3ba7b776ea7b',
       title: '2등 제목',
       singer: 'new jeans',
@@ -25,7 +36,7 @@ export default function TournamentRanking() {
     },
     {
       rank: 3,
-      album_img:
+      imgUrl:
         'https://i.scdn.co/image/ab67616d0000b273bdea30b86b37142ec99deb78',
       title: '3등 제목',
       singer: 'test',
@@ -33,7 +44,7 @@ export default function TournamentRanking() {
     },
     {
       rank: 4,
-      album_img:
+      imgUrl:
         'https://i.scdn.co/image/ab67616d0000b27330623d491400e1516d3fca59',
       title: '4등 제목',
       singer: '윤종신',
@@ -41,7 +52,7 @@ export default function TournamentRanking() {
     },
     {
       rank: 5,
-      album_img:
+      imgUrl:
         'https://i.scdn.co/image/ab67616d0000b2732918f236448bf544586e388a',
       title: '5등 제목',
       singer: '윤하',

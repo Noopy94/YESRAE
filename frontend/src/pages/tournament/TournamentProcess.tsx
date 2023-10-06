@@ -5,6 +5,7 @@ import Youtube from 'react-youtube';
 import { useSetRecoilState } from 'recoil';
 import { tournamentResult } from '../../recoil/tournament/tournamentResult';
 import ButtonComponent from '../../components/common/ButtonComponent';
+import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 
 type Song = {
   id: number;
@@ -130,9 +131,22 @@ const TournamentProcess = () => {
     }
   };
 
+  const handleHome = () => {
+    navigate('/');
+  };
+
   return (
     <div>
-      <div className="flex justify-center mt-16 text-6xl font-bold gap-x-36">
+      <div className="flex items-center pt-16 pl-28">
+        <ArrowLeftIcon
+          className="w-5 mr-2 cursor-pointer"
+          onClick={handleHome}
+        />
+        <div className="cursor-pointer" onClick={handleHome}>
+          홈
+        </div>
+      </div>
+      <div className="flex justify-center text-6xl font-bold gap-x-36">
         <div>{totalRound === 2 ? '결승' : `${totalRound}강`}</div>
         <div>
           {currentRound / 2}/{totalRound / 2}
