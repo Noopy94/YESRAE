@@ -209,47 +209,56 @@ export default function SongDetail() {
           <div className="fixed relative bottom-0 left-0 h-52">
             <div>
               popularity
-              <ProgressComponent
-                amount={currentSongDetail.popularity}
-                max={100}
-              />
+              <ProgressComponent amount={currentSongDetail.popularity} max={100} />
             </div>
-            acosticness : {currentSongDetail.acousticness}
-            <br />
-            <br />
-            danceability : {currentSongDetail.danceability}
-            <br />
-            <br />
-            energy : {currentSongDetail.energy}
-            <br />
-            <br />
-            instrumentalness : {currentSongDetail.instrumentalness}
-            <br />
-            <br />
-            livness : {currentSongDetail.liveness}
-            <br />
-            <br />
-            loudness : {currentSongDetail.loudness}
-            <br />
-            <br />
-            speechiness : {currentSongDetail.speechiness}
-            <br />
-            <br />
-            tempo : {currentSongDetail.tempo}
-            <br />
-            <br />
-            mode : {currentSongDetail.mode}
-            <br />
-            <br />
-            tune : {currentSongDetail.tune}
-            <br />
-            <br />
-            timeSignature : {currentSongDetail.timeSignature}
-            <br />
-            <br />
-            valence : {currentSongDetail.valence}
-            <br />
-            <br />
+            <div>
+              acousticness
+              <ProgressComponent amount={currentSongDetail.acousticness} max={1} />
+            </div>
+            <div>
+              danceability
+              <ProgressComponent amount={currentSongDetail.danceability} max={1} />
+            </div>
+            <div>
+              energy
+              <ProgressComponent amount={currentSongDetail.energy} max={1} />
+            </div>
+            <div>
+              instrumentalness
+              <ProgressComponent amount={currentSongDetail.instrumentalness} max={1} />
+            </div>
+            <div>
+              livness
+              <ProgressComponent amount={currentSongDetail.liveness} max={1} />
+            </div>
+            <div>
+              loudness
+              <ProgressComponent amount={currentSongDetail.loudness + 60} max={100} />
+            </div>
+            <div>
+              speechiness
+              <ProgressComponent amount={currentSongDetail.speechiness} max={1} />
+            </div>
+            <div>
+              tempo
+              <ProgressComponent amount={currentSongDetail.tempo} max={255} />
+            </div>
+            <div>
+              mode
+              <ProgressComponent amount={currentSongDetail.mode} max={1} />
+            </div>
+            <div>
+              tune
+              <ProgressComponent amount={currentSongDetail.tune} max={11} />
+            </div>
+            <div>
+              timeSignature
+              <ProgressComponent amount={currentSongDetail.timeSignature} max={5} />
+            </div>
+            <div>
+              valence
+              <ProgressComponent amount={currentSongDetail.valence} max={1} />
+            </div>
           </div>
         </main>
       </div>
