@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 interface IRankingInfo {
   ranking: {
     rank: number;
-    album_img: string;
+    imgUrl: string;
     title: string;
     singer: string;
     proportion: number;
@@ -15,7 +15,7 @@ export default function RankingResultInfo({ ranking }: IRankingInfo) {
     <div className="flex items-center mt-8 text-xl font-semibold text-center">
       <div className="w-1/5 ">{ranking.rank}</div>
       <div className="w-1/5">
-        <img src={ranking.album_img} alt="" />
+        <img src={ranking.imgUrl} alt="" />
       </div>
       <div className="w-1/5 ">{ranking.title}</div>
       <div className="w-1/5">{ranking.singer}</div>

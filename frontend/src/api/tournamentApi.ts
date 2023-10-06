@@ -33,3 +33,9 @@ export const getTournamentResult = async (result: {
 
   return response.data.content;
 };
+
+export const getTournamentRanking = async () => {
+  const response = await axios.get(BASE_URL + 'tournament/ranking');
+
+  return response.data.content;
+};
