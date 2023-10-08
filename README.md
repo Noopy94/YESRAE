@@ -1,4 +1,6 @@
-# A304 - 빅데이터 추천 프로젝트
+# 🎵 YESRAE
+
+## A304 - 노래 추천 프로젝트 (빅데이터 추천)
 
 <!-- 필수 항목 -->
 
@@ -7,7 +9,7 @@
 | Application                       | Domain                                | Language                      | Framework                               |
 | --------------------------------- | ------------------------------------- | ----------------------------- | --------------------------------------- |
 | :white_check_mark: Desktop Web    | :black_square_button: AI              | :white_check_mark: JavaScript | :black_square_button: Vue.js            |
-| :black_square_button: Mobile Web  | :white_check_mark: Big Data        | :white_check_mark: TypeScript | :white_check_mark: React                |
+| :black_square_button: Mobile Web  | :white_check_mark: Big Data           | :white_check_mark: TypeScript | :white_check_mark: React                |
 | :white_check_mark: Responsive Web | :black_square_button: Blockchain      | :black_square_button: C/C++   | :black_square_button: Angular           |
 | :black_square_button: Android App | :black_square_button: IoT             | :black_square_button: C#      | :black_square_button: Node.js           |
 | :black_square_button: iOS App     | :black_square_button: AR/VR/Metaverse | :white_check_mark: Python     | :white_check_mark: Flask/Django/FastAPI |
@@ -43,12 +45,76 @@
 
 ## 팀 소개
 
-- 이두현: 팀장, 풀스택 개발
-- 박민혁: 풀스택 개발
-- 최주호: 풀스택 개발, 데이터 크롤링
-- 노성호: 풀스택 개발
-- 김도현: 풀스택 개발, 추천 알고리즘
-- 김민식: CI/CD
+<table>
+  <tr>
+    <td align="center" width="500px">
+      <a href="https://github.com/Noopy94" target="_blank">
+        <img src="./img/Yesrae_LDH.jpg" alt="이두현 프로필" />
+      </a>
+    </td>
+    <td align="center" width="500px">
+      <a href="https://github.com/jvlover" target="_blank">
+        <img src="./img/Yesrae_PMH.jpg" alt="박민혁 프로필" />
+      </a>
+    </td>
+    <td align="center" width="500px">
+      <a href="https://github.com/mongsuokki" target="_blank">
+        <img src="./img/Yesrae_CJH.jpg" alt="최주호 프로필" />
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/Noopy94" target="_blank">
+        이두현<br />(Front-end)
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/jvlover" target="_blank">
+        박민혁<br />(Front-end)
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/mongsuokki" target="_blank">
+        최주호<br />(Front-end)
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="500px">
+      <a href="https://github.com/bamtolee" target="_blank">
+        <img src="./img/Yesrae_NSH.jpg" alt="노성호 프로필" />
+      </a>
+    </td>
+    <td align="center" width="500px">
+      <a href="https://github.com/fnejd" target="_blank">
+        <img src="./img/Yesrae_KDH.jpg" alt="김도현 프로필" />
+      </a>
+    </td>
+    <td align="center" width="500px">
+      <a href="https://github.com/DUDINGDDI" target="_blank">
+        <img src="./img/Yesrae_KMS.jpg" alt="김민식 프로필" />
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/bamtolee" target="_blank">
+        노성호<br />(Back-end)
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/fnejd" target="_blank">
+        김도현<br />(Back-end)
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/DUDINGDDI">
+        김민식<br />(Back-end)
+      </a>
+    </td>
+  </tr>
+</table>
 
 <!-- 자유 양식 -->
 
@@ -56,14 +122,257 @@
 
 ### 개발 환경
 
-| 분야         | 항목        | 버전    |
-| ------------ | ----------- | ------- |
-| 백엔드       | Java        | 17      |
-| 백엔드       | Gradle      | 8.2.1   |
-| 백엔드       | Spring boot | 3.1.3   |
-| 프론트엔드   | React       | 18      |
-| 프론트엔드   | Node.js     | 18.17.1 |
-| 데이터베이스 | MySql       | 8.0.33  |
+### Frontend
+
+- React (18)
+  - Recoil
+- TypeScript (5.2.2)
+- Tailwind CSS
+- Axios
+- pnpm
+- Vite
+- Node.js (18.17.1)
+
+### Backend
+
+- Java (17)
+- Spring Boot (3.1.3)
+- Gradle (3.1.3)
+- dependencies
+  - Spring Security
+  - JPA
+  - querydsl
+  - aws s3
+- MySQL (8.0.33)
+- Redis (3.0.504)
+- Fast API (0.103.1)
+
+### Server
+
+- AWS EC2
+
+## Skills
+
+![사용기술](./img/Yesrae_Skills.jpg)
+
+---
+
+## 소프트웨어 아키텍처
+
+![아키텍쳐](/img/Yesrae_architecture.jpg)
+
+---
+
+## Folder Structure
+
+### BACKEND
+
+```
+C:.
+├─java
+│  └─com
+│      └─ssafy
+│          └─yesrae
+│              ├─common
+│              │  ├─exception
+│              │  │  ├─article
+│              │  │  ├─comment
+│              │  │  ├─notification
+│              │  │  ├─playlist
+│              │  │  ├─song
+│              │  │  ├─Template
+│              │  │  └─user
+│              │  ├─model
+│              │  └─util
+│              ├─config
+│              │  ├─jwt
+│              │  │  ├─filter
+│              │  │  ├─service
+│              │  │  └─util
+│              │  ├─login
+│              │  │  ├─filter
+│              │  │  ├─handler
+│              │  │  └─service
+│              │  ├─oauth2
+│              │  │  ├─handler
+│              │  │  ├─service
+│              │  │  └─userinfo
+│              │  └─security
+│              └─domain
+│                  ├─article
+│                  │  ├─controller
+│                  │  ├─dto
+│                  │  │  ├─request
+│                  │  │  └─response
+│                  │  ├─entity
+│                  │  ├─repository
+│                  │  └─service
+│                  ├─comment
+│                  │  ├─controller
+│                  │  ├─dto
+│                  │  │  ├─request
+│                  │  │  └─response
+│                  │  ├─entity
+│                  │  ├─repository
+│                  │  └─service
+│                  ├─notification
+│                  │  ├─controller
+│                  │  ├─dto
+│                  │  │  ├─request
+│                  │  │  └─response
+│                  │  ├─entity
+│                  │  ├─repository
+│                  │  └─service
+│                  ├─playlist
+│                  │  ├─controller
+│                  │  ├─dto
+│                  │  │  ├─request
+│                  │  │  └─response
+│                  │  ├─entity
+│                  │  ├─repository
+│                  │  └─service
+│                  ├─song
+│                  │  ├─controller
+│                  │  ├─dto
+│                  │  │  ├─request
+│                  │  │  └─response
+│                  │  ├─entity
+│                  │  ├─repository
+│                  │  └─service
+│                  ├─template
+│                  │  ├─controller
+│                  │  ├─dto
+│                  │  │  ├─request
+│                  │  │  └─response
+│                  │  ├─entity
+│                  │  ├─repository
+│                  │  └─service
+│                  ├─tournament
+│                  │  ├─controller
+│                  │  ├─dto
+│                  │  │  ├─request
+│                  │  │  └─response
+│                  │  ├─entity
+│                  │  ├─repository
+│                  │  └─service
+│                  └─user
+│                      ├─controller
+│                      ├─dto
+│                      │  ├─request
+│                      │  └─response
+│                      ├─entity
+│                      ├─repository
+│                      └─service
+└─resources
+    └─secret
+```
+
+### Crawling
+
+```
+C:.
+├─java
+│  └─com
+│      └─ssafy
+│          └─yesrae
+│              └─crawling
+│                  │  CrawlingApplication.java
+│                  │
+│                  └─domain
+│                      └─song
+│                          ├─controller
+│                          │      SongController.java
+│                          │
+│                          ├─dto
+│                          │  ├─request
+│                          │  │      SongRegistPostReq.java
+│                          │  │
+│                          │  └─response
+│                          │          SongFindRes.java
+│                          │
+│                          ├─entity
+│                          │      Song.java
+│                          │
+│                          ├─repository
+│                          │      SongRepository.java
+│                          │
+│                          └─service
+│                                  SongService.java
+│                                  SongServiceImpl.java
+│
+└─resources
+        application.yml
+```
+
+### FastAPI
+
+```
+C:.
+│  .env
+│  annoy.ann
+│  main.py
+│  yesrae.log
+│
+├─api
+│  │  song_quiz_api.py
+│  │  song_recommend_api.py
+│  └─ song_vector_api.py
+│
+├─config
+│  │  log_config.py
+│  │  mongodb_config.py
+│  │  mysql_config.py
+│  └─redis_config.py
+│
+├─database
+│  │  orm.py
+│  └─ repository.py
+│
+├─schema
+│  │  request.py
+│  └─ response.py
+│
+├─service
+│  │  song_quiz.py
+│  │  song_recommend.py
+│  └─ song_vector.py
+│
+└─util
+    │  song_analyze.py
+    │  song_annoy.py
+    └─ song_calculate.py
+```
+
+### FRONTEND
+
+```
+C:.
+├─api
+├─assets
+│  └─font
+├─components
+│  ├─common
+│  ├─HeaderNav
+│  ├─nomantle
+│  ├─playercontroller
+│  ├─recommend
+│  └─tournament
+├─pages
+│  ├─main
+│  ├─nomantle
+│  ├─playlist
+│  ├─recommend
+│  ├─song
+│  ├─tournament
+│  └─user
+└─recoil
+    ├─currentpage
+    ├─currentsong
+    ├─defaultdata
+    ├─playlist
+    ├─tournament
+    └─user
+```
 
 ### ERD
 
