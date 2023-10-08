@@ -54,7 +54,13 @@ class SongTotalRankSchema(BaseModel):
     class Config:
         from_attributes = True
 
-
+"""
+노래 추천 결과
+id : 노래 ID
+title : 노래 제목
+singer : 가수
+album_img : 앨범 이미지
+"""
 class RecommendSongSchema(BaseModel):
     id : str
     title : str

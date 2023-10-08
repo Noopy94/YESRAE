@@ -164,4 +164,3 @@ def calSimilarity(tempo1, tempo2, mel_mean_var_concat1, mel_mean_var_concat2):
     similarity_score = (20 * cosine_sim + (1 / (1 + tempo_difference))) / 21
 
     return similarity_score
-

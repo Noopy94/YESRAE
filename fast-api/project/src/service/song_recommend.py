@@ -32,4 +32,3 @@ class SongRecommend:
             result.append(song_info)
 
         return result
-
