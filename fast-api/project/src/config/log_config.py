@@ -18,4 +18,3 @@ console_handler.setFormatter(formatter)
 # 루트 로거에 핸들러 추가
 root_logger = logging.getLogger()
 root_logger.addHandler(console_handler)
-
