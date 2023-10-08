@@ -129,9 +129,6 @@ def calSimilarity_2D(tempo1, tempo2, mel_freq1, mel_freq2):
      # 두 곡의 mel_freqs 간의 코사인 유사성 계산
     cosine_sim = 1 - distance.cosine(mel_freq1_res.ravel(), mel_freq2_res.ravel())
 
-    #print(f"Tempo Difference: {tempo_difference}")
-    #print(f"Mel Frequency Cosine Similarity: {cosine_sim}")
-
     # 템포 와 mel_freqs 유사성을 결합하여 유사도 계산
     similarity_score = (20 * cosine_sim + (1 / (1 + tempo_difference))) / 21
 
@@ -156,9 +153,6 @@ def calSimilarity(tempo1, tempo2, mel_mean_var_concat1, mel_mean_var_concat2):
 
     # 두 곡의 mel_freqs 간의 코사인 유사성 계산
     cosine_sim = 1 - distance.cosine(mel_mean_var_concat1, mel_mean_var_concat2)
-
-    #print(f"Tempo Difference: {tempo_difference}")
-    #print(f"Mel Frequency Cosine Similarity: {cosine_sim}")
 
     # 템포 와 mel_freqs 유사성을 결합하여 유사도 계산
     similarity_score = (20 * cosine_sim + (1 / (1 + tempo_difference))) / 21

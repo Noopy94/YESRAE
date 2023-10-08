@@ -9,9 +9,8 @@ logger = logging.getLogger(__name__)
 
 class SongRecommend:
 
-
-        
-    song_repository = SongRepository()
+    def __init__(self):   
+        self.song_repository = SongRepository()
 
 
     "노래 추천하기"
