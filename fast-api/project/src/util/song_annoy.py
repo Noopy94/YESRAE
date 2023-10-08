@@ -64,7 +64,6 @@ def annoy(target_songs):
         for result in annoy_result:
             if idx != result:
                 logging.info(f"{songs[idx]} 에 연관된 추천 노래 ID {songs[result]}")
-
                 recommend_songs.add(songs[result])
     
     logging.info(f"추천 노래들 개수 : {len(recommend_songs)}")

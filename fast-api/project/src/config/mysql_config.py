@@ -28,4 +28,3 @@ def get_db() -> Session:
         yield session
     finally:
         session.close()
-

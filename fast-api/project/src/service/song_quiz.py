@@ -98,7 +98,7 @@ class SongQuizService:
             similarity: float = self.calculate_util.calculate(today_song_info, compare_song_info) 
 
             if similarity < 100:
-                similarity = similarity * 0.7
+                similarity = similarity * 0.9
             else:
                 similarity = 100
 
